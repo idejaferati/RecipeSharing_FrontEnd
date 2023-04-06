@@ -13,19 +13,21 @@ const Navbar = () => {
 		<>
 			<Nav>
 				<Bars />
-
 				<NavMenu>
-					<NavLink to='/discover' activeStyle>
-						Discover
+				<NavLink to='/' activeStyle>
+						Home
 					</NavLink>
-					<NavLink to='/articles' activeStyle>
-						Articles
+					<NavLink to='/cuisines' activeStyle>
+						Cuisines
 					</NavLink>
-					<NavLink to='/myrecipes' activeStyle>
-						My Recipes
+					<NavLink to='/recipes' activeStyle>
+						Recipes
 					</NavLink>
-					<NavLink to='/about' activeStyle>
-						About
+					<NavLink to='/shoping' activeStyle>
+						Shoping
+					</NavLink>
+					<NavLink to='/blog' activeStyle>
+						Blog
 					</NavLink>
 					<NavLink to='/profile' activeStyle>
 						Profile

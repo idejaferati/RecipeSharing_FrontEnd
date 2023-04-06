@@ -1,19 +1,36 @@
-import React from 'react';
+import React from "react";
+import HomeImg from "../images/mainImg.jpg";
+import Carousel from "./../components/carousel";
 
 const Home = () => {
-return (
-	<div
-	style={{
-		display: 'flex',
-		justifyContent: 'Right',
-		alignItems: 'Right',
-		height: '100vh'
-	}}
-	>
-	<h1>Welcome to Recipe Sharing. </h1>
-	<h3>This menu will be the landing page for this application. It will contain a query to personalize user experience... </h3>
-	</div>
-);
+  return (
+    <div
+      style={{
+        backgroundImage: `url(${HomeImg})`,
+        backgroundSize: "cover",
+        height: "100vh",
+      }}>
+      <div
+        style={{
+          position: "absolute",
+          left: "400px",
+          top: "400px",
+          color: "#02211b",
+        }}>
+        <h6>PERSONALIZE YOUR EXPERIENCE</h6>
+        <h1>What are your favorite cuisines?</h1>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          right: "0px",
+          top: "300px",
+          width: "400px",
+        }}>
+        <Carousel />
+      </div>
+    </div>
+  );
 };
 
 export default Home;

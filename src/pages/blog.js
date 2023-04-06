@@ -1,6 +1,6 @@
 import React from 'react';
 
-const About = () => {
+const Blog = () => {
 return (
 	<div
 	style={{
@@ -10,9 +10,9 @@ return (
 		height: '100vh'
 	}}
 	>
-	<h3>Recipe Sharing is created by FIEK students...</h3>
+	<h3>This menu can be a section where users can read articles or blog posts related to cooking, food, and health.</h3>
 	</div>
 );
 };
 
-export default About;
+export default Blog;
