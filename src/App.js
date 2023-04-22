@@ -8,6 +8,8 @@ import Cuisines from "./pages/cuisines";
 import Profile from "./pages/profile";
 import Recipes from "./pages/recipes";
 import Shoping from "./pages/shoping";
+import Login from "./pages/login";
+import SignUp from "./pages/signup";
 import Footer from "./components/footer";
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/shoping" element={<Shoping />} />
+        <Route path="/login" exact element={<Login />} />
+        <Route path="/signup" exact element={<SignUp />} />
       </Routes>
       <Footer />
     </Router>
