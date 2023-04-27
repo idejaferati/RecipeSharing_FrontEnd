@@ -7,7 +7,7 @@ import Blog from "./pages/blog";
 import Cuisines from "./pages/cuisines";
 import Profile from "./pages/profile";
 import Recipes from "./pages/recipes";
-import Shoping from "./pages/shoping";
+import Shoping from "./pages/shopping";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Footer from "./components/footer";
@@ -22,7 +22,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/blog" element={<Blog />} />
-        <Route path="/shoping" element={<Shoping />} />
+        <Route path="/shopping" element={<Shoping />} />
         <Route path="/login" exact element={<Login />} />
         <Route path="/signup" exact element={<SignUp />} />
       </Routes>

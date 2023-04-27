@@ -1,5 +1,5 @@
-import { createContext, useEffect, useState } from "react";
-import { PRODUCTS } from "../products";
+import { createContext, useState } from "react";
+import { PRODUCTS } from "../pages/products";
 
 export const ShopContext = createContext(null);
 
