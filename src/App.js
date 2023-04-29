@@ -7,27 +7,30 @@ import Blog from "./pages/blog";
 import Cuisines from "./pages/cuisines";
 import Profile from "./pages/profile";
 import Recipes from "./pages/recipes";
-import Shoping from "./pages/shopping";
+import Shopping from "./pages/shopping";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Footer from "./components/footer";
+import { ShopContextProvider } from "./context/shop-context";
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" exact element={<Home />} />
-        <Route path="/cuisines" element={<Cuisines />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/recipes" element={<Recipes />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/shopping" element={<Shoping />} />
-        <Route path="/login" exact element={<Login />} />
-        <Route path="/signup" exact element={<SignUp />} />
-      </Routes>
-      <Footer />
-    </Router>
+    <ShopContextProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" exact element={<Home />} />
+          <Route path="/cuisines" element={<Cuisines />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/shopping" element={<Shopping />} />
+          <Route path="/login" exact element={<Login />} />
+          <Route path="/signup" exact element={<SignUp />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </ShopContextProvider>
   );
 }
 

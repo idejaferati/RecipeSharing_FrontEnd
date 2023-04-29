@@ -1,11 +1,8 @@
 import React from "react";
 import HomeImg from "../images/mainImg.jpg";
 import Carousel from "./../components/carousel";
-import { useContext } from "react";
-import { ShopContext } from "../context/context";
 
 const Home = () => {
-  const { addToCart, cartItems } = useContext(ShopContext);
   return (
     <div
       style={{
@@ -27,10 +24,9 @@ const Home = () => {
         style={{
           position: "absolute",
           right: "0px",
-          top: "300px",
+          top: "150px",
           width: "400px",
         }}>
-        <button className="addToCartBttn" onClick={() => addToCart(1)}></button>
         <Carousel />
       </div>
     </div>

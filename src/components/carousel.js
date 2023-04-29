@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
+import { PRODUCTS } from './../data/products';
 
 const CarouselWrapper = styled.div`
   position: relative;
@@ -62,22 +63,17 @@ function Carousel() {
   return (
     <CarouselWrapper>
       <Slider {...settings}>
-        <div>
-          <h3>Image 1</h3>
-          <p>An image is going to be placed here.</p>
-        </div>
-        <div>
-          <h3>Image 2</h3>
-          <p>An image is going to be placed here.</p>
-        </div>
-        <div>
-          <h3>Image 3</h3>
-          <p>An image is going to be placed here.</p>
-        </div>
-        <div>
-          <h3>Image 4</h3>
-          <p>An image is going to be placed here.</p>
-        </div>
+        {PRODUCTS.map((product) => {
+          return (
+            <div>
+              <h3>{product.productName}</h3>
+              <img src={product.productImage} style={{
+                width: '50px',
+                height: '50px'
+              }}/>
+            </div>
+          )
+        })}
       </Slider>
     </CarouselWrapper>
   );

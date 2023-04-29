@@ -1,5 +1,7 @@
 import React, { useContext } from "react";
-import { ShopContext } from "../../context/context";
+import { ShopContext } from "../../context/shop-context";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 const CartItem = (props) => {
   const { id, productName, price, productImage } = props.data;
@@ -8,19 +10,43 @@ const CartItem = (props) => {
 
   return (
     <div className="cartItem">
-      <img src={productImage} />
+      <img src={productImage} style={{
+        width: '50px',
+        height: '50px'
+      }}/>
       <div className="description">
         <p>
           <b>{productName}</b>
         </p>
         <p> Price: ${price}</p>
-        <div className="countHandler">
-          <button onClick={() => removeFromCart(id)}> - </button>
-          <input
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '340px'
+        }}>
+          <Button
+            onClick={() => removeFromCart(id)}
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}>
+            -
+          </Button>
+          <TextField
+            autoComplete="amount"
+            id="amount"
+            label="Amount"
+            disabled
             value={cartItems[id]}
-            onChange={(e) => updateCartItemCount(Number(e.target.value), id)}
+            size="small" 
+            style = {{width: 100}} 
+            onChange={(e) => updateCartItemCount(e.target.value ? Number(e.target.value) : 0, id)}
           />
-          <button onClick={() => addToCart(id)}> + </button>
+          <Button
+            onClick={() => addToCart(id)}
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}>
+            +
+          </Button>
         </div>
       </div>
     </div>
