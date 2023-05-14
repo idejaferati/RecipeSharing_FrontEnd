@@ -4,11 +4,23 @@ import CartItem from "../components/cart-item/index";
 import { useNavigate } from "react-router-dom";
 import { PRODUCTS } from './../data/products';
 import Button from "@mui/material/Button";
+import { ContactDialog } from './../components/contact-dialog';
 
 const Shopping = () => {
   const { cartItems, getTotalCartAmount, checkout } = useContext(ShopContext);
   const totalAmount = getTotalCartAmount();
   const navigate = useNavigate();
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(1);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
 
   return (
     <div
@@ -46,14 +58,20 @@ const Shopping = () => {
             </Button>
             <Button
               onClick={() => {
-                checkout();
-                navigate("/checkout");
+                //checkout();
+                handleClickOpen();
+                //navigate("/checkout");
               }}
               variant="contained"
               sx={{ mt: 3, mb: 2 }}>
               {" "}
               Checkout{" "}
             </Button>
+            <ContactDialog
+              selectedValue={selectedValue}
+              open={open}
+              onClose={handleClose}
+            />
           </div>
         </div>
       ) : (
