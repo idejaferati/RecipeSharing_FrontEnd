@@ -3,9 +3,15 @@ import PropTypes from 'prop-types';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Button from "@mui/material/Button";
+import styled from "styled-components";
 import { Formik, Field, Form } from "formik";
 
- const validate = values => {
+
+const ErrorsDiv = styled.div`
+  color: red;
+`;
+
+const validate = values => {
    const errors = {};
    if (!values.firstName) {
      errors.firstName = 'Required';
@@ -26,9 +32,9 @@ import { Formik, Field, Form } from "formik";
    }
  
    return errors;
- };
+};
 
-export function ContactDialog(props) {
+export const ContactDialog = (props) => {
   const { onClose, selectedValue, open } = props;
 
   const handleClose = () => {
@@ -62,11 +68,13 @@ export function ContactDialog(props) {
             padding: "10px"}}>
           <label htmlFor="firstName">First Name</label>
           <Field name="firstName" type="text" style={{height: "26px", width: "200px"}}/>
-          {errors.firstName ? <div>{errors.firstName}</div> : null}
+          {errors.firstName ? <ErrorsDiv>{errors.firstName}</ErrorsDiv> : null}
           <label htmlFor="lastName">Last Name</label>
           <Field name="lastName" type="text" style={{height: "26px", width: "200px"}}/>
+          {errors.lastName ? <ErrorsDiv>{errors.lastName}</ErrorsDiv> : null}
           <label htmlFor="email">Email</label>
           <Field name="email" type="email" style={{height: "26px", width: "200px"}}/>
+          {errors.email ? <ErrorsDiv>{errors.email}</ErrorsDiv> : null}
           <Button type="submit"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}>

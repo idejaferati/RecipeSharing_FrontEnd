@@ -13,8 +13,8 @@ const Product = (props) => {
     return (
       <div style={{
         borderRadius: '15px',
-        width: '300px',
-        height: '350px',
+        width: '250px',
+        height: '250px',
         margin: '100px',
         display: 'flex',
         flexDirection: 'column',
