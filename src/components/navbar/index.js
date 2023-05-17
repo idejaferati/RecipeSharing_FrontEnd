@@ -14,22 +14,22 @@ const Navbar = () => {
       <Nav>
         <Bars />
         <NavMenu>
-          <NavLink to="/" activeStyle>
+          <NavLink to="/" activestyle="true">
             Home
           </NavLink>
-          <NavLink to="/cuisines" activeStyle>
+          <NavLink to="/cuisines" activestyle="true">
             Cuisines
           </NavLink>
-          <NavLink to="/recipes" activeStyle>
+          <NavLink to="/recipes" activestyle="true">
             Recipes
           </NavLink>
-          <NavLink to="/shoping" activeStyle>
-            Shoping
+          <NavLink to="/shopping" activestyle="true">
+            Shopping
           </NavLink>
-          <NavLink to="/blog" activeStyle>
+          <NavLink to="/blog" activestyle="true">
             Blog
           </NavLink>
-          <NavLink to="/profile" activeStyle>
+          <NavLink to="/profile" activestyle="true">
             Profile
           </NavLink>
           {/* Second Nav */}

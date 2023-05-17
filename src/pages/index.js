@@ -24,7 +24,7 @@ const Home = () => {
         style={{
           position: "absolute",
           right: "0px",
-          top: "300px",
+          top: "150px",
           width: "400px",
         }}>
         <Carousel />
