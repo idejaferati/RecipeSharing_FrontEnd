@@ -43,6 +43,12 @@ const CarouselWrapper = styled.div`
   }
 `;
 
+
+const StyledImg = styled.img`
+  width: 50px;
+  height: 50px;
+`;
+
 function Carousel() {
   const settings = {
     dots: false,
@@ -67,10 +73,7 @@ function Carousel() {
           return (
             <div>
               <h3>{product.productName}</h3>
-              <img src={product.productImage} style={{
-                width: '50px',
-                height: '50px'
-              }}/>
+              <StyledImg src={product.productImage} />
             </div>
           )
         })}

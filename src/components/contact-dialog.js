@@ -6,6 +6,12 @@ import Button from "@mui/material/Button";
 import styled from "styled-components";
 import { Formik, Field, Form } from "formik";
 
+const StyledForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  padding: 10px;
+`;
 
 const ErrorsDiv = styled.div`
   color: red;
@@ -62,26 +68,27 @@ export const ContactDialog = (props) => {
          isSubmitting,
          /* and other goodies */
        }) => (
-        <Form style={{display: "flex",
-            flexDirection: "column",
-            rowGap: "10px",
-            padding: "10px"}}>
+        <StyledForm>
+
           <label htmlFor="firstName">First Name</label>
           <Field name="firstName" type="text" style={{height: "26px", width: "200px"}}/>
           {errors.firstName ? <ErrorsDiv>{errors.firstName}</ErrorsDiv> : null}
+
           <label htmlFor="lastName">Last Name</label>
           <Field name="lastName" type="text" style={{height: "26px", width: "200px"}}/>
           {errors.lastName ? <ErrorsDiv>{errors.lastName}</ErrorsDiv> : null}
+
           <label htmlFor="email">Email</label>
           <Field name="email" type="email" style={{height: "26px", width: "200px"}}/>
           {errors.email ? <ErrorsDiv>{errors.email}</ErrorsDiv> : null}
+
           <Button type="submit"
               variant="contained"
               sx={{ mt: 3, mb: 2 }}>
               {" "}
               Submit{" "}
             </Button>
-        </Form>
+        </StyledForm>
        )}
       </Formik>
     </Dialog>

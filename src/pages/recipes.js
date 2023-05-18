@@ -17,7 +17,6 @@ const TitleDiv = styled.div`
 	font-size: 10px;
 `;
 
-
 const GridContainer = styled.div`
 	width: 100%;
 	height: auto;

@@ -1,6 +1,24 @@
 import React, { useContext } from "react";
 import { ShopContext } from './../../context/shop-context';
 import Button from "@mui/material/Button";
+import styled from "styled-components";
+
+const OuterContainer = styled.div`
+  border-radius: 15px;
+  width: 250px;
+  height: 250px;
+  margin: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledImg = styled.img`
+  border-radius: 15px;
+  width: 70px;
+  height: 70px;
+`;
 
 const Product = (props) => {
     const EMPTY_CART = { addToCart: ()=>{}, cartItems: [] }; // To ensure that default value is singleton and avoid useless re-renders
@@ -11,21 +29,8 @@ const Product = (props) => {
     const cartItemCount = cartItems[id];
 
     return (
-      <div style={{
-        borderRadius: '15px',
-        width: '250px',
-        height: '250px',
-        margin: '100px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <img src={productImage} style={{
-          borderRadius: '15px',
-          width: '70px',
-          height: '70px',
-        }}/>
+      <OuterContainer>
+        <StyledImg src={productImage} />
         <div className="description">
           <p>
             <b>{productName}</b>
@@ -38,7 +43,7 @@ const Product = (props) => {
           sx={{ mt: 3, mb: 2 }}>
           Add To Cart {cartItemCount > 0 && <> ({cartItemCount})</>}
         </Button>
-      </div>
+      </OuterContainer>
     );
   };
 
