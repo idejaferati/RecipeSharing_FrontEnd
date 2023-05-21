@@ -2,6 +2,13 @@ import React, { useContext } from "react";
 import { ShopContext } from "../../context/shop-context";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import styled from "styled-components";
+
+const StyledImg = styled.img`
+  border-radius: 15px;
+  width: 50px;
+  height: 50px;
+`;
 
 const CartItem = (props) => {
   const { id, productName, price, productImage } = props.data;
@@ -10,10 +17,7 @@ const CartItem = (props) => {
 
   return (
     <div className="cartItem">
-      <img src={productImage} style={{
-        width: '50px',
-        height: '50px'
-      }}/>
+      <StyledImg src={productImage}/>
       <div className="description">
         <p>
           <b>{productName}</b>

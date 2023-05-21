@@ -5,6 +5,20 @@ import { useNavigate } from "react-router-dom";
 import { PRODUCTS } from './../data/products';
 import Button from "@mui/material/Button";
 import { ContactDialog } from './../components/contact-dialog';
+import styled from "styled-components";
+
+const StyledOuterContainer = styled.div`
+	display: flex;
+	height: 88vh;
+  overflow: scroll;
+	flex-direction: column;
+`;
+
+const StyledShoppingItemsContainer = styled.div`
+  display: 'flex';
+  justify-content: 'space-between';
+  width: '340px';
+`;
 
 const Shopping = () => {
   const { cartItems, getTotalCartAmount, checkout } = useContext(ShopContext);
@@ -23,12 +37,7 @@ const Shopping = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-      }}>
+    <StyledOuterContainer>
       <div>
         <h1>Your Cart Items</h1>
       </div>
@@ -45,11 +54,7 @@ const Shopping = () => {
         <div>
           <hr></hr>
           <p> Subtotal: ${totalAmount} </p>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '340px'
-          }}>
+          <StyledShoppingItemsContainer>
             <Button
               onClick={() => navigate("/")}
               variant="outlined"
@@ -72,12 +77,12 @@ const Shopping = () => {
               open={open}
               onClose={handleClose}
             />
-          </div>
+          </StyledShoppingItemsContainer>
         </div>
       ) : (
         <h3> Your Shopping Cart is Empty. Proceed to Recipes to add items in the Cart.</h3>
       )}
-    </div>
+    </StyledOuterContainer>
   );
 };
 

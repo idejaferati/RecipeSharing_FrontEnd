@@ -3,7 +3,7 @@ import { PRODUCTS } from './../data/products';
 import Product from './../components/product/index';
 import styled from "styled-components";
 
-const OuterContainer = styled.div`
+const StyledOuterContainer = styled.div`
 	display: flex;
 	justify-content: right;
 	align-items: right;
@@ -11,14 +11,13 @@ const OuterContainer = styled.div`
 	flex-direction: column;
 `;
 
-const TitleDiv = styled.div`
+const StyledTitleDiv = styled.div`
 	margin-top: 20px;
 	text-align: center;
 	font-size: 10px;
 `;
 
-
-const GridContainer = styled.div`
+const StyledGridContainer = styled.div`
 	width: 100%;
 	height: auto;
 	display: grid;
@@ -28,17 +27,17 @@ const GridContainer = styled.div`
 
 const MyRecipes = () => {
   return (
-    <OuterContainer>
-      <TitleDiv>
+    <StyledOuterContainer>
+      <StyledTitleDiv>
         <h1>Recipes</h1>
-      </TitleDiv>
+      </StyledTitleDiv>
 
-      <GridContainer>
+      <StyledGridContainer>
         {PRODUCTS.map((product) => (
           <Product data={product} key={product.id}/>
         ))}
-      </GridContainer>
-    </OuterContainer>
+      </StyledGridContainer>
+    </StyledOuterContainer>
   );
 };
 
