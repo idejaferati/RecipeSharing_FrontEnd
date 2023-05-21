@@ -15,14 +15,26 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
+async function loginAsync(event) {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+  const jsonData = {
+    email: data.get("email"),
+    roleId : data.get("roleId"),
+    password: data.get("password"),
+  };
+
+  try {
+    //const response = await loginUser(jsonData);
+    console.log(jsonData);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default function Login() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const handleSubmit = async (event) => {
+    await loginAsync(event);
   };
 
   return (
@@ -85,7 +97,7 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

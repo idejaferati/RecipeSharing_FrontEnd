@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,17 +10,40 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { registerUser } from './../service/user-requests.js';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import FormLabel from '@mui/material/FormLabel';
 
 const theme = createTheme();
 
+async function signUpAsync(event) {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+  const jsonData = {
+    firstName : data.get("firstName"),
+    lastName : data.get("lastName"),
+    gender : data.get("gender"),
+    dateOfBirth : data.get("dateOfBirth"),
+    email: data.get("email"),
+    roleId : data.get("roleId"),
+    phoneNumber : data.get("phoneNumber"),
+    password: data.get("password"),
+  };
+
+  try {
+    //const response = await registerUser(jsonData);
+    console.log(jsonData);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const handleSubmit = async (event) => {
+    await signUpAsync(event);
   };
 
   return (
@@ -69,6 +90,40 @@ export default function SignUp() {
                   autoComplete="family-name"
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+              <FormLabel id="gender-label">Gender</FormLabel>
+              <RadioGroup
+                aria-labelledby="gender-label"
+                defaultValue="female"
+                name="gender"
+              >
+                <FormControlLabel value="female" control={<Radio />} label="Female" />
+                <FormControlLabel value="male" control={<Radio />} label="Male" />
+              </RadioGroup>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DatePicker 
+                  label="Date of birth" 
+                  required 
+                  fullWidth 
+                  id="dateOfBirth" 
+                  name="dateOfBirth" 
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phoneNumber"
+                  label="Phone Number"
+                  name="phoneNumber"
+                  autoComplete="phoneNumber"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -90,14 +145,6 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -108,7 +155,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Log in
                 </Link>
               </Grid>
