@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FaBars } from "react-icons/fa";
 
 
-export const Nav = styled.nav`
+export const StyledNav = styled.nav`
 	background: #ffffff;
 	height: 40px;
 	display: flex;
@@ -14,7 +14,7 @@ export const Nav = styled.nav`
 	/* justify-content: flex-start; */
 `;
 
-export const NavLink = styled(Link)`
+export const StyledNavLink = styled(Link)`
 	color: #02211b;
 	display: flex;
 	align-items: center;
@@ -28,7 +28,7 @@ export const NavLink = styled(Link)`
 	}
 `;
 
-export const Bars = styled(FaBars)`
+export const StyledBars = styled(FaBars)`
 	display: none;
 	color: #808080;
 	@media screen and (max-width: 768px) {
@@ -42,7 +42,7 @@ export const Bars = styled(FaBars)`
 	}
 `;
 
-export const NavMenu = styled.div`
+export const StyledNavMenu = styled.div`
 	display: flex;
 	align-items: center;
 	margin-right: -24px;
@@ -56,7 +56,7 @@ export const NavMenu = styled.div`
 	}
 `;
 
-export const NavBtn = styled.nav`
+export const StyledNavBtn = styled.nav`
 	display: flex;
 	align-items: center;
 	margin-right: 20px;
@@ -68,7 +68,7 @@ export const NavBtn = styled.nav`
 	}
 `;
 
-export const NavBtnLink = styled(Link)`
+export const StyledNavBtnLink = styled(Link)`
 	border-radius: 100px;
 	background: #5fd9c2;
 	padding: 6px 22px;

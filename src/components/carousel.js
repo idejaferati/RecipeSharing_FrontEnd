@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
 import { PRODUCTS } from './../data/products';
 
-const CarouselWrapper = styled.div`
+const StyledCarouselWrapper = styled.div`
   position: relative;
   .slick-prev,
   .slick-next {
@@ -67,7 +67,7 @@ function Carousel() {
   };
 
   return (
-    <CarouselWrapper>
+    <StyledCarouselWrapper>
       <Slider {...settings}>
         {PRODUCTS.map((product) => {
           return (
@@ -78,7 +78,7 @@ function Carousel() {
           )
         })}
       </Slider>
-    </CarouselWrapper>
+    </StyledCarouselWrapper>
   );
 }
 

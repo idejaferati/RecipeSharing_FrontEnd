@@ -7,14 +7,14 @@ import Button from "@mui/material/Button";
 import { ContactDialog } from './../components/contact-dialog';
 import styled from "styled-components";
 
-const OuterContainer = styled.div`
+const StyledOuterContainer = styled.div`
 	display: flex;
 	height: 88vh;
   overflow: scroll;
 	flex-direction: column;
 `;
 
-const ShoppingItemsContainer = styled.div`
+const StyledShoppingItemsContainer = styled.div`
   display: 'flex';
   justify-content: 'space-between';
   width: '340px';
@@ -37,7 +37,7 @@ const Shopping = () => {
   };
 
   return (
-    <OuterContainer>
+    <StyledOuterContainer>
       <div>
         <h1>Your Cart Items</h1>
       </div>
@@ -54,7 +54,7 @@ const Shopping = () => {
         <div>
           <hr></hr>
           <p> Subtotal: ${totalAmount} </p>
-          <ShoppingItemsContainer>
+          <StyledShoppingItemsContainer>
             <Button
               onClick={() => navigate("/")}
               variant="outlined"
@@ -77,12 +77,12 @@ const Shopping = () => {
               open={open}
               onClose={handleClose}
             />
-          </ShoppingItemsContainer>
+          </StyledShoppingItemsContainer>
         </div>
       ) : (
         <h3> Your Shopping Cart is Empty. Proceed to Recipes to add items in the Cart.</h3>
       )}
-    </OuterContainer>
+    </StyledOuterContainer>
   );
 };
 

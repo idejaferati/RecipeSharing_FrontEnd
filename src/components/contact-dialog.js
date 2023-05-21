@@ -13,7 +13,7 @@ const StyledForm = styled(Form)`
   padding: 10px;
 `;
 
-const ErrorsDiv = styled.div`
+const StyledErrorsContainer = styled.div`
   color: red;
 `;
 
@@ -72,15 +72,15 @@ export const ContactDialog = (props) => {
 
           <label htmlFor="firstName">First Name</label>
           <Field name="firstName" type="text" style={{height: "26px", width: "200px"}}/>
-          {errors.firstName ? <ErrorsDiv>{errors.firstName}</ErrorsDiv> : null}
+          {errors.firstName ? <StyledErrorsContainer>{errors.firstName}</StyledErrorsContainer> : null}
 
           <label htmlFor="lastName">Last Name</label>
           <Field name="lastName" type="text" style={{height: "26px", width: "200px"}}/>
-          {errors.lastName ? <ErrorsDiv>{errors.lastName}</ErrorsDiv> : null}
+          {errors.lastName ? <StyledErrorsContainer>{errors.lastName}</StyledErrorsContainer> : null}
 
           <label htmlFor="email">Email</label>
           <Field name="email" type="email" style={{height: "26px", width: "200px"}}/>
-          {errors.email ? <ErrorsDiv>{errors.email}</ErrorsDiv> : null}
+          {errors.email ? <StyledErrorsContainer>{errors.email}</StyledErrorsContainer> : null}
 
           <Button type="submit"
               variant="contained"

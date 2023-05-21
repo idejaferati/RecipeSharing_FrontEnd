@@ -3,7 +3,7 @@ import { ShopContext } from './../../context/shop-context';
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 
-const OuterContainer = styled.div`
+const StyledOuterContainer = styled.div`
   border-radius: 15px;
   width: 250px;
   height: 250px;
@@ -29,7 +29,7 @@ const Product = (props) => {
     const cartItemCount = cartItems[id];
 
     return (
-      <OuterContainer>
+      <StyledOuterContainer>
         <StyledImg src={productImage} />
         <div className="description">
           <p>
@@ -43,7 +43,7 @@ const Product = (props) => {
           sx={{ mt: 3, mb: 2 }}>
           Add To Cart {cartItemCount > 0 && <> ({cartItemCount})</>}
         </Button>
-      </OuterContainer>
+      </StyledOuterContainer>
     );
   };
 

@@ -1,45 +1,45 @@
 import React from "react";
 import {
-  Nav,
-  NavLink,
-  Bars,
-  NavMenu,
-  NavBtn,
-  NavBtnLink,
+  StyledNav,
+  StyledNavLink,
+  StyledBars,
+  StyledNavMenu,
+  StyledNavBtn,
+  StyledNavBtnLink,
 } from "./navbarElements";
 
 const Navbar = () => {
   return (
     <>
-      <Nav>
-        <Bars />
-        <NavMenu>
-          <NavLink to="/" activestyle="true">
+      <StyledNav>
+        <StyledBars />
+        <StyledNavMenu>
+          <StyledNavLink to="/" activestyle="true">
             Home
-          </NavLink>
-          <NavLink to="/cuisines" activestyle="true">
+          </StyledNavLink>
+          <StyledNavLink to="/cuisines" activestyle="true">
             Cuisines
-          </NavLink>
-          <NavLink to="/recipes" activestyle="true">
+          </StyledNavLink>
+          <StyledNavLink to="/recipes" activestyle="true">
             Recipes
-          </NavLink>
-          <NavLink to="/shopping" activestyle="true">
+          </StyledNavLink>
+          <StyledNavLink to="/shopping" activestyle="true">
             Shopping
-          </NavLink>
-          <NavLink to="/blog" activestyle="true">
+          </StyledNavLink>
+          <StyledNavLink to="/blog" activestyle="true">
             Blog
-          </NavLink>
-          <NavLink to="/profile" activestyle="true">
+          </StyledNavLink>
+          <StyledNavLink to="/profile" activestyle="true">
             Profile
-          </NavLink>
+          </StyledNavLink>
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
-        </NavMenu>
-        <NavBtn>
-          <NavBtnLink to="/signup">Sign Up</NavBtnLink>
-          <NavBtnLink to="/login">Log In</NavBtnLink>
-        </NavBtn>
-      </Nav>
+        </StyledNavMenu>
+        <StyledNavBtn>
+          <StyledNavBtnLink to="/signup">Sign Up</StyledNavBtnLink>
+          <StyledNavBtnLink to="/login">Log In</StyledNavBtnLink>
+        </StyledNavBtn>
+      </StyledNav>
     </>
   );
 };

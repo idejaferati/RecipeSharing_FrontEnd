@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 
-const FooterStl = styled.footer`
+const StyledFooter = styled.footer`
     background-color: #ffffff;
     bottom: 0;
     left: 0;
@@ -17,7 +17,7 @@ const Footer = () => {
     const year = new Date().getFullYear();
   
     return <footer>
-            <FooterStl>{`©  ${year} Dishcovery - Discover new tastes every day. All rights reserved`}</FooterStl>
+            <StyledFooter>{`©  ${year} Dishcovery - Discover new tastes every day. All rights reserved`}</StyledFooter>
         </footer>;
   };
   
