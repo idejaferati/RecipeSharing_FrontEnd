@@ -32,6 +32,15 @@ const Navbar = () => {
           <StyledNavLink to="/profile" activestyle="true">
             Profile
           </StyledNavLink>
+          <StyledNavLink to="/mydata" activestyle="true">
+            My data
+          </StyledNavLink>
+          <StyledNavLink to="/permissions" activestyle="true">
+            Permissions
+          </StyledNavLink>
+          <StyledNavLink to="/manageuser" activestyle="true">
+            Manage user
+          </StyledNavLink>
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
         </StyledNavMenu>
