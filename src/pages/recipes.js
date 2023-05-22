@@ -3,6 +3,8 @@ import { PRODUCTS } from "./../data/products";
 import Product from "./../components/product/index";
 import styled from "styled-components";
 import axios from "axios";
+import Button from "@mui/material/Button";
+import NewRecipeDialog from './../components/new-recipe-dialog';
 
 const StyledOuterContainer = styled.div`
   display: flex;
@@ -127,6 +129,17 @@ const StyledRecipeImage = styled.img`
 
 const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(1);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -169,6 +182,15 @@ const MyRecipes = () => {
     fetchCuisineNames();
   }, [recipes]);
 
+  const deleteRecipe = async (id) => {
+    try {
+      await axios.delete(`https://localhost:7164/api/recipes/${id}`);
+      setRecipes(recipes.filter(recipe => recipe.id !== id));
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
+  };
+
   return (
     <StyledOuterContainer>
       <StyledTitleDiv>
@@ -180,6 +202,20 @@ const MyRecipes = () => {
           <Product data={product} key={product.id} />
         ))}
       </StyledGridContainer>
+      <Button
+        onClick={() => {
+          handleClickOpen();
+        }}
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}>
+        {" "}
+        Add new recipe{" "}
+      </Button>
+      <NewRecipeDialog
+        selectedValue={selectedValue}
+        open={open}
+        onClose={handleClose}
+      />
 
       <StyledRecipesContainer>
         <StyledRecipesTitle>All Recipes</StyledRecipesTitle>
@@ -239,6 +275,14 @@ const MyRecipes = () => {
                     </StyledInstructionItem>
                   ))}
                 </StyledInstructionList>
+                <Button
+                  type="button"
+                  fullWidth
+                  onClick={() => deleteRecipe(recipe.id)}
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}>
+                  Delete
+                </Button>
               </StyledRecipeItem>
             ))}
           </StyledRecipeList>
