@@ -74,6 +74,7 @@ export const StyledNavBtnLink = styled(Link)`
 	padding: 6px 22px;
 	color: #02211b;
 	outline: none;
+	min-width: 55px;
 	border: none;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
