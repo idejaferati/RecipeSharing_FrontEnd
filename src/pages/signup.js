@@ -34,7 +34,7 @@ async function signUpAsync(event) {
   };
 
   try {
-    //const response = await registerUser(jsonData);
+    const response = await registerUser(jsonData);
     console.log(jsonData);
   } catch (error) {
     console.error(error);
@@ -42,6 +42,22 @@ async function signUpAsync(event) {
 }
 
 export default function SignUp() {
+  const [roles, setRoles] = useState([]);
+  const [selectedRole, setSelectedRole] = useState('');
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        //const response = await axios.get('https://localhost:7164/api/Auth/getRoles');
+        //setRoles(response.data);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
   const handleSubmit = async (event) => {
     await signUpAsync(event);
   };
@@ -123,6 +139,24 @@ export default function SignUp() {
                     shrink: true,
                   }}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl required fullWidth>
+                  <InputLabel id="roleId-label">Select Role</InputLabel>
+                  <Select
+                    labelId="roleId-label"
+                    id="roleId"
+                    name="roleId"
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                  >
+                    {roles.map((role) => (
+                      <MenuItem key={role.id} value={role.id}>
+                        {role.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField

@@ -17,27 +17,48 @@ import Footer from "./components/footer";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ShopContextProvider } from "./context/shop-context";
+import { AuthProvider } from './context/auth-provider';
+import RequireAuth from './pages/require-auth';
+
+const ROLES = {
+  'User': user,
+  'Admin': admin
+}
 
 function App() {
   return (
     <ShopContextProvider>
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/cuisines" element={<Cuisines />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/recipes" element={<Recipes />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/shopping" element={<Shopping />} />
-          <Route path="/mydata" element={<UserData />} />
-          <Route path="/permissions" element={<UserPermissions />} />
-          <Route path="/manageuser" element={<ManageUser />} />
-          <Route path="/login" exact element={<Login />} />
-          <Route path="/signup" exact element={<SignUp />} />
-        </Routes>
-        <Footer />
-      </Router>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Router>
+          <AuthProvider>
+            <Navbar />
+            <Routes>
+              <Route path="/" exact element={<Home />} />
+              <Route path="/cuisines" element={<Cuisines />} />
+              <Route path="/login" exact element={<Login />} />
+              <Route path="/signup" exact element={<SignUp />} />
+              <Route path="unauthorized" element={<Unauthorized />} />
+
+              <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/recipes" element={<Recipes />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/shopping" element={<Shopping />} />
+                <Route path="/mydata" element={<UserData />} />
+              </Route>
+
+              <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+                <Route path="/permissions" element={<UserPermissions />} />
+                <Route path="/manageuser" element={<ManageUser />} />
+              </Route>
+
+              {/* catch all */}
+              <Route path="*" element={<Missing />} />
+            </Routes>
+            <Footer />
+          </AuthProvider>
+        </Router>
+      </LocalizationProvider>
     </ShopContextProvider>
   );
 }

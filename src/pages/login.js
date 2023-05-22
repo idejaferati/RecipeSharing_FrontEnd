@@ -12,20 +12,26 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import useAuth from '../hooks/useAuth';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const theme = createTheme();
 
-async function loginAsync(event) {
+async function loginAsync(event, setAuth) {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
   const jsonData = {
     email: data.get("email"),
-    roleId : data.get("roleId"),
     password: data.get("password"),
   };
 
   try {
-    //const response = await loginUser(jsonData);
+    const response = await loginUser(jsonData);
+    const accessToken = response.data.token;
+    Cookies.set('jwtToken', accessToken, { expires: 7 });
+    const roles = response?.data?.roles;
+    setAuth({ user: jsonData.email, password: jsonData.password, roles, accessToken });
+    navigate(from, { replace: true });
     console.log(jsonData);
   } catch (error) {
     console.error(error);
@@ -33,8 +39,13 @@ async function loginAsync(event) {
 }
 
 export default function Login() {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
   const handleSubmit = async (event) => {
-    await loginAsync(event);
+    await loginAsync(event, setAuth);
   };
 
   return (
