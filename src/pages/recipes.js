@@ -53,6 +53,11 @@ const StyledRecipeItem = styled.li`
   border-radius: 5px;
 `;
 
+const StyledNewRecipeButton = styled(Button)`
+  width: 301px;
+  align-self: center;
+`;
+
 const StyledRecipeName = styled.h3`
   font-size: 20px;
   margin-bottom: 5px;
@@ -141,20 +146,6 @@ const MyRecipes = () => {
     setSelectedValue(value);
   };
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const response = await axios.get(
-          "https://localhost:7164/api/recipes/getAll"
-        ); // Replace with your actual endpoint
-        setRecipes(response.data);
-      } catch (error) {
-        console.error("Error fetching recipes:", error);
-      }
-    };
-
-    fetchRecipes();
-  }, []);
 
   const fetchCuisineName = async (cuisineId) => {
     try {
@@ -169,18 +160,27 @@ const MyRecipes = () => {
   };
 
   useEffect(() => {
-    const fetchCuisineNames = async () => {
-      const updatedRecipes = [];
-      for (const recipe of recipes) {
-        const cuisineName = await fetchCuisineName(recipe.cuisineId);
-        const updatedRecipe = { ...recipe, cuisineName };
-        updatedRecipes.push(updatedRecipe);
+    const fetchRecipes = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7164/api/recipes/getAll"
+        ); // Replace with your actual endpoint
+        const updatedRecipes = [];
+
+        for (const recipe of response.data) {
+          const cuisineName = await fetchCuisineName(recipe.cuisineId);
+          const updatedRecipe = { ...recipe, cuisineName };
+          updatedRecipes.push(updatedRecipe);
+        }
+
+        setRecipes(updatedRecipes);
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
       }
-      setRecipes(updatedRecipes);
     };
 
-    fetchCuisineNames();
-  }, [recipes]);
+    fetchRecipes();
+  }, []);
 
   const deleteRecipe = async (id) => {
     try {
@@ -202,7 +202,7 @@ const MyRecipes = () => {
           <Product data={product} key={product.id} />
         ))}
       </StyledGridContainer>
-      <Button
+      <StyledNewRecipeButton
         onClick={() => {
           handleClickOpen();
         }}
@@ -210,7 +210,7 @@ const MyRecipes = () => {
         sx={{ mt: 3, mb: 2 }}>
         {" "}
         Add new recipe{" "}
-      </Button>
+      </StyledNewRecipeButton>
       <NewRecipeDialog
         selectedValue={selectedValue}
         open={open}
