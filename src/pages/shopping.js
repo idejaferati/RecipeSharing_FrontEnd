@@ -1,23 +1,24 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/shop-context";
 import CartItem from "../components/cart-item/index";
 import { useNavigate } from "react-router-dom";
-import { PRODUCTS } from './../data/products';
+import { SHOPPING_LIST } from "./../data/products";
 import Button from "@mui/material/Button";
-import { ContactDialog } from './../components/contact-dialog';
+import { ContactDialog } from "./../components/contact-dialog";
 import styled from "styled-components";
+import axios from "axios";
 
 const StyledOuterContainer = styled.div`
-	display: flex;
-	height: 88vh;
+  display: flex;
+  height: 88vh;
   overflow: scroll;
-	flex-direction: column;
+  flex-direction: column;
 `;
 
 const StyledShoppingItemsContainer = styled.div`
-  display: 'flex';
-  justify-content: 'space-between';
-  width: '340px';
+  display: "flex";
+  justify-content: "space-between";
+  width: "340px";
 `;
 
 const Shopping = () => {
@@ -36,23 +37,42 @@ const Shopping = () => {
     setSelectedValue(value);
   };
 
+  const [shoppingList, setShoppingList] = useState([]);
+
+  useEffect(() => {
+    const fetchShopingList = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7164/api/ShoppingList"
+        );
+        setShoppingList(response.data);
+      } catch (error) {
+        console.error("Error fetching shopping list:", error);
+      }
+    };
+
+    fetchShopingList();
+  }, []);
+
   return (
     <StyledOuterContainer>
       <div>
         <h1>Your Cart Items</h1>
       </div>
       <div>
-        {PRODUCTS.map((product) => {
-          if (cartItems[product.id] !== 0) {
-            return <CartItem key={product.id} data={product} />;
-          }
-          return null;
-        })}
+        {
+          /*shoppingList.*/ SHOPPING_LIST.map((product) => {
+            if (cartItems[product.id] !== 0) {
+              return <CartItem key={product.id} data={product} />;
+            }
+            return null;
+          })
+        }
       </div>
 
       {totalAmount > 0 ? (
         <div>
-          <hr></hr>
+          {/* <hr></hr>
           <p> Subtotal: ${totalAmount} </p>
           <StyledShoppingItemsContainer>
             <Button
@@ -77,10 +97,14 @@ const Shopping = () => {
               open={open}
               onClose={handleClose}
             />
-          </StyledShoppingItemsContainer>
+          </StyledShoppingItemsContainer> */}
         </div>
       ) : (
-        <h3> Your Shopping Cart is Empty. Proceed to Recipes to add items in the Cart.</h3>
+        <h3>
+          {" "}
+          Your Shopping Cart is Empty. Proceed to Recipes to add items in the
+          Cart.
+        </h3>
       )}
     </StyledOuterContainer>
   );
