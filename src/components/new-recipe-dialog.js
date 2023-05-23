@@ -6,6 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
+import Button from '@mui/material/Button';
 
 const StyledGrid = styled(Grid)`
   padding: 10px;
@@ -215,14 +216,16 @@ const NewRecipeDialog = (props) => {
                           <ErrorMessage name={`ingredients.${index}.unit`} component="div" />
                         </StyledGrid>
 
-                        <button type="button" onClick={() => arrayHelpers.remove(index)}>
+                        <Button variant="contained"
+              sx={{ mt: 3, mb: 2 }} type="button" onClick={() => arrayHelpers.remove(index)}>
                           Remove Ingredient
-                        </button>
+                        </Button>
                       </div>
                     ))}
-                    <button type="button" onClick={() => arrayHelpers.push({ name: '', amount: 0, unit: 'Teaspoon' })}>
+                    <Button variant="contained"
+              sx={{ mt: 3, mb: 2 }} type="button" onClick={() => arrayHelpers.push({ name: '', amount: 0, unit: 'Teaspoon' })}>
                       Add Ingredient
-                    </button>
+                    </Button>
                   </div>
                 )}
               </FieldArray>
@@ -263,14 +266,16 @@ const NewRecipeDialog = (props) => {
                         <ErrorMessage name={`instructions.${index}.stepDescription`} component="div" />
                       </StyledGrid>
 
-                      <button type="button" onClick={() => arrayHelpers.remove(index)}>
+                      <Button variant="contained"
+              sx={{ mt: 3, mb: 2 }} type="button" onClick={() => arrayHelpers.remove(index)}>
                         Remove Step
-                      </button>
+                      </Button>
                     </div>
                   ))}
-                  <button type="button" onClick={() => arrayHelpers.push({ stepNumber: values.instructions.length + 1, stepDescription: '' })}>
+                  <Button variant="contained"
+              sx={{ mt: 3, mb: 2 }} type="button" onClick={() => arrayHelpers.push({ stepNumber: values.instructions.length + 1, stepDescription: '' })}>
                     Add Step
-                  </button>
+                  </Button>
                 </div>
               )}
             </FieldArray>
@@ -305,14 +310,16 @@ const NewRecipeDialog = (props) => {
                         id={`tags.${index}.name`}
                         name={`tags.${index}.name`}
                       />
-                      <button type="button" onClick={() => arrayHelpers.remove(index)}>
+                      <Button variant="contained"
+              sx={{ mt: 3, mb: 2 }} type="button" onClick={() => arrayHelpers.remove(index)}>
                         Remove Tag
-                      </button>
+                      </Button>
                     </div>
                   ))}
-                  <button type="button" onClick={() => arrayHelpers.push({ name: '' })}>
+                  <Button variant="contained"
+              sx={{ mt: 3, mb: 2 }} type="button" onClick={() => arrayHelpers.push({ name: '' })}>
                     Add Tag
-                  </button>
+                  </Button>
                 </div>
               )}
             </FieldArray>
@@ -326,7 +333,7 @@ const NewRecipeDialog = (props) => {
               id="servings"
               name="servings"
             />
-  <br/><br/>
+           <br/><br/>
             {/* Yield */}
             {/* ... */}
 
@@ -337,7 +344,7 @@ const NewRecipeDialog = (props) => {
               id="calories"
               name="calories"
             />
-  <br/><br/>
+            <br/><br/>
             {/* Audio Instructions */}
             <label htmlFor="audioInstructions">Images address</label>
             <Field
@@ -345,7 +352,7 @@ const NewRecipeDialog = (props) => {
               id="audioInstructions"
               name="audioInstructions"
             />
-  <br/><br/>
+            <br/><br/>
             {/* Video Instructions */}
             <label htmlFor="videoInstructions">Video Instructions</label>
             <Field
@@ -353,8 +360,9 @@ const NewRecipeDialog = (props) => {
               id="videoInstructions"
               name="videoInstructions"
             />
-  <br/><br/>
-            <button type="submit">Submit</button>
+            <br/><br/>
+            <Button variant="contained"
+              sx={{ mt: 3, mb: 2 }} type="submit">Submit</Button>
           </form>
         )}
       </Formik>
