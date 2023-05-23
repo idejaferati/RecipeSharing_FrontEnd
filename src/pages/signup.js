@@ -10,12 +10,15 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { registerUser } from './../service/user-requests.js';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import FormLabel from '@mui/material/FormLabel';
+import { registerUser } from "./../service/user-requests.js";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import FormLabel from "@mui/material/FormLabel";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const theme = createTheme();
 
@@ -23,13 +26,13 @@ async function signUpAsync(event) {
   event.preventDefault();
   const data = new FormData(event.currentTarget);
   const jsonData = {
-    firstName : data.get("firstName"),
-    lastName : data.get("lastName"),
-    gender : data.get("gender"),
-    dateOfBirth : data.get("dateOfBirth"),
+    firstName: data.get("firstName"),
+    lastName: data.get("lastName"),
+    gender: data.get("gender"),
+    dateOfBirth: data.get("dateOfBirth"),
     email: data.get("email"),
-    roleId : data.get("roleId"),
-    phoneNumber : data.get("phoneNumber"),
+    roleId: data.get("roleId"),
+    phoneNumber: data.get("phoneNumber"),
     password: data.get("password"),
   };
 
@@ -43,15 +46,17 @@ async function signUpAsync(event) {
 
 export default function SignUp() {
   const [roles, setRoles] = useState([]);
-  const [selectedRole, setSelectedRole] = useState('');
+  const [selectedRole, setSelectedRole] = useState("");
 
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        //const response = await axios.get('https://localhost:7164/api/Auth/getRoles');
-        //setRoles(response.data);
+        const response = await axios.get(
+          "https://localhost:7164/api/Auth/getRoles"
+        );
+        setRoles(response.data);
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
       }
     };
 
@@ -107,23 +112,30 @@ export default function SignUp() {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-              <FormLabel id="gender-label">Gender</FormLabel>
-              <RadioGroup
-                aria-labelledby="gender-label"
-                defaultValue="female"
-                name="gender"
-              >
-                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                <FormControlLabel value="male" control={<Radio />} label="Male" />
-              </RadioGroup>
+                <FormLabel id="gender-label">Gender</FormLabel>
+                <RadioGroup
+                  aria-labelledby="gender-label"
+                  defaultValue="female"
+                  name="gender">
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                </RadioGroup>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <DatePicker 
-                  label="Date of birth" 
-                  required 
-                  fullWidth 
-                  id="dateOfBirth" 
-                  name="dateOfBirth" 
+                <DatePicker
+                  label="Date of birth"
+                  required
+                  fullWidth
+                  id="dateOfBirth"
+                  name="dateOfBirth"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -148,8 +160,7 @@ export default function SignUp() {
                     id="roleId"
                     name="roleId"
                     value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value)}
-                  >
+                    onChange={(e) => setSelectedRole(e.target.value)}>
                     {roles.map((role) => (
                       <MenuItem key={role.id} value={role.id}>
                         {role.name}
