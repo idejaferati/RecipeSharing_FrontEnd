@@ -12,19 +12,47 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import useAuth from "../components/hooks/use-auth";
+import { useNavigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
+import { loginUser } from "../service/user-requests";
 
 const theme = createTheme();
 
 export default function Login() {
-  let navigate = useNavigate();
-  const handleSubmit = (event) => {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+
+  async function loginAsync(event, setAuth) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const jsonData = {
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+
+    try {
+      const response = await loginUser(jsonData);
+      const accessToken = response.data.token;
+      Cookies.set("jwtToken", accessToken, { expires: 7 });
+      const roles = response?.data?.roles;
+      setAuth({
+        user: jsonData.email,
+        password: jsonData.password,
+        roles,
+        accessToken,
+      });
+      navigate(from, { replace: true });
+      console.log(jsonData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleSubmit = async (event) => {
+    await loginAsync(event, setAuth);
   };
 
   return (
@@ -88,7 +116,7 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
