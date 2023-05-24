@@ -4,13 +4,12 @@ import Cookies from "js-cookie";
 import styled from "styled-components";
 
 const StyledBlogContainer = styled.div`
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
   background-color: #f9f9f9;
-`;
-
-const StyledH1 = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
 `;
 
 const StyledUserTable = styled.table`
@@ -22,7 +21,8 @@ const StyledUserTable = styled.table`
 const StyledTableHeader = styled.th`
   padding: 10px;
   border-bottom: 1px solid #ddd;
-  background-color: #f5f5f5;
+  background-color: #5fd9c2;
+  color: white;
   font-weight: bold;
   text-align: left;
 `;
@@ -51,11 +51,23 @@ const StyledSearchContainer = styled.div`
 
   input[type="text"] {
     margin-right: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
   }
 `;
 
 const StyledSearchButton = styled.button`
   padding: 5px 10px;
+  background-color: #5fd9c2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #4fc4af;
+  }
 `;
 
 const ManageUser = () => {
@@ -119,7 +131,7 @@ const ManageUser = () => {
 
   return (
     <StyledBlogContainer>
-      <StyledH1>User Management</StyledH1>
+      <h1>User Management</h1>
 
       <StyledSearchContainer>
         <input
