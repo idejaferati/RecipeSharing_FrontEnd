@@ -35,9 +35,19 @@ async function signUpAsync(event) {
     phoneNumber: data.get("phoneNumber"),
     password: data.get("password"),
   };
-
+  console.log(jsonData);
   try {
-    const response = await registerUser(jsonData);
+    const response = await axios.post(
+      "https://localhost:7164/api/Users/Register",
+      JSON.stringify(jsonData),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response.data);
+    console.log(response.data);
     console.log(jsonData);
   } catch (error) {
     console.error(error);

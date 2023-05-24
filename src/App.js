@@ -21,12 +21,6 @@ import RequireAuth from "./pages/require-auth";
 import Unauthorized from "./pages/unauthorized";
 import Missing from "./pages/missing";
 
-export const ROLES = {
-  User: "user",
-  Admin: "admin",
-  Editor: "editor",
-};
-
 function App() {
   return (
     <ShopContextProvider>
@@ -41,14 +35,14 @@ function App() {
               <Route path="/signup" exact element={<SignUp />} />
               <Route path="unauthorized" element={<Unauthorized />} />
 
-              <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+              <Route element={<RequireAuth allowedRoles={["user"]} />}>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/recipes" element={<Recipes />} />
                 <Route path="/cookbook" element={<Cookbook />} />
                 <Route path="/shopping" element={<Shopping />} />
               </Route>
 
-              <Route element={<RequireAuth allowedRoles={[ROLES.Admin]} />}>
+              <Route element={<RequireAuth allowedRoles={["admin"]} />}>
                 <Route path="/permissions" element={<UserPermissions />} />
                 <Route path="/manageuser" element={<ManageUser />} />
               </Route>

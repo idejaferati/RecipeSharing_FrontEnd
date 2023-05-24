@@ -16,6 +16,7 @@ import useAuth from "../components/hooks/use-auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { loginUser } from "../service/user-requests";
+import axios from "axios";
 
 const theme = createTheme();
 
@@ -32,16 +33,26 @@ export default function Login() {
       email: data.get("email"),
       password: data.get("password"),
     };
-
+    console.log(jsonData);
     try {
-      const response = await loginUser(jsonData);
+      const response = await axios.post(
+        "https://localhost:7164/api/Auth/Login",
+        JSON.stringify(jsonData),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log(response.data);
       const accessToken = response.data.token;
       Cookies.set("jwtToken", accessToken, { expires: 7 });
-      const roles = response?.data?.roles;
+      const role = response?.data?.role;
       setAuth({
         user: jsonData.email,
         password: jsonData.password,
-        roles,
+        role,
         accessToken,
       });
       navigate(from, { replace: true });
@@ -105,7 +116,6 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={() => navigate("/")}
               sx={{ mt: 3, mb: 2 }}>
               Login
             </Button>
