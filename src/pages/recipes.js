@@ -4,7 +4,11 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import NewRecipeDialog from "./../components/new-recipe-dialog";
 import Cookies from "js-cookie";
-import { StyledListItem, StyledButton } from "../shared/shared-style";
+import {
+  StyledListItem,
+  StyledButton,
+  StyledInput,
+} from "../shared/shared-style";
 import { StarRating } from "../components/star-rating";
 import TextField from "@mui/material/TextField";
 
@@ -107,10 +111,6 @@ const StyledRecipeImage = styled.img`
 const StyledAddToCollectionSection = styled.div`
   border: 1px dashed green;
   padding: 15px;
-`;
-
-const StyledInput = styled.input`
-  height: 30px;
 `;
 
 const StyledSelect = styled.select`
@@ -385,7 +385,7 @@ const MyRecipes = () => {
           sx={{ mt: 3, mb: 2 }}>
           Add new recipe
         </StyledNewRecipeButton>
-        <p className="error">{error}</p>;
+        <p className="error">{error.response.data}</p>;
       </StyledRecipesContainer>
     );
   }

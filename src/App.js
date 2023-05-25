@@ -3,7 +3,7 @@ import "./App.css";
 import Navbar from "./components/navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages";
-import Cookbook from "./pages/cookbook";
+import Cookbooks from "./pages/cookbooks";
 import Cuisines from "./pages/cuisines";
 import Profile from "./pages/profile";
 import Recipes from "./pages/recipes";
@@ -19,6 +19,7 @@ import RequireAuth from "./pages/require-auth";
 import Unauthorized from "./pages/unauthorized";
 import Missing from "./pages/missing";
 import MyCollections from "./pages/my-collections";
+import MyCookbooks from "./pages/my-cookbooks";
 
 function App() {
   return (
@@ -36,9 +37,10 @@ function App() {
             <Route element={<RequireAuth allowedRole={"user"} />}>
               <Route path="/profile" element={<Profile />} />
               <Route path="/recipes" element={<Recipes />} />
-              <Route path="/cookbook" element={<Cookbook />} />
+              <Route path="/cookbooks" element={<Cookbooks />} />
               <Route path="/shopping" element={<Shopping />} />
               <Route path="/userCollections" element={<MyCollections />} />
+              <Route path="/userCookbooks" element={<MyCookbooks />} />
             </Route>
 
             <Route element={<RequireAuth allowedRole={"admin"} />}>
