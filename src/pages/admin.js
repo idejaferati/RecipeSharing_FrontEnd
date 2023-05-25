@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserData = () => {
+const Admin = () => {
 return (
 	<div
 	style={{
@@ -10,9 +10,9 @@ return (
 		height: '100vh'
 	}}
 	>
-	<h3>This menu can be a section where are the data of user.</h3>
+	<h3>This menu can be a section where admin manages data.</h3>
 	</div>
 );
 };
 
-export default UserData;
+export default Admin;
