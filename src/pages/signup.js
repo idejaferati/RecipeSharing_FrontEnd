@@ -14,7 +14,6 @@ import { registerUser } from "./../service/user-requests.js";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import FormLabel from "@mui/material/FormLabel";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -29,7 +28,6 @@ async function signUpAsync(event) {
     firstName: data.get("firstName"),
     lastName: data.get("lastName"),
     gender: data.get("gender"),
-    dateOfBirth: data.get("dateOfBirth"),
     email: data.get("email"),
     roleId: data.get("roleId"),
     phoneNumber: data.get("phoneNumber"),
@@ -128,15 +126,6 @@ export default function SignUp() {
                     label="Male"
                   />
                 </RadioGroup>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <DatePicker
-                  label="Date of birth"
-                  required
-                  fullWidth
-                  id="dateOfBirth"
-                  name="dateOfBirth"
-                />
               </Grid>
               <Grid item xs={12}>
                 <TextField
