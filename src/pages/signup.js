@@ -18,33 +18,39 @@ import FormLabel from "@mui/material/FormLabel";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
-
-async function signUpAsync(event) {
-  event.preventDefault();
-  const data = new FormData(event.currentTarget);
-  const jsonData = {
-    firstName: data.get("firstName"),
-    lastName: data.get("lastName"),
-    gender: data.get("gender"),
-    email: data.get("email"),
-    roleId: data.get("roleId"),
-    phoneNumber: data.get("phoneNumber"),
-    password: data.get("password"),
-  };
-
-  try {
-    const response = await registerUser(jsonData);
-    console.log(jsonData);
-  } catch (error) {
-    console.error(error);
-  }
-}
 
 export default function SignUp() {
   const [roles, setRoles] = useState([]);
   const [selectedRole, setSelectedRole] = useState("");
+  const navigate = useNavigate();
+
+  async function signUpAsync(event) {
+    event.preventDefault();
+
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
+      gender: data.get("gender"),
+      email: data.get("email"),
+      roleId: data.get("roleId"),
+      phoneNumber: data.get("phoneNumber"),
+      password: data.get("password"),
+    };
+
+    try {
+      const response = await registerUser(jsonData);
+      console.log(response);
+      if (response) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     const fetchRoles = async () => {
