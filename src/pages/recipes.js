@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import NewRecipeDialog from "./../components/new-recipe-dialog";
 import Cookies from "js-cookie";
 import { StyledListItem, StyledButton } from "../shared/shared-style";
+import { StarRating } from "../components/star-rating";
+import TextField from "@mui/material/TextField";
 
 const StyledRecipesContainer = styled.div`
   max-width: 800px;
@@ -136,8 +138,12 @@ const MyRecipes = () => {
   const [selectedRecipeId, setSelectedRecipeId] = useState("");
   const [newCollectionName, setNewCollectionName] = useState("");
   const [newCollectionDescription, setNewCollectionDescription] = useState("");
+  const [reviewingRecipeId, setReviewingRecipeId] = useState("");
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviews, setReviews] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(1);
+  const [reviewMessage, setReviewMessage] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -186,24 +192,24 @@ const MyRecipes = () => {
     fetchCollections();
   }, []);
 
-  const deleteRecipe = async (recipeId) => {
-    try {
-      const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .delete(`https://localhost:7164/api/recipes/${recipeId}`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        })
-        .then(() => {
-          setRecipes((recipes) =>
-            recipes.filter((recipe) => recipe.id !== recipeId)
-          );
-        });
-    } catch (error) {
-      console.error("Error deleting recipe:", error);
-    }
-  };
+  // const deleteRecipe = async (recipeId) => {
+  //   try {
+  //     const jwtToken = Cookies.get("jwtToken");
+  //     await axios
+  //       .delete(`https://localhost:7164/api/recipes/${recipeId}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${jwtToken}`,
+  //         },
+  //       })
+  //       .then(() => {
+  //         setRecipes((recipes) =>
+  //           recipes.filter((recipe) => recipe.id !== recipeId)
+  //         );
+  //       });
+  //   } catch (error) {
+  //     console.error("Error deleting recipe:", error);
+  //   }
+  // };
 
   const shopIngredient = async (name, quantity) => {
     try {
@@ -241,25 +247,28 @@ const MyRecipes = () => {
       };
       console.log(JSON.stringify(collectionData));
       const jwtToken = Cookies.get("jwtToken");
-      const response = await axios.post(
-        "https://localhost:7164/api/Collections",
-        JSON.stringify(collectionData),
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
+      const response = await axios
+        .post(
+          "https://localhost:7164/api/Collections",
+          JSON.stringify(collectionData),
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
 
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const newCollection = response.data;
-      setCollections((collections) => [...collections, newCollection]);
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(() => {
+          const newCollection = response.data;
+          setCollections((collections) => [...collections, newCollection]);
 
-      // Reset the form fields and selection
-      setNewCollectionName("");
-      setNewCollectionDescription("");
-      setSelectedRecipeId("");
-      setShowAddToCollection(false);
+          // Reset the form fields and selection
+          setNewCollectionName("");
+          setNewCollectionDescription("");
+          setSelectedRecipeId("");
+          setShowAddToCollection(false);
+        });
     } catch (error) {
       console.error("Error creating new collection:", error);
     }
@@ -273,25 +282,97 @@ const MyRecipes = () => {
       console.log(collectionId, recipeId);
       const jwtToken = Cookies.get("jwtToken");
 
-      await axios.post(
-        `https://localhost:7164/api/collections/${collectionId}/recipes/addrecipe`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          params: {
-            recipeId,
-          },
-        }
-      );
-
-      setSelectedRecipeId("");
-      setShowAddToCollection(false);
+      await axios
+        .post(
+          `https://localhost:7164/api/collections/${collectionId}/recipes/addrecipe`,
+          null,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+            params: {
+              recipeId,
+            },
+          }
+        )
+        .then(() => {
+          setSelectedRecipeId("");
+          setShowAddToCollection(false);
+        });
     } catch (error) {
       console.error("Error adding recipe to existing collection:", error);
     }
   };
+
+  const handleReviewRecipe = async (recipeId, rating) => {
+    try {
+      const reviewData = {
+        recipeId: recipeId,
+        rating: rating,
+        message: reviewMessage,
+      };
+
+      const jwtToken = Cookies.get("jwtToken");
+      await axios
+        .post(
+          "https://localhost:7164/api/reviews",
+          JSON.stringify(reviewData),
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(() => {
+          // Optionally, you can fetch the updated recipe data after adding the review
+          // const updatedRecipeResponse = await axios.get(`https://localhost:7164/api/recipes/${recipeId}`);
+          // const updatedRecipe = updatedRecipeResponse.data;
+          // Update the recipe state with the updated data
+
+          // Reset the review form
+          setReviewingRecipeId("");
+          setReviewRating(0);
+          setReviewMessage(""); // Reset the review message
+        });
+    } catch (error) {
+      console.error("Error adding review:", error);
+    }
+  };
+
+  const fetchReviews = async (selectedRecipeId) => {
+    try {
+      console.log(selectedRecipeId);
+      const jwtToken = Cookies.get("jwtToken");
+      await axios
+        .get(`https://localhost:7164/api/reviews`, {
+          params: {
+            id: selectedRecipeId,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          // reviews.find(e=>e.id == selectedRecipeId).reviews
+          // setReviews(res.data);
+          setReviews((prevReviews) => ({
+            ...prevReviews,
+            [selectedRecipeId]: res.data,
+          }));
+        });
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  const handleShowReviews = async (recipeId) => {
+    await fetchReviews(recipeId);
+  };
+
+  useEffect(() => {
+    if (selectedRecipeId !== "") {
+      handleShowReviews(selectedRecipeId);
+    }
+  }, [selectedRecipeId]);
 
   if (error) {
     return (
@@ -394,7 +475,7 @@ const MyRecipes = () => {
                   </StyledInstructionItem>
                 ))}
               </StyledInstructionList>
-              <StyledButton
+              {/* <StyledButton
                 type="button"
                 variant="outlined"
                 color="error"
@@ -402,7 +483,7 @@ const MyRecipes = () => {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={() => deleteRecipe(recipe.id)}>
                 Delete Recipe
-              </StyledButton>
+              </StyledButton> */}
               <StyledButton
                 type="button"
                 variant="contained"
@@ -410,6 +491,61 @@ const MyRecipes = () => {
                 onClick={() => handleAddToCollection(recipe.id)}>
                 Add to Collection
               </StyledButton>
+              {recipe.id === reviewingRecipeId ? (
+                <div className="review-form">
+                  <p>Rate this recipe:</p>
+                  <StarRating
+                    rating={reviewRating}
+                    onRatingChange={setReviewRating}
+                  />
+                  <TextField
+                    label="Review Message"
+                    value={reviewMessage}
+                    onChange={(e) => setReviewMessage(e.target.value)} // Update the review message state
+                    multiline
+                    rows={4}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <StyledButton
+                    type="button"
+                    color="secondary"
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    onClick={() => handleReviewRecipe(recipe.id, reviewRating)}>
+                    Submit Review
+                  </StyledButton>
+                </div>
+              ) : (
+                <StyledButton
+                  type="button"
+                  color="secondary"
+                  variant="outlined"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={() => setReviewingRecipeId(recipe.id)}>
+                  Review Recipe
+                </StyledButton>
+              )}
+              <StyledButton
+                type="button"
+                color="success"
+                variant="outlined"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => handleShowReviews(recipe.id)}>
+                Show Reviews
+              </StyledButton>
+              {reviews[recipe.id] && (
+                <div key={recipe.id}>
+                  <h4>Reviews:</h4>
+                  <ul>
+                    {reviews[recipe.id].map((review) => (
+                      <li key={review.id}>
+                        Rating: {review.rating} | Message: {review.message}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </StyledListItem>
           ))}
         </StyledRecipeList>
