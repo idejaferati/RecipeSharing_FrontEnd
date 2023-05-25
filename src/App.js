@@ -20,6 +20,7 @@ import Unauthorized from "./pages/unauthorized";
 import Missing from "./pages/missing";
 import MyCollections from "./pages/my-collections";
 import MyCookbooks from "./pages/my-cookbooks";
+import ChangePassword from "./pages/change-password";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/login" exact element={<Login />} />
             <Route path="/signup" exact element={<SignUp />} />
             <Route path="unauthorized" element={<Unauthorized />} />
+            <Route path="changePassword" element={<ChangePassword />} />
 
             <Route element={<RequireAuth allowedRole={"user"} />}>
               <Route path="/profile" element={<Profile />} />
