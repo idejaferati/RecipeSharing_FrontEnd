@@ -37,6 +37,9 @@ const Navbar = () => {
               <StyledNavLink to="/cookbook" activestyle="true">
                 Cookbook
               </StyledNavLink>
+              <StyledNavLink to="/userCollections" activestyle="true">
+                My collections
+              </StyledNavLink>
             </>
           ) : null}
           {role == "admin" ? (

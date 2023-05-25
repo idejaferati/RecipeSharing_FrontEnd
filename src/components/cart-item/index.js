@@ -6,12 +6,14 @@ import { Button } from "@mui/material";
 
 const CartItem = (props) => {
   const { user } = props.data;
-
-  const [recipes, setRecipes] = useState(user.recipes);
+  console.log("PROSPPSL:", props);
+  const [recipes, setRecipes] = useState(user?.recipes);
   const navigate = useNavigate();
 
   const deleteRecipe = async (id) => {
-    const recipeIndex = props.data.user.recipes.findIndex((el) => el.id === id);
+    const recipeIndex = props.data.user?.recipes?.findIndex(
+      (el) => el.id === id
+    );
     const currentRecipes = [...recipes];
     currentRecipes.splice(recipeIndex, 1);
     setRecipes(currentRecipes);
@@ -33,7 +35,7 @@ const CartItem = (props) => {
             alignItems: "center",
             width: "340px",
           }}>
-          {recipes.map((recipe) => (
+          {recipes?.map((recipe) => (
             <ShoppingList
               recipe={recipe}
               data={props.data}

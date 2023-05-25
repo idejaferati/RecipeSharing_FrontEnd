@@ -18,6 +18,7 @@ import { AuthProvider } from "./context/auth-provider";
 import RequireAuth from "./pages/require-auth";
 import Unauthorized from "./pages/unauthorized";
 import Missing from "./pages/missing";
+import MyCollections from "./pages/my-collections";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Route path="/recipes" element={<Recipes />} />
               <Route path="/cookbook" element={<Cookbook />} />
               <Route path="/shopping" element={<Shopping />} />
+              <Route path="/userCollections" element={<MyCollections />} />
             </Route>
 
             <Route element={<RequireAuth allowedRole={"admin"} />}>

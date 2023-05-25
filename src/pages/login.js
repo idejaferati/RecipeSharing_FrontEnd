@@ -34,28 +34,29 @@ export default function Login() {
     };
 
     try {
-      const response = await axios.post(
-        "https://localhost:7164/api/Auth/Login",
-        JSON.stringify(jsonData),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log(response.data);
-      const accessToken = response.data.token;
-      Cookies.set("jwtToken", accessToken, { expires: 7 });
-      const role = response.data.role;
-      setAuth({
-        user: jsonData.email,
-        password: jsonData.password,
-        role,
-        accessToken,
-      });
-      navigate(from, { replace: true });
-      console.log(jsonData);
+      await axios
+        .post(
+          "https://localhost:7164/api/Auth/Login",
+          JSON.stringify(jsonData),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          const accessToken = res.data.token;
+          Cookies.set("jwtToken", accessToken, { expires: 7 });
+          const role = res.data.role;
+          setAuth({
+            user: jsonData.email,
+            password: jsonData.password,
+            role,
+            accessToken,
+          });
+          navigate(from, { replace: true });
+          console.log(jsonData);
+        });
     } catch (error) {
       console.error(error);
     }

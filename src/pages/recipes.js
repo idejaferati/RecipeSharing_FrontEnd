@@ -4,6 +4,7 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import NewRecipeDialog from "./../components/new-recipe-dialog";
 import Cookies from "js-cookie";
+import { StyledListItem, StyledButton } from "../shared/shared-style";
 
 const StyledRecipesContainer = styled.div`
   max-width: 800px;
@@ -20,14 +21,6 @@ const StyledRecipesTitle = styled.h2`
 const StyledRecipeList = styled.ul`
   list-style: none;
   padding: 0;
-`;
-
-const StyledRecipeItem = styled.li`
-  background: aliceblue;
-  border: 1px solid dodgerblue;
-  border-radius: 10px;
-  padding: 15px;
-  margin: 15px;
 `;
 
 const StyledNewRecipeButton = styled(Button)`
@@ -122,11 +115,13 @@ const StyledSelect = styled.select`
   height: 36px;
 `;
 
-const StyledButton = styled(Button)`
-  margin: 0;
+const StyledCollectionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
-const StyledCollectionContainer = styled.div`
+const StyledIngredientContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -135,7 +130,6 @@ const StyledCollectionContainer = styled.div`
 const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [collections, setCollections] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddToCollection, setShowAddToCollection] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState("");
@@ -157,15 +151,14 @@ const MyRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await axios.get(
-          "https://localhost:7164/api/recipes/getAll"
-        );
-        setRecipes(response.data);
-        setIsLoading(false);
+        await axios
+          .get("https://localhost:7164/api/recipes/getAll")
+          .then((res) => {
+            setRecipes(res.data);
+          });
       } catch (error) {
         console.error("Error fetching recipes:", error);
-        setError("Failed to fetch recipes");
-        setIsLoading(false);
+        setError(error);
       }
     };
 
@@ -176,15 +169,15 @@ const MyRecipes = () => {
     const fetchCollections = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        const response = await axios.get(
-          "https://localhost:7164/api/collections/user",
-          {
+        await axios
+          .get("https://localhost:7164/api/collections/user", {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
-          }
-        );
-        setCollections(response.data);
+          })
+          .then((res) => {
+            setCollections(res.data);
+          });
       } catch (error) {
         console.error("Error fetching collections:", error);
       }
@@ -196,32 +189,39 @@ const MyRecipes = () => {
   const deleteRecipe = async (recipeId) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.delete(`https://localhost:7164/api/recipes/${recipeId}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
-      setRecipes((recipes) =>
-        recipes.filter((recipe) => recipe.id !== recipeId)
-      );
+      await axios
+        .delete(`https://localhost:7164/api/recipes/${recipeId}`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
+        .then(() => {
+          setRecipes((recipes) =>
+            recipes.filter((recipe) => recipe.id !== recipeId)
+          );
+        });
     } catch (error) {
       console.error("Error deleting recipe:", error);
     }
   };
 
-  const shopRecipe = async (values) => {
+  const shopIngredient = async (name, quantity) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      const response = await axios.post(
-        "https://localhost:7164/api/ShoppingList",
-        JSON.stringify([values]),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      await axios
+        .post(
+          "https://localhost:7164/api/ShoppingList",
+          JSON.stringify([{ name, quantity }]),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        )
+        .then((res) => {
+          console.log("Ingredient is on shopping list", res);
+        });
     } catch (error) {
       console.error("Error shopping recipe:", error);
     }
@@ -293,12 +293,20 @@ const MyRecipes = () => {
     }
   };
 
-  if (isLoading) {
-    return <p className="loading">Loading...</p>;
-  }
-
   if (error) {
-    return <p className="error">{error}</p>;
+    return (
+      <StyledRecipesContainer>
+        <StyledNewRecipeButton
+          onClick={() => {
+            handleClickOpen();
+          }}
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}>
+          Add new recipe
+        </StyledNewRecipeButton>
+        <p className="error">{error}</p>;
+      </StyledRecipesContainer>
+    );
   }
 
   return (
@@ -320,7 +328,7 @@ const MyRecipes = () => {
       {recipes.length > 0 ? (
         <StyledRecipeList>
           {recipes.map((recipe) => (
-            <StyledRecipeItem key={recipe.id}>
+            <StyledListItem key={recipe.id}>
               <StyledRecipeImage src={recipe.audioInstructions} alt="Recipe" />{" "}
               Image tag
               <StyledRecipeName>{recipe.name}</StyledRecipeName>
@@ -362,9 +370,20 @@ const MyRecipes = () => {
               <h4 className="recipe-subtitle">Ingredients:</h4>
               <StyledIngredientList>
                 {recipe.ingredients.map((ingredient) => (
-                  <StyledIngredientItem key={ingredient.id}>
-                    {ingredient.name} - {ingredient.amount} {ingredient.unit}
-                  </StyledIngredientItem>
+                  <StyledIngredientContainer key={ingredient.id}>
+                    <StyledIngredientItem>
+                      {ingredient.name} - {ingredient.amount} {ingredient.unit}
+                    </StyledIngredientItem>
+                    <StyledButton
+                      type="button"
+                      variant="outlined"
+                      sx={{ mt: 3, mb: 2 }}
+                      onClick={() =>
+                        shopIngredient(ingredient.name, ingredient.amount)
+                      }>
+                      Shop ingredient
+                    </StyledButton>
+                  </StyledIngredientContainer>
                 ))}
               </StyledIngredientList>
               <StyledRecipeSubtitle>Instructions:</StyledRecipeSubtitle>
@@ -391,7 +410,7 @@ const MyRecipes = () => {
                 onClick={() => handleAddToCollection(recipe.id)}>
                 Add to Collection
               </StyledButton>
-            </StyledRecipeItem>
+            </StyledListItem>
           ))}
         </StyledRecipeList>
       ) : (
@@ -422,26 +441,28 @@ const MyRecipes = () => {
               Create New Collection
             </StyledButton>
           </StyledCollectionContainer>
-          <StyledCollectionContainer>
-            <p>Choose an existing collection:</p>
-            <StyledSelect
-              value={selectedCollection}
-              onChange={(e) => setSelectedCollection(e.target.value)}>
-              <option value="">Select a collection</option>
-              {collections.map((collection) => (
-                <option key={collection.id} value={collection.id}>
-                  {collection.name}
-                </option>
-              ))}
-            </StyledSelect>
-            <StyledButton
-              type="button"
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleAddToExistingCollection}>
-              Add to Existing Collection
-            </StyledButton>
-          </StyledCollectionContainer>
+          {!!collections?.length && (
+            <StyledCollectionContainer>
+              <p>Choose an existing collection:</p>
+              <StyledSelect
+                value={selectedCollection}
+                onChange={(e) => setSelectedCollection(e.target.value)}>
+                <option value="">Select a collection</option>
+                {collections.map((collection) => (
+                  <option key={collection.id} value={collection.id}>
+                    {collection.name}
+                  </option>
+                ))}
+              </StyledSelect>
+              <StyledButton
+                type="button"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={handleAddToExistingCollection}>
+                Add to Existing Collection
+              </StyledButton>
+            </StyledCollectionContainer>
+          )}
         </StyledAddToCollectionSection>
       )}
     </StyledRecipesContainer>
