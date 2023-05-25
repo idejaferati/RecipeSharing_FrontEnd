@@ -42,19 +42,22 @@ export default function SignUp() {
     };
 
     try {
-      const response = await axios.post(
-        "https://localhost:7164/api/Users/Register",
-        JSON.stringify(jsonData),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-      if (response) {
-        navigate("/login");
-      }
+      await axios
+        .post(
+          "https://localhost:7164/api/Users/Register",
+          JSON.stringify(jsonData),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          if (res) {
+            console.log(res.data);
+            navigate("/login");
+          }
+        });
     } catch (error) {
       console.error(error);
     }

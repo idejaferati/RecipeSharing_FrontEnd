@@ -4,6 +4,7 @@ import CartItem from "../components/cart-item/index";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const StyledOuterContainer = styled.div`
   display: flex;
@@ -20,9 +21,15 @@ const Shopping = () => {
 
   useEffect(() => {
     const fetchShoppingList = async () => {
+      const jwtToken = Cookies.get("jwtToken");
       try {
         const response = await axios.get(
-          "https://localhost:7164/api/ShoppingList"
+          "https://localhost:7164/api/ShoppingList",
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
         setShoppingList(response.data);
       } catch (error) {
