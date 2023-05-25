@@ -209,6 +209,24 @@ const MyRecipes = () => {
     }
   };
 
+  const shopRecipe = async (values) => {
+    try {
+      const jwtToken = Cookies.get("jwtToken");
+      const response = await axios.post(
+        "https://localhost:7164/api/ShoppingList",
+        JSON.stringify([values]),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error shopping recipe:", error);
+    }
+  };
+
   const handleAddToCollection = (recipeId) => {
     setSelectedRecipeId(recipeId);
     setShowAddToCollection(true);

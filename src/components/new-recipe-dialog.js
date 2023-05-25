@@ -63,9 +63,7 @@ const NewRecipeDialog = (props) => {
   }, []);
 
   const handleSubmit = async (values) => {
-    const jwtToken = Cookies.get("jwtToken");
     try {
-      console.log(JSON.stringify(values));
       const jwtToken = Cookies.get("jwtToken");
       const response = await axios.post(
         "https://localhost:7164/api/recipes",
