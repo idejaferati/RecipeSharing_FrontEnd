@@ -8,11 +8,10 @@ import {
   StyledNavBtnLink,
 } from "./navbarElements";
 import useAuth from "../hooks/use-auth";
-import ROLES from "../../App";
 
 const Navbar = () => {
   const { auth } = useAuth();
-  const roles = auth?.roles;
+  const role = auth?.role;
   return (
     <>
       <StyledNav>
@@ -24,7 +23,7 @@ const Navbar = () => {
           <StyledNavLink to="/cuisines" activestyle="true">
             Cuisines
           </StyledNavLink>
-          {!!roles?.find((role) => [ROLES.User]?.includes(role)) ? (
+          {!!role == "user" ? (
             <>
               <StyledNavLink to="/recipes" activestyle="true">
                 Recipes
@@ -40,7 +39,7 @@ const Navbar = () => {
               </StyledNavLink>
             </>
           ) : null}
-          {!!roles?.find((role) => [ROLES.Admin]?.includes(role)) ? (
+          {!!role == "admin" ? (
             <>
               <StyledNavLink to="/permissions" activestyle="true">
                 Permissions

@@ -42,8 +42,16 @@ export default function SignUp() {
     };
 
     try {
-      const response = await registerUser(jsonData);
-      console.log(response);
+      const response = await axios.post(
+        "https://localhost:7164/api/Users/Register",
+        JSON.stringify(jsonData),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
       if (response) {
         navigate("/login");
       }
