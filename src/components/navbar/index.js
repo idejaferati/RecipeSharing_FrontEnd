@@ -23,7 +23,7 @@ const Navbar = () => {
           <StyledNavLink to="/cuisines" activestyle="true">
             Cuisines
           </StyledNavLink>
-          {!!role == "user" ? (
+          {role == "user" ? (
             <>
               <StyledNavLink to="/recipes" activestyle="true">
                 Recipes
@@ -39,7 +39,7 @@ const Navbar = () => {
               </StyledNavLink>
             </>
           ) : null}
-          {!!role == "admin" ? (
+          {role == "admin" ? (
             <>
               <StyledNavLink to="/permissions" activestyle="true">
                 Permissions

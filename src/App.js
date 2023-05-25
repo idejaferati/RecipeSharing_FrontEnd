@@ -22,34 +22,34 @@ import Missing from "./pages/missing";
 function App() {
   return (
     <ShopContextProvider>
-        <Router>
-          <AuthProvider>
-            <Navbar />
-            <Routes>
-              <Route path="/" exact element={<Home />} />
-              <Route path="/cuisines" element={<Cuisines />} />
-              <Route path="/login" exact element={<Login />} />
-              <Route path="/signup" exact element={<SignUp />} />
-              <Route path="unauthorized" element={<Unauthorized />} />
+      <Router>
+        <AuthProvider>
+          <Navbar />
+          <Routes>
+            <Route path="/" exact element={<Home />} />
+            <Route path="/cuisines" element={<Cuisines />} />
+            <Route path="/login" exact element={<Login />} />
+            <Route path="/signup" exact element={<SignUp />} />
+            <Route path="unauthorized" element={<Unauthorized />} />
 
-              <Route element={<RequireAuth allowedRole={["user"]} />}>
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/recipes" element={<Recipes />} />
-                <Route path="/cookbook" element={<Cookbook />} />
-                <Route path="/shopping" element={<Shopping />} />
-              </Route>
+            <Route element={<RequireAuth allowedRole={"user"} />}>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/recipes" element={<Recipes />} />
+              <Route path="/cookbook" element={<Cookbook />} />
+              <Route path="/shopping" element={<Shopping />} />
+            </Route>
 
-              <Route element={<RequireAuth allowedRole={["admin"]} />}>
-                <Route path="/permissions" element={<UserPermissions />} />
-                <Route path="/manageuser" element={<ManageUser />} />
-              </Route>
+            <Route element={<RequireAuth allowedRole={"admin"} />}>
+              <Route path="/permissions" element={<UserPermissions />} />
+              <Route path="/manageuser" element={<ManageUser />} />
+            </Route>
 
-              {/* catch all */}
-              <Route path="*" element={<Missing />} />
-            </Routes>
-            <Footer />
-          </AuthProvider>
-        </Router>
+            {/* catch all */}
+            <Route path="*" element={<Missing />} />
+          </Routes>
+          <Footer />
+        </AuthProvider>
+      </Router>
     </ShopContextProvider>
   );
 }

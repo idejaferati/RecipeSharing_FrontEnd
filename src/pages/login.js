@@ -47,7 +47,7 @@ export default function Login() {
       console.log(response.data);
       const accessToken = response.data.token;
       Cookies.set("jwtToken", accessToken, { expires: 7 });
-      const role = response?.data?.role;
+      const role = response.data.role;
       setAuth({
         user: jsonData.email,
         password: jsonData.password,
@@ -115,7 +115,6 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={() => navigate("/")}
               sx={{ mt: 3, mb: 2 }}>
               Login
             </Button>
