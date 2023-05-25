@@ -105,6 +105,7 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
+              onClick={() => navigate("/")}
               sx={{ mt: 3, mb: 2 }}>
               Login
             </Button>
