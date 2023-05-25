@@ -34,11 +34,14 @@ const Navbar = () => {
               <StyledNavLink to="/profile" activestyle="true">
                 Profile
               </StyledNavLink>
-              <StyledNavLink to="/cookbook" activestyle="true">
-                Cookbook
+              <StyledNavLink to="/cookbooks" activestyle="true">
+                Cookbooks
               </StyledNavLink>
               <StyledNavLink to="/userCollections" activestyle="true">
                 My collections
+              </StyledNavLink>
+              <StyledNavLink to="/userCookbooks" activestyle="true">
+                My cookbooks
               </StyledNavLink>
             </>
           ) : null}

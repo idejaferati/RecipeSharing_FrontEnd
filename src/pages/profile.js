@@ -609,7 +609,7 @@ const Profile = () => {
                   variant="outlined"
                   sx={{ mt: 3, mb: 2 }}
                   onClick={() => handleAddToCookbook(recipe.id)}>
-                  Add to Collection
+                  Add to Cookbook
                 </Button>
               </>
             )}
@@ -641,26 +641,28 @@ const Profile = () => {
               Create New Cookbook
             </Button>
           </div>
-          <div>
-            <p>Choose an existing cookbook:</p>
-            <StyledSelect
-              value={selectedCookbook}
-              onChange={(e) => setSelectedCookbook(e.target.value)}>
-              <option value="">Select a cookbook</option>
-              {cookbooks.map((cookbook) => (
-                <option key={cookbook.id} value={cookbook.id}>
-                  {cookbook.name}
-                </option>
-              ))}
-            </StyledSelect>
-            <Button
-              type="button"
-              variant="outlined"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleAddToExistingCookbook}>
-              Add to Existing Cookbook
-            </Button>
-          </div>
+          {!!cookbooks.length && (
+            <div>
+              <p>Choose an existing cookbook:</p>
+              <StyledSelect
+                value={selectedCookbook}
+                onChange={(e) => setSelectedCookbook(e.target.value)}>
+                <option value="">Select a cookbook</option>
+                {cookbooks.map((cookbook) => (
+                  <option key={cookbook.id} value={cookbook.id}>
+                    {cookbook.name}
+                  </option>
+                ))}
+              </StyledSelect>
+              <Button
+                type="button"
+                variant="outlined"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={handleAddToExistingCookbook}>
+                Add to Existing Cookbook
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
