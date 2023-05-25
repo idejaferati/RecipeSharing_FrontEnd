@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Blog = () => {
+const Admin = () => {
 return (
 	<div
 	style={{
@@ -10,9 +10,9 @@ return (
 		height: '100vh'
 	}}
 	>
-	<h3>This menu can be a section where users can read articles or blog posts related to cooking, food, and health.</h3>
+	<h3>This menu can be a section where admin manages data.</h3>
 	</div>
 );
 };
 
-export default Blog;
+export default Admin;

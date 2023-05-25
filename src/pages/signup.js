@@ -3,8 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,17 +10,65 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { registerUser } from "./../service/user-requests.js";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const [roles, setRoles] = useState([]);
+  const [selectedRole, setSelectedRole] = useState("");
+  const navigate = useNavigate();
+
+  async function signUpAsync(event) {
     event.preventDefault();
+
     const data = new FormData(event.currentTarget);
-    console.log({
+    const jsonData = {
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
+      gender: data.get("gender"),
       email: data.get("email"),
+      roleId: data.get("roleId"),
+      phoneNumber: data.get("phoneNumber"),
       password: data.get("password"),
-    });
+    };
+
+    try {
+      const response = await registerUser(jsonData);
+      console.log(response);
+      if (response) {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7164/api/Auth/getRoles"
+        );
+        setRoles(response.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchRoles();
+  }, []);
+
+  const handleSubmit = async (event) => {
+    await signUpAsync(event);
   };
 
   return (
@@ -69,6 +115,55 @@ export default function SignUp() {
                   autoComplete="family-name"
                 />
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormLabel id="gender-label">Gender</FormLabel>
+                <RadioGroup
+                  aria-labelledby="gender-label"
+                  defaultValue="female"
+                  name="gender">
+                  <FormControlLabel
+                    value="female"
+                    control={<Radio />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="male"
+                    control={<Radio />}
+                    label="Male"
+                  />
+                </RadioGroup>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phoneNumber"
+                  label="Phone Number"
+                  name="phoneNumber"
+                  autoComplete="phoneNumber"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl required fullWidth>
+                  <InputLabel id="roleId-label">Select Role</InputLabel>
+                  <Select
+                    labelId="roleId-label"
+                    id="roleId"
+                    name="roleId"
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}>
+                    {roles.map((role) => (
+                      <MenuItem key={role.id} value={role.id}>
+                        {role.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -90,14 +185,6 @@ export default function SignUp() {
                   autoComplete="new-password"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
             </Grid>
             <Button
               type="submit"
@@ -108,7 +195,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Log in
                 </Link>
               </Grid>
