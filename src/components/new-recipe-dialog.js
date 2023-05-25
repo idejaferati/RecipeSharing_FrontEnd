@@ -10,12 +10,25 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 
-const StyledGrid = styled(Grid)`
+const StyledFormItem = styled.div`
   padding: 10px;
+  display: flex;
+  gap: 10px;
+`;
+
+const StyledInput = styled.input`
+  height: 30px;
+`;
+
+const StyledField = styled(Field)`
+  height: 30px;
+`;
+
+const StyledSelect = styled.select`
+  height: 36px;
 `;
 
 const NewRecipeDialog = (props) => {
@@ -62,6 +75,9 @@ const NewRecipeDialog = (props) => {
           },
         }
       );
+      console.log("Recipe submitted successfully!", response.data);
+
+      setTimeout(() => handleClose(), 4000);
       // Handle success or show a success message
     } catch (error) {
       console.error("Error submitting recipe:", error);
@@ -90,10 +106,10 @@ const NewRecipeDialog = (props) => {
         }}
         onSubmit={handleSubmit}>
         {({ values, handleChange, handleBlur, handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <StyledGrid item xs={12}>
+          <form style={{ minWidth: "450px" }} onSubmit={handleSubmit}>
+            <StyledFormItem>
               <label htmlFor="name">Name</label>
-              <input
+              <StyledInput
                 type="text"
                 id="name"
                 name="name"
@@ -102,16 +118,16 @@ const NewRecipeDialog = (props) => {
                 value={values.name}
               />
               <ErrorMessage name="name" component="div" />
-            </StyledGrid>
-            <StyledGrid item xs={12}>
+            </StyledFormItem>
+            <StyledFormItem>
               <label htmlFor="description">Description</label>
-              <Field type="text" id="description" name="description" />
+              <StyledField type="text" id="description" name="description" />
               <ErrorMessage name="description" component="div" />
-            </StyledGrid>
+            </StyledFormItem>
 
-            <StyledGrid item xs={12}>
+            <StyledFormItem>
               <label htmlFor="cuisineId">Cuisine</label>
-              <select
+              <StyledSelect
                 id="cuisineId"
                 name="cuisineId"
                 onChange={handleChange}
@@ -123,17 +139,17 @@ const NewRecipeDialog = (props) => {
                     {cuisine.name}
                   </option>
                 ))}
-              </select>
+              </StyledSelect>
               <ErrorMessage name="cuisineId" component="div" />
-            </StyledGrid>
-            <StyledGrid item xs={12}>
+            </StyledFormItem>
+            <StyledFormItem>
               <label htmlFor="tags">Tags</label>
               <FieldArray name="tags">
                 {(arrayHelpers) => (
                   <div>
                     {tags.map((tag) => (
                       <label key={tag.id}>
-                        <input
+                        <StyledInput
                           type="checkbox"
                           name="tags"
                           value={tag.name}
@@ -154,23 +170,23 @@ const NewRecipeDialog = (props) => {
                 )}
               </FieldArray>
               <ErrorMessage name="tags" component="div" />
-            </StyledGrid>
+            </StyledFormItem>
 
             <br />
             <br />
 
-            <StyledGrid item xs={12}>
+            <StyledFormItem>
               <label htmlFor="ingredients">Ingredients</label>
               <FieldArray name="ingredients">
                 {(arrayHelpers) => (
                   <div>
                     {values.ingredients.map((ingredient, index) => (
                       <div key={index}>
-                        <StyledGrid item xs={12}>
+                        <StyledFormItem>
                           <label htmlFor={`ingredients.${index}.name`}>
                             Name
                           </label>
-                          <input
+                          <StyledInput
                             type="text"
                             id={`ingredients.${index}.name`}
                             name={`ingredients.${index}.name`}
@@ -182,13 +198,13 @@ const NewRecipeDialog = (props) => {
                             name={`ingredients.${index}.name`}
                             component="div"
                           />
-                        </StyledGrid>
+                        </StyledFormItem>
 
-                        <StyledGrid item xs={12}>
+                        <StyledFormItem>
                           <label htmlFor={`ingredients.${index}.amount`}>
                             Amount
                           </label>
-                          <input
+                          <StyledInput
                             type="number"
                             id={`ingredients.${index}.amount`}
                             name={`ingredients.${index}.amount`}
@@ -200,13 +216,13 @@ const NewRecipeDialog = (props) => {
                             name={`ingredients.${index}.amount`}
                             component="div"
                           />
-                        </StyledGrid>
+                        </StyledFormItem>
 
-                        <StyledGrid item xs={12}>
+                        <StyledFormItem>
                           <label htmlFor={`ingredients.${index}.unit`}>
                             Unit
                           </label>
-                          <select
+                          <StyledSelect
                             id={`ingredients.${index}.unit`}
                             name={`ingredients.${index}.unit`}
                             onChange={handleChange}
@@ -226,15 +242,16 @@ const NewRecipeDialog = (props) => {
                             <option value="Tablespoon">Liter</option>
                             <option value="Tablespoon">Pieces</option>
                             {/* Add more units as needed */}
-                          </select>
+                          </StyledSelect>
                           <ErrorMessage
                             name={`ingredients.${index}.unit`}
                             component="div"
                           />
-                        </StyledGrid>
+                        </StyledFormItem>
 
                         <Button
-                          variant="contained"
+                          variant="outlined"
+                          color="error"
                           sx={{ mt: 3, mb: 2 }}
                           type="button"
                           onClick={() => arrayHelpers.remove(index)}>
@@ -259,22 +276,22 @@ const NewRecipeDialog = (props) => {
                 )}
               </FieldArray>
               <ErrorMessage name="ingredients" component="div" />
-            </StyledGrid>
+            </StyledFormItem>
 
             <br />
-            <br />
-            {/* Instructions */}
-            <label htmlFor="instructions">Instructions</label>
-            <FieldArray name="instructions">
-              {(arrayHelpers) => (
-                <div>
-                  {values.instructions.map((instruction, index) => (
-                    <div key={index}>
-                      <StyledGrid item xs={12}>
-                        <label htmlFor={`instructions.${index}.stepNumber`}>
-                          Step {index + 1} :{" "}
-                        </label>
-                        {/* <input
+            <StyledFormItem>
+              {/* Instructions */}
+              <label htmlFor="instructions">Instructions</label>
+              <FieldArray name="instructions">
+                {(arrayHelpers) => (
+                  <div>
+                    {values.instructions.map((instruction, index) => (
+                      <div key={index}>
+                        <StyledFormItem>
+                          <label htmlFor={`instructions.${index}.stepNumber`}>
+                            Step {index + 1} :{" "}
+                          </label>
+                          {/* <StyledInput
                           type="text"
                           id={`instructions.${index}.stepNumber`}
                           name={`instructions.${index}.stepNumber`}
@@ -282,140 +299,151 @@ const NewRecipeDialog = (props) => {
                           onBlur={handleBlur}
                           value={instruction.stepNumber}
                         /> */}
-                        <ErrorMessage
-                          name={`instructions.${index}.stepNumber`}
-                          component="div"
-                        />
-                      </StyledGrid>
+                          <ErrorMessage
+                            name={`instructions.${index}.stepNumber`}
+                            component="div"
+                          />
+                        </StyledFormItem>
 
-                      <StyledGrid item xs={12}>
-                        <label
-                          htmlFor={`instructions.${index}.stepDescription`}>
-                          Description
+                        <StyledFormItem>
+                          <label
+                            htmlFor={`instructions.${index}.stepDescription`}>
+                            Description
+                          </label>
+                          <StyledInput
+                            type="text"
+                            id={`instructions.${index}.stepDescription`}
+                            name={`instructions.${index}.stepDescription`}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={instruction.stepDescription}
+                          />
+                          <ErrorMessage
+                            name={`instructions.${index}.stepDescription`}
+                            component="div"
+                          />
+                        </StyledFormItem>
+
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          sx={{ mt: 3, mb: 2 }}
+                          type="button"
+                          onClick={() => arrayHelpers.remove(index)}>
+                          Remove Step
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      type="button"
+                      onClick={() =>
+                        arrayHelpers.push({
+                          stepNumber: values.instructions.length + 1,
+                          stepDescription: "",
+                        })
+                      }>
+                      Add Step
+                    </Button>
+                  </div>
+                )}
+              </FieldArray>
+              <ErrorMessage name="instructions" component="div" />
+            </StyledFormItem>
+            <br />
+            <StyledFormItem>
+              {/* Prep Time */}
+              <label htmlFor="prepTime">Prep Time (minutes)</label>
+              <StyledField type="number" id="prepTime" name="prepTime" />
+            </StyledFormItem>
+            <br />
+            <StyledFormItem>
+              {/* Cook Time */}
+              <label htmlFor="cookTime">Cook Time (minutes)</label>
+              <StyledField type="number" id="cookTime" name="cookTime" />
+            </StyledFormItem>
+            <br />
+            <StyledFormItem>
+              {/* Tags */}
+              <label htmlFor="tags">Tags</label>
+              <FieldArray name="tags">
+                {(arrayHelpers) => (
+                  <div>
+                    {values.tags.map((tag, index) => (
+                      <div key={index}>
+                        <label htmlFor={`tags.${index}.name`}>
+                          Tag {index + 1}:
                         </label>
-                        <input
+                        <StyledField
                           type="text"
-                          id={`instructions.${index}.stepDescription`}
-                          name={`instructions.${index}.stepDescription`}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          value={instruction.stepDescription}
+                          id={`tags.${index}.name`}
+                          name={`tags.${index}.name`}
                         />
-                        <ErrorMessage
-                          name={`instructions.${index}.stepDescription`}
-                          component="div"
-                        />
-                      </StyledGrid>
-
-                      <Button
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        type="button"
-                        onClick={() => arrayHelpers.remove(index)}>
-                        Remove Step
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    type="button"
-                    onClick={() =>
-                      arrayHelpers.push({
-                        stepNumber: values.instructions.length + 1,
-                        stepDescription: "",
-                      })
-                    }>
-                    Add Step
-                  </Button>
-                </div>
-              )}
-            </FieldArray>
-            <ErrorMessage name="instructions" component="div" />
-            <br />
-            <br />
-            {/* Prep Time */}
-            <label htmlFor="prepTime">Prep Time (minutes)</label>
-            <Field type="number" id="prepTime" name="prepTime" />
-            <br />
-            <br />
-            {/* Cook Time */}
-            <label htmlFor="cookTime">Cook Time (minutes)</label>
-            <Field type="number" id="cookTime" name="cookTime" />
-            <br />
-            <br />
-            {/* Tags */}
-            <label htmlFor="tags">Tags</label>
-            <FieldArray name="tags">
-              {(arrayHelpers) => (
-                <div>
-                  {values.tags.map((tag, index) => (
-                    <div key={index}>
-                      <label htmlFor={`tags.${index}.name`}>
-                        Tag {index + 1}
-                      </label>
-                      <Field
-                        type="text"
-                        id={`tags.${index}.name`}
-                        name={`tags.${index}.name`}
-                      />
-                      <Button
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                        type="button"
-                        onClick={() => arrayHelpers.remove(index)}>
-                        Remove Tag
-                      </Button>
-                    </div>
-                  ))}
-                  <Button
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    type="button"
-                    onClick={() => arrayHelpers.push({ name: "" })}>
-                    Add Tag
-                  </Button>
-                </div>
-              )}
-            </FieldArray>
-            <ErrorMessage name="tags" component="div" />
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          sx={{ mt: 3, mb: 2 }}
+                          type="button"
+                          onClick={() => arrayHelpers.remove(index)}>
+                          Remove Tag
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      type="button"
+                      onClick={() => arrayHelpers.push({ name: "" })}>
+                      Add Tag
+                    </Button>
+                  </div>
+                )}
+              </FieldArray>
+              <ErrorMessage name="tags" component="div" />
+            </StyledFormItem>
 
             <br />
-            <br />
-            {/* Servings */}
-            <label htmlFor="servings">Servings</label>
-            <Field type="number" id="servings" name="servings" />
-            <br />
+            <StyledFormItem>
+              {/* Servings */}
+              <label htmlFor="servings">Servings</label>
+              <StyledField type="number" id="servings" name="servings" />
+            </StyledFormItem>
             <br />
             {/* Yield */}
             {/* ... */}
 
-            {/* Calories */}
-            <label htmlFor="calories">Calories</label>
-            <Field type="number" id="calories" name="calories" />
+            <StyledFormItem>
+              {/* Calories */}
+              <label htmlFor="calories">Calories</label>
+              <StyledField type="number" id="calories" name="calories" />
+            </StyledFormItem>
             <br />
+            <StyledFormItem>
+              {/* Audio Instructions */}
+              <label htmlFor="audioInstructions">Images address</label>
+              <StyledField
+                type="text"
+                id="audioInstructions"
+                name="audioInstructions"
+              />
+            </StyledFormItem>
             <br />
-            {/* Audio Instructions */}
-            <label htmlFor="audioInstructions">Images address</label>
-            <Field
-              type="text"
-              id="audioInstructions"
-              name="audioInstructions"
-            />
+            <StyledFormItem>
+              {/* Video Instructions */}
+              <label htmlFor="videoInstructions">Video Instructions</label>
+              <StyledField
+                type="text"
+                id="videoInstructions"
+                name="videoInstructions"
+              />
+            </StyledFormItem>
             <br />
-            <br />
-            {/* Video Instructions */}
-            <label htmlFor="videoInstructions">Video Instructions</label>
-            <Field
-              type="text"
-              id="videoInstructions"
-              name="videoInstructions"
-            />
-            <br />
-            <br />
-            <Button variant="contained" sx={{ mt: 3, mb: 2 }} type="submit">
-              Submit
-            </Button>
+            <StyledFormItem>
+              <Button variant="contained" sx={{ mt: 3, mb: 2 }} type="submit">
+                Submit
+              </Button>
+            </StyledFormItem>
           </form>
         )}
       </Formik>

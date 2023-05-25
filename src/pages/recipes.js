@@ -5,28 +5,6 @@ import Button from "@mui/material/Button";
 import NewRecipeDialog from "./../components/new-recipe-dialog";
 import Cookies from "js-cookie";
 
-const StyledOuterContainer = styled.div`
-  display: flex;
-  justify-content: right;
-  align-items: right;
-  height: 100vh;
-  flex-direction: column;
-`;
-
-const StyledTitleDiv = styled.div`
-  margin-top: 20px;
-  text-align: center;
-  font-size: 10px;
-`;
-
-const StyledGridContainer = styled.div`
-  width: 100%;
-  height: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  place-items: center;
-`;
-
 const StyledRecipesContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
@@ -45,11 +23,11 @@ const StyledRecipeList = styled.ul`
 `;
 
 const StyledRecipeItem = styled.li`
-  margin-bottom: 20px;
-  border: 2px solid #ddd;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+  background: aliceblue;
+  border: 1px solid dodgerblue;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 15px;
 `;
 
 const StyledNewRecipeButton = styled(Button)`
@@ -129,6 +107,29 @@ const StyledNoRecipes = styled.p`
 
 const StyledRecipeImage = styled.img`
   width: 200px;
+`;
+
+const StyledAddToCollectionSection = styled.div`
+  border: 1px dashed green;
+  padding: 15px;
+`;
+
+const StyledInput = styled.input`
+  height: 30px;
+`;
+
+const StyledSelect = styled.select`
+  height: 36px;
+`;
+
+const StyledButton = styled(Button)`
+  margin: 0;
+`;
+
+const StyledCollectionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 const MyRecipes = () => {
@@ -301,131 +302,129 @@ const MyRecipes = () => {
   }
 
   return (
-    <div className="recipes-container">
+    <StyledRecipesContainer>
       <StyledNewRecipeButton
         onClick={() => {
           handleClickOpen();
         }}
         variant="contained"
         sx={{ mt: 3, mb: 2 }}>
-        {" "}
-        Add new recipe{" "}
+        Add new recipe
       </StyledNewRecipeButton>
       <NewRecipeDialog
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
       />
-      <h2 className="recipes-title">All Recipes</h2>
+      <StyledRecipesTitle>All Recipes</StyledRecipesTitle>
       {recipes.length > 0 ? (
-        <ul className="recipe-list">
+        <StyledRecipeList>
           {recipes.map((recipe) => (
-            <li className="recipe-item" key={recipe.id}>
-              <img
-                src={recipe.audioInstructions}
-                alt="Recipe"
-                className="recipe-image"
-              />{" "}
+            <StyledRecipeItem key={recipe.id}>
+              <StyledRecipeImage src={recipe.audioInstructions} alt="Recipe" />{" "}
               Image tag
-              <h3 className="recipe-name">{recipe.name}</h3>
-              <p className="recipe-description">{recipe.description}</p>
-              <div className="recipe-details">
-                <p className="recipe-info">
+              <StyledRecipeName>{recipe.name}</StyledRecipeName>
+              <StyledRecipeDescription>
+                {recipe.description}
+              </StyledRecipeDescription>
+              <StyledRecipeDetails>
+                <StyledRecipeInfo>
                   <strong>Prep Time:</strong> {recipe.prepTime} minutes
-                </p>
-                <p className="recipe-info">
+                </StyledRecipeInfo>
+                <StyledRecipeInfo>
                   <strong>Servings:</strong> {recipe.servings}
-                </p>
-                <p className="recipe-info">
+                </StyledRecipeInfo>
+                <StyledRecipeInfo>
                   <strong>Yield:</strong> {recipe.yield}
-                </p>
-                <p className="recipe-info">
+                </StyledRecipeInfo>
+                <StyledRecipeInfo>
                   <strong>Calories:</strong> {recipe.calories}
-                </p>
-                <div className="tags">
+                </StyledRecipeInfo>
+                <StyledTags>
                   <strong>Tags:</strong>
                   {recipe.tags.map((tag) => (
-                    <span key={tag.id} className="tag">
-                      {tag.name}
-                    </span>
+                    <StyledTag key={tag.id}>{tag.name}</StyledTag>
                   ))}
-                </div>
-                <div className="user-details">
+                </StyledTags>
+                <StyledUserDetails>
                   <strong>Posted by:</strong> {recipe.user.firstName}{" "}
                   {recipe.user.lastName}
-                  <p className="user-email">
+                  <StyledUserEmail>
                     <strong>Email:</strong> {recipe.user.email}
-                  </p>
-                </div>
-              </div>
+                  </StyledUserEmail>
+                </StyledUserDetails>
+              </StyledRecipeDetails>
               <p className="cuisine-name">
                 {" "}
                 <strong>Cuisines:</strong> {recipe.cuisineName}
               </p>{" "}
               {/* Display cuisine name */}
               <h4 className="recipe-subtitle">Ingredients:</h4>
-              <ul className="ingredient-list">
+              <StyledIngredientList>
                 {recipe.ingredients.map((ingredient) => (
-                  <li className="ingredient-item" key={ingredient.id}>
+                  <StyledIngredientItem key={ingredient.id}>
                     {ingredient.name} - {ingredient.amount} {ingredient.unit}
-                  </li>
+                  </StyledIngredientItem>
                 ))}
-              </ul>
-              <h4 className="recipe-subtitle">Instructions:</h4>
-              <ol className="instruction-list">
+              </StyledIngredientList>
+              <StyledRecipeSubtitle>Instructions:</StyledRecipeSubtitle>
+              <StyledInstructionList>
                 {recipe.instructions.map((instruction) => (
-                  <li className="instruction-item" key={instruction.id}>
+                  <StyledInstructionItem key={instruction.id}>
                     Step {instruction.stepNumber}: {instruction.stepDescription}
-                  </li>
+                  </StyledInstructionItem>
                 ))}
-              </ol>
-              <button
-                className="delete-button"
+              </StyledInstructionList>
+              <StyledButton
+                type="button"
+                variant="outlined"
+                color="error"
+                style={{ marginRight: "10px" }}
+                sx={{ mt: 3, mb: 2 }}
                 onClick={() => deleteRecipe(recipe.id)}>
                 Delete Recipe
-              </button>
-              <button
-                className="green-button"
-                onClick={() =>
-                  shopRecipe({ id: recipe.id, quantity: recipe.amount })
-                }>
-                Shop Recipe
-              </button>
-              <button
-                className="add-to-collection-button"
+              </StyledButton>
+              <StyledButton
+                type="button"
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
                 onClick={() => handleAddToCollection(recipe.id)}>
                 Add to Collection
-              </button>
-            </li>
+              </StyledButton>
+            </StyledRecipeItem>
           ))}
-        </ul>
+        </StyledRecipeList>
       ) : (
-        <p className="no-recipes">No recipes found.</p>
+        <StyledNoRecipes>No recipes found.</StyledNoRecipes>
       )}
       {showAddToCollection && (
-        <div className="add-to-collection-modal">
+        <StyledAddToCollectionSection>
           <h3>Add to Collection</h3>
-          <div>
+          <StyledCollectionContainer>
             <p>Create a new collection:</p>
-            <input
+            <StyledInput
               type="text"
               placeholder="Collection Name"
               value={newCollectionName}
               onChange={(e) => setNewCollectionName(e.target.value)}
             />
-            <input
+            <StyledInput
               type="text"
               placeholder="Collection Description"
               value={newCollectionDescription}
               onChange={(e) => setNewCollectionDescription(e.target.value)}
             />
-            <button onClick={handleAddToNewCollection}>
+            <StyledButton
+              type="button"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={handleAddToNewCollection}>
               Create New Collection
-            </button>
-          </div>
-          <div>
+            </StyledButton>
+          </StyledCollectionContainer>
+          <StyledCollectionContainer>
             <p>Choose an existing collection:</p>
-            <select
+            <StyledSelect
               value={selectedCollection}
               onChange={(e) => setSelectedCollection(e.target.value)}>
               <option value="">Select a collection</option>
@@ -434,14 +433,18 @@ const MyRecipes = () => {
                   {collection.name}
                 </option>
               ))}
-            </select>
-            <button onClick={handleAddToExistingCollection}>
+            </StyledSelect>
+            <StyledButton
+              type="button"
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={handleAddToExistingCollection}>
               Add to Existing Collection
-            </button>
-          </div>
-        </div>
+            </StyledButton>
+          </StyledCollectionContainer>
+        </StyledAddToCollectionSection>
       )}
-    </div>
+    </StyledRecipesContainer>
   );
 };
 

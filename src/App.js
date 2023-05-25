@@ -13,8 +13,6 @@ import ManageUser from "./pages/manage-user";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Footer from "./components/footer";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ShopContextProvider } from "./context/shop-context";
 import { AuthProvider } from "./context/auth-provider";
 import RequireAuth from "./pages/require-auth";
@@ -24,7 +22,6 @@ import Missing from "./pages/missing";
 function App() {
   return (
     <ShopContextProvider>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Router>
           <AuthProvider>
             <Navbar />
@@ -53,7 +50,6 @@ function App() {
             <Footer />
           </AuthProvider>
         </Router>
-      </LocalizationProvider>
     </ShopContextProvider>
   );
 }
