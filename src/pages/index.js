@@ -11,16 +11,16 @@ const StyledOuterContainer = styled.div`
 
 const StyledTitleContainer = styled.div`
   position: absolute;
-  left: 400px;
-  top: 400px;
+  left: 750px;
+  top: 200px;
   color: #02211b;
 `;
 
 const StyledCarouselContainer = styled.div`
   position: absolute;
-  right: 0px;
+  left: 400px;
   top: 150px;
-  width: 400px;
+  width: 600px;
 `;
 
 const Home = () => {

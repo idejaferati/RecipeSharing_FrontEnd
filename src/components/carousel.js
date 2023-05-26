@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
-import { PRODUCTS } from './../data/products';
+import axios from "axios";
+import { Link } from "react-router-dom";
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
 
 const StyledCarouselWrapper = styled.div`
   position: relative;
+  width: 90%;
+
   .slick-prev,
   .slick-next {
     position: absolute;
@@ -25,24 +35,25 @@ const StyledCarouselWrapper = styled.div`
 
   .slick-prev {
     background-image: url("../assets/collapse-allow.png");
-    left: 90px;
-    top: 1%;
-    transform: translateY(-50%);
+    top: 50%;
+    left: -40px;
+    transform: translate(-50%, -50%);
   }
   .slick-next {
     background-image: url("../assets/expand-allow.png");
-    left: 90px;
-    top: 99%;
-    transform: translateY(-50%);
+    top: 50%;
+    right: -40px;
+    transform: translate(50%, -50%);
   }
-  .slick-prev:before {
-    content: url("../assets/collapse-allow.png");
-  }
-  .slick-next:before {
-    content: url("../assets/expand-allow.png");
+
+  .slick-slide > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
   }
 `;
-
 
 const StyledImg = styled.img`
   width: 50px;
@@ -50,35 +61,52 @@ const StyledImg = styled.img`
 `;
 
 function Carousel() {
+  const [cuisines, setCuisines] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("https://localhost:7164/api/cuisines")
+      .then((response) => {
+        setCuisines(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching cuisines:", error);
+      });
+  }, []);
+
   const settings = {
     dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
-    vertical: true,
-    arrows: true, // add arrows
+    arrows: true,
     prevArrow: (
-      <button type="button" className="slide-arrow slick-prev"></button>
-    ), // set the previous arrow button
+      <button type="button" className="slide-arrow slick-prev">
+        Prev
+      </button>
+    ),
     nextArrow: (
-      <button type="button" className="slide-arrow slick-next"></button>
-    ), // set the next arrow button
+      <button type="button" className="slide-arrow slick-next">
+        Next
+      </button>
+    ),
   };
 
   return (
-    <StyledCarouselWrapper>
-      <Slider {...settings}>
-        {PRODUCTS.map((product) => {
-          return (
-            <div>
-              <h3>{product.productName}</h3>
-              <StyledImg src={product.productImage} />
+    <Container>
+      <StyledCarouselWrapper>
+        <Slider {...settings}>
+          {cuisines.map((cuisine) => (
+            <div key={cuisine.name}>
+              <Link to="http://localhost:3000/cuisines">
+              <h2 style={{ textTransform: 'uppercase' }}>{cuisine.name}</h2>
+              </Link>
             </div>
-          )
-        })}
-      </Slider>
-    </StyledCarouselWrapper>
+          ))}
+        </Slider>
+      </StyledCarouselWrapper>
+    </Container>
   );
 }
 
