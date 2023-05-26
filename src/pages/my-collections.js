@@ -47,6 +47,42 @@ const MyCollections = () => {
     }
   };
 
+  const deleteRecipe = async (collectionId, recipeId) => {
+    try {
+      const jwtToken = Cookies.get("jwtToken");
+      console.log(collectionId);
+      console.log(recipeId);
+
+      await axios
+        .put(
+          `https://localhost:7164/api/collections/${collectionId}/recipes/${recipeId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        )
+        .then(() => {
+          // Update the collections state by removing the deleted recipe from the specified collection
+          setCollections(
+            collections.map((collection) => {
+              if (collection.id === collectionId) {
+                return {
+                  ...collection,
+                  recipes: collection.recipes.filter(
+                    (recipe) => recipe.id !== recipeId
+                  ),
+                };
+              }
+              return collection;
+            })
+          );
+        });
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+    }
+  };
+
   const handleUpdateCollection = (collectionId) => {
     const updatedName = prompt("Enter the updated name:");
     const updatedDescription = prompt("Enter the updated description:");
@@ -150,6 +186,15 @@ const MyCollections = () => {
                         </li>
                       ))}
                     </ol>
+                    <StyledButton
+                      type="button"
+                      variant="outlined"
+                      color="error"
+                      style={{ marginRight: "10px" }}
+                      sx={{ mt: 3, mb: 2 }}
+                      onClick={() => deleteRecipe(collection.id, recipe.id)}>
+                      Delete Recipe
+                    </StyledButton>
                   </li>
                 ))}
               </ul>
