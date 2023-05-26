@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const StyledFormContainer = styled.div`
   display: flex;
@@ -15,6 +16,7 @@ const StyledFormContainer = styled.div`
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,6 +175,13 @@ const Profile = () => {
           </form>
         </StyledFormContainer>
       )}
+      <Button
+        type="button"
+        onClick={() => navigate("/changePassword")}
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}>
+        Go to change password
+      </Button>
     </div>
   );
 };

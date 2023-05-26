@@ -35,7 +35,7 @@ function App() {
             <Route path="/login" exact element={<Login />} />
             <Route path="/signup" exact element={<SignUp />} />
             <Route path="unauthorized" element={<Unauthorized />} />
-            <Route path="changePassword" element={<ChangePassword />} />
+            <Route path="/changePassword" element={<ChangePassword />} />
 
             <Route element={<RequireAuth allowedRole={"user"} />}>
               <Route path="/userRecipes" element={<MyRecipes />} />
