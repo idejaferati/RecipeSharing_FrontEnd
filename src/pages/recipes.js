@@ -129,6 +129,12 @@ const StyledIngredientContainer = styled.div`
   gap: 10px;
 `;
 
+const StyledSearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [collections, setCollections] = useState([]);
@@ -144,6 +150,9 @@ const MyRecipes = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(1);
   const [reviewMessage, setReviewMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchClicked, setSearchClicked] = useState(false);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -161,6 +170,11 @@ const MyRecipes = () => {
           .get("https://localhost:7164/api/recipes/getAll")
           .then((res) => {
             setRecipes(res.data);
+
+            const filtered = res.data.filter((recipe) =>
+              recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setFilteredRecipes(filtered);
           });
       } catch (error) {
         console.error("Error fetching recipes:", error);
@@ -364,6 +378,19 @@ const MyRecipes = () => {
     }
   };
 
+  const handleSearchQueryChange = (event) => {
+    setSearchQuery(event.target.value);
+    setSearchClicked(false);
+  };
+
+  const handleSearch = () => {
+    const filtered = recipes.filter((recipe) =>
+      recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredRecipes(filtered);
+    setSearchClicked(true);
+  };
+
   const handleShowReviews = async (recipeId) => {
     await fetchReviews(recipeId);
   };
@@ -406,9 +433,26 @@ const MyRecipes = () => {
         onClose={handleClose}
       />
       <StyledRecipesTitle>All Recipes</StyledRecipesTitle>
-      {recipes.length > 0 ? (
+      <StyledSearchContainer>
+        <StyledInput
+          type="text"
+          placeholder="Search recipes..."
+          value={searchQuery}
+          onChange={handleSearchQueryChange}
+        />
+        <StyledButton
+          type="button"
+          color="success"
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}
+          style={{ margin: "0px" }}
+          onClick={handleSearch}>
+          Search
+        </StyledButton>
+      </StyledSearchContainer>
+      {filteredRecipes.length > 0 ? (
         <StyledRecipeList>
-          {recipes.map((recipe) => (
+          {filteredRecipes.map((recipe) => (
             <StyledListItem key={recipe.id}>
               <StyledRecipeImage src={recipe.audioInstructions} alt="Recipe" />{" "}
               Image tag

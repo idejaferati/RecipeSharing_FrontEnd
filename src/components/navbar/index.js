@@ -6,12 +6,23 @@ import {
   StyledNavMenu,
   StyledNavBtn,
   StyledNavBtnLink,
+  StyledNavBtnLink2,
 } from "./navbarElements";
 import useAuth from "../hooks/use-auth";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
   const role = auth?.role;
+
+  const handleLogout = () => {
+    Cookies.remove("jwtToken");
+    setAuth(null);
+    navigate("/");
+  };
+
   return (
     <>
       <StyledNav>
@@ -31,11 +42,11 @@ const Navbar = () => {
               <StyledNavLink to="/shopping" activestyle="true">
                 Shopping
               </StyledNavLink>
-              <StyledNavLink to="/profile" activestyle="true">
-                Profile
-              </StyledNavLink>
               <StyledNavLink to="/cookbooks" activestyle="true">
                 Cookbooks
+              </StyledNavLink>
+              <StyledNavLink to="/userRecipes" activestyle="true">
+                My Recipes
               </StyledNavLink>
               <StyledNavLink to="/userCollections" activestyle="true">
                 My collections
@@ -58,10 +69,19 @@ const Navbar = () => {
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
         </StyledNavMenu>
-        <StyledNavBtn>
-          <StyledNavBtnLink to="/signup">Sign Up</StyledNavBtnLink>
-          <StyledNavBtnLink to="/login">Log In</StyledNavBtnLink>
-        </StyledNavBtn>
+        {role == "admin" || role == "user" ? (
+          <StyledNavBtn>
+            <StyledNavBtnLink to="/profile">Profile</StyledNavBtnLink>
+            <StyledNavBtnLink2 onClick={handleLogout}>
+              Log out
+            </StyledNavBtnLink2>
+          </StyledNavBtn>
+        ) : (
+          <StyledNavBtn>
+            <StyledNavBtnLink to="/signup">Sign Up</StyledNavBtnLink>
+            <StyledNavBtnLink to="/login">Log In</StyledNavBtnLink>
+          </StyledNavBtn>
+        )}
       </StyledNav>
     </>
   );
