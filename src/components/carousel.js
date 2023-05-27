@@ -99,8 +99,12 @@ function Carousel() {
         <Slider {...settings}>
           {cuisines.map((cuisine) => (
             <div key={cuisine.name}>
-              <Link to="http://localhost:3000/cuisines">
-              <h2 style={{ textTransform: 'uppercase' }}>{cuisine.name}</h2>
+              <Link
+                style={{ color: "black" }}
+                to="http://localhost:3000/cuisines">
+                <h2 style={{ textTransform: "uppercase", color: "black" }}>
+                  {cuisine.name}
+                </h2>
               </Link>
             </div>
           ))}

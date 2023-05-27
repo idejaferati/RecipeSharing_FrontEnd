@@ -385,6 +385,7 @@ const MyRecipes = () => {
               variant="outlined"
               color="error"
               sx={{ mt: 3, mb: 2 }}
+              style={{ margin: "3px" }}
               onClick={() => handleDeleteRecipe(recipe.id)}>
               Delete Recipe
             </Button>
@@ -425,6 +426,7 @@ const MyRecipes = () => {
                         variant="outlined"
                         color="error"
                         sx={{ mt: 3, mb: 2 }}
+                        style={{ margin: "3px" }}
                         onClick={() => handleDeleteInstruction(index)}>
                         Delete
                       </Button>
@@ -437,6 +439,7 @@ const MyRecipes = () => {
                     type="button"
                     variant="outlined"
                     sx={{ mt: 3, mb: 2 }}
+                    style={{ margin: "3px" }}
                     onClick={handleAddInstruction}>
                     Add Step
                   </Button>
@@ -456,6 +459,7 @@ const MyRecipes = () => {
                         variant="outlined"
                         color="error"
                         sx={{ mt: 3, mb: 2 }}
+                        style={{ margin: "3px" }}
                         onClick={() => handleDeleteIngredient(index)}>
                         Delete
                       </Button>
@@ -468,6 +472,7 @@ const MyRecipes = () => {
                     type="button"
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    style={{ margin: "3px" }}
                     onClick={handleAddIngredient}>
                     Add Ingredient
                   </Button>
@@ -487,6 +492,7 @@ const MyRecipes = () => {
                         variant="outlined"
                         color="error"
                         sx={{ mt: 3, mb: 2 }}
+                        style={{ margin: "3px" }}
                         onClick={() => handleDeleteTag(index)}>
                         Delete
                       </Button>
@@ -499,6 +505,7 @@ const MyRecipes = () => {
                     type="button"
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    style={{ margin: "3px" }}
                     onClick={handleAddTag}>
                     Add Tag
                   </Button>
@@ -583,6 +590,7 @@ const MyRecipes = () => {
                     type="button"
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
+                    style={{ margin: "3px" }}
                     onClick={handleUpdateRecipe}>
                     Save
                   </Button>
@@ -601,6 +609,7 @@ const MyRecipes = () => {
                   type="button"
                   variant="outlined"
                   sx={{ mt: 3, mb: 2 }}
+                  style={{ margin: "3px" }}
                   onClick={() => handleEditClick(recipe)}>
                   Update Recipe
                 </Button>
@@ -608,6 +617,7 @@ const MyRecipes = () => {
                   type="button"
                   variant="outlined"
                   sx={{ mt: 3, mb: 2 }}
+                  style={{ margin: "3px" }}
                   onClick={() => handleAddToCookbook(recipe.id)}>
                   Add to Cookbook
                 </Button>
