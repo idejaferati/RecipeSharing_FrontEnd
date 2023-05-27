@@ -11,6 +11,7 @@ import {
 } from "../shared/shared-style";
 import { StarRating } from "../components/star-rating";
 import TextField from "@mui/material/TextField";
+import { AddToCollectionDialog } from "../components/add-to-collection-dialog";
 
 const StyledRecipesContainer = styled.div`
   max-width: 800px;
@@ -108,21 +109,6 @@ const StyledRecipeImage = styled.img`
   width: 200px;
 `;
 
-const StyledAddToCollectionSection = styled.div`
-  border: 1px dashed green;
-  padding: 15px;
-`;
-
-const StyledSelect = styled.select`
-  height: 36px;
-`;
-
-const StyledCollectionContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
 const StyledIngredientContainer = styled.div`
   display: flex;
   align-items: center;
@@ -137,29 +123,28 @@ const StyledSearchContainer = styled.div`
 
 const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
-  const [collections, setCollections] = useState([]);
   const [error, setError] = useState(null);
   const [showAddToCollection, setShowAddToCollection] = useState(false);
-  const [selectedCollection, setSelectedCollection] = useState("");
   const [selectedRecipeId, setSelectedRecipeId] = useState("");
-  const [newCollectionName, setNewCollectionName] = useState("");
-  const [newCollectionDescription, setNewCollectionDescription] = useState("");
   const [reviewingRecipeId, setReviewingRecipeId] = useState("");
   const [reviewRating, setReviewRating] = useState(0);
   const [reviews, setReviews] = useState([]);
-  const [open, setOpen] = React.useState(false);
+  const [openNewRecipeModal, setOpenNewRecipeModal] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(1);
+  const [selectedValue2, setSelectedValue2] = React.useState(1);
   const [reviewMessage, setReviewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchClicked, setSearchClicked] = useState(false);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [openAddToCollectionModal, setOpenAddToCollectionModal] =
+    useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenNewRecipeModal(true);
   };
 
   const handleClose = (value) => {
-    setOpen(false);
+    setOpenNewRecipeModal(false);
     setSelectedValue(value);
   };
 
@@ -183,27 +168,6 @@ const MyRecipes = () => {
     };
 
     fetchRecipes();
-  }, []);
-
-  useEffect(() => {
-    const fetchCollections = async () => {
-      try {
-        const jwtToken = Cookies.get("jwtToken");
-        await axios
-          .get("https://localhost:7164/api/collections/user", {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          })
-          .then((res) => {
-            setCollections(res.data);
-          });
-      } catch (error) {
-        console.error("Error fetching collections:", error);
-      }
-    };
-
-    fetchCollections();
   }, []);
 
   // const deleteRecipe = async (recipeId) => {
@@ -247,75 +211,19 @@ const MyRecipes = () => {
     }
   };
 
+  const handleOpenAddToCollectionModal = () => {
+    setOpenAddToCollectionModal(true);
+  };
+
+  const handleCloseAddToCollectionModal = (value) => {
+    setOpenAddToCollectionModal(false);
+    setSelectedValue2(value);
+  };
+
   const handleAddToCollection = (recipeId) => {
     setSelectedRecipeId(recipeId);
     setShowAddToCollection(true);
-  };
-
-  const handleAddToNewCollection = async () => {
-    try {
-      const collectionData = {
-        name: newCollectionName,
-        description: newCollectionDescription,
-        recipes: [selectedRecipeId],
-      };
-      console.log(JSON.stringify(collectionData));
-      const jwtToken = Cookies.get("jwtToken");
-      const response = await axios
-        .post(
-          "https://localhost:7164/api/Collections",
-          JSON.stringify(collectionData),
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(() => {
-          const newCollection = response.data;
-          setCollections((collections) => [...collections, newCollection]);
-
-          // Reset the form fields and selection
-          setNewCollectionName("");
-          setNewCollectionDescription("");
-          setSelectedRecipeId("");
-          setShowAddToCollection(false);
-        });
-    } catch (error) {
-      console.error("Error creating new collection:", error);
-    }
-  };
-
-  const handleAddToExistingCollection = async () => {
-    try {
-      const collectionId = selectedCollection;
-      const recipeId = selectedRecipeId;
-
-      console.log(collectionId, recipeId);
-      const jwtToken = Cookies.get("jwtToken");
-
-      await axios
-        .post(
-          `https://localhost:7164/api/collections/${collectionId}/recipes/addrecipe`,
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-            params: {
-              recipeId,
-            },
-          }
-        )
-        .then(() => {
-          setSelectedRecipeId("");
-          setShowAddToCollection(false);
-        });
-    } catch (error) {
-      console.error("Error adding recipe to existing collection:", error);
-    }
+    handleOpenAddToCollectionModal();
   };
 
   const handleReviewRecipe = async (recipeId, rating) => {
@@ -360,6 +268,9 @@ const MyRecipes = () => {
       const jwtToken = Cookies.get("jwtToken");
       await axios
         .get(`https://localhost:7164/api/reviews`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
           params: {
             id: selectedRecipeId,
           },
@@ -395,12 +306,6 @@ const MyRecipes = () => {
     await fetchReviews(recipeId);
   };
 
-  useEffect(() => {
-    if (selectedRecipeId !== "") {
-      handleShowReviews(selectedRecipeId);
-    }
-  }, [selectedRecipeId]);
-
   if (error) {
     return (
       <StyledRecipesContainer>
@@ -429,7 +334,7 @@ const MyRecipes = () => {
       </StyledNewRecipeButton>
       <NewRecipeDialog
         selectedValue={selectedValue}
-        open={open}
+        open={openNewRecipeModal}
         onClose={handleClose}
       />
       <StyledRecipesTitle>All Recipes</StyledRecipesTitle>
@@ -578,7 +483,7 @@ const MyRecipes = () => {
                 onClick={() => handleShowReviews(recipe.id)}>
                 Show Reviews
               </StyledButton>
-              {reviews[recipe.id] && (
+              {reviews && reviews[recipe.id] && (
                 <div key={recipe.id}>
                   <h4>Reviews:</h4>
                   <ul>
@@ -597,53 +502,14 @@ const MyRecipes = () => {
         <StyledNoRecipes>No recipes found.</StyledNoRecipes>
       )}
       {showAddToCollection && (
-        <StyledAddToCollectionSection>
-          <h3>Add to Collection</h3>
-          <StyledCollectionContainer>
-            <p>Create a new collection:</p>
-            <StyledInput
-              type="text"
-              placeholder="Collection Name"
-              value={newCollectionName}
-              onChange={(e) => setNewCollectionName(e.target.value)}
-            />
-            <StyledInput
-              type="text"
-              placeholder="Collection Description"
-              value={newCollectionDescription}
-              onChange={(e) => setNewCollectionDescription(e.target.value)}
-            />
-            <StyledButton
-              type="button"
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleAddToNewCollection}>
-              Create New Collection
-            </StyledButton>
-          </StyledCollectionContainer>
-          {!!collections?.length && (
-            <StyledCollectionContainer>
-              <p>Choose an existing collection:</p>
-              <StyledSelect
-                value={selectedCollection}
-                onChange={(e) => setSelectedCollection(e.target.value)}>
-                <option value="">Select a collection</option>
-                {collections.map((collection) => (
-                  <option key={collection.id} value={collection.id}>
-                    {collection.name}
-                  </option>
-                ))}
-              </StyledSelect>
-              <StyledButton
-                type="button"
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleAddToExistingCollection}>
-                Add to Existing Collection
-              </StyledButton>
-            </StyledCollectionContainer>
-          )}
-        </StyledAddToCollectionSection>
+        <AddToCollectionDialog
+          selectedValue={selectedValue2}
+          open={openAddToCollectionModal}
+          onClose={handleCloseAddToCollectionModal}
+          selectedRecipeId={selectedRecipeId}
+          setSelectedRecipeId={setSelectedRecipeId}
+          setShowAddToCollection={setShowAddToCollection}
+        />
       )}
     </StyledRecipesContainer>
   );

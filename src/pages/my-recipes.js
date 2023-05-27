@@ -317,16 +317,16 @@ const MyRecipes = () => {
   const handleAddToExistingCookbook = async () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      const cookbookId = selectedCookbook;
+      const cookBookId = selectedCookbook;
       const recipeId = selectedRecipeId;
       //const recipeId = editingRecipe.id; // Assuming the recipe ID is required for adding to a cookbook
 
-      await axios.post(`https://localhost:7164/api/cookbooks/addRecipe`, null, {
+      await axios.put(`https://localhost:7164/api/cookbooks/addRecipe`, null, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
         params: {
-          cookbookId,
+          cookBookId,
           recipeId,
         },
       });

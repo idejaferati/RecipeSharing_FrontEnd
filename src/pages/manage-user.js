@@ -73,7 +73,7 @@ const StyledSearchButton = styled.button`
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
   const [searchEmail, setSearchEmail] = useState("");
-  const [foundUser, setFoundUser] = useState(null);
+  const [foundUsers, setFoundUsers] = useState(null);
 
   useEffect(() => {
     const jwtToken = Cookies.get("jwtToken");
@@ -115,15 +115,20 @@ const ManageUser = () => {
   const handleSearchUser = async () => {
     const jwtToken = Cookies.get("jwtToken");
     try {
-      const response = await axios.get(
-        `https://localhost:7164/api/Users/search-by-email/${searchEmail}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-      setFoundUser(response.data);
+      if (searchEmail) {
+        await axios
+          .get(
+            `https://localhost:7164/api/Users/search-by-email/${searchEmail}`,
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+            }
+          )
+          .then((res) => setFoundUsers(res.data));
+      } else {
+        setFoundUsers(users);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -145,9 +150,9 @@ const ManageUser = () => {
         </StyledSearchButton>
       </StyledSearchContainer>
 
-      {foundUser ? (
+      {!!foundUsers ? (
         <div>
-          <h2>Found User:</h2>
+          <h2>Found User(s):</h2>
           <StyledUserTable>
             <thead>
               <StyledTableRow>
@@ -161,19 +166,21 @@ const ManageUser = () => {
               </StyledTableRow>
             </thead>
             <tbody>
-              <StyledTableRow key={foundUser.id}>
-                <StyledTableData>{foundUser.firstName}</StyledTableData>
-                <StyledTableData>{foundUser.lastName}</StyledTableData>
-                <StyledTableData>{foundUser.gender}</StyledTableData>
-                <StyledTableData>{foundUser.dateOfBirth}</StyledTableData>
-                <StyledTableData>{foundUser.email}</StyledTableData>
-                <StyledTableData>{foundUser.phoneNumber}</StyledTableData>
-                <StyledTableData>
-                  <button onClick={() => handleDeleteUser(foundUser.email)}>
-                    Delete
-                  </button>
-                </StyledTableData>
-              </StyledTableRow>
+              {foundUsers.map((foundUser) => (
+                <StyledTableRow key={foundUser.id}>
+                  <StyledTableData>{foundUser.firstName}</StyledTableData>
+                  <StyledTableData>{foundUser.lastName}</StyledTableData>
+                  <StyledTableData>{foundUser.gender}</StyledTableData>
+                  <StyledTableData>{foundUser.dateOfBirth}</StyledTableData>
+                  <StyledTableData>{foundUser.email}</StyledTableData>
+                  <StyledTableData>{foundUser.phoneNumber}</StyledTableData>
+                  <StyledTableData>
+                    <button onClick={() => handleDeleteUser(foundUser.email)}>
+                      Delete
+                    </button>
+                  </StyledTableData>
+                </StyledTableRow>
+              ))}
             </tbody>
           </StyledUserTable>
         </div>
