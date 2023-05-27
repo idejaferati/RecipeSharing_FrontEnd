@@ -64,6 +64,12 @@ const Navbar = () => {
               <StyledNavLink to="/manageuser" activestyle="true">
                 Manage user
               </StyledNavLink>
+              <StyledNavLink to="/managetags" activestyle="true">
+                Manage tags
+              </StyledNavLink>
+              <StyledNavLink to="/managerecipes" activestyle="true">
+                Manage recipes
+              </StyledNavLink>
             </>
           ) : null}
           {/* Second Nav */}

@@ -14,42 +14,79 @@ import TextField from "@mui/material/TextField";
 import { AddToCollectionDialog } from "../components/add-to-collection-dialog";
 
 const StyledRecipesContainer = styled.div`
-  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const StyledRecipesTitle = styled.h2`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #333;
 `;
 
 const StyledRecipeList = styled.ul`
   list-style: none;
   padding: 0;
+  display: block;
+  align-items: flex-start;
 `;
 
+const StyledRecipeImage = styled.img`
+  width: 200px;
+  height: 400px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-self: flex-start;
+  float: right;
+  margin-right: 10px;
+`;
 const StyledNewRecipeButton = styled(Button)`
   width: 301px;
   align-self: center;
+  margin: 2px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const StyledSearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center; /* Added */
 `;
 
 const StyledRecipeName = styled.h3`
   font-size: 20px;
   margin-bottom: 5px;
+  color: #333;
 `;
 
 const StyledRecipeDescription = styled.p`
   margin-bottom: 10px;
+  color: #555;
 `;
 
 const StyledRecipeDetails = styled.div`
-  margin-bottom: 10px;
+  flex-grow: 1;
 `;
 
 const StyledRecipeInfo = styled.p`
   margin: 0;
+  color: #777;
 `;
 
 const StyledTags = styled.div`
@@ -79,12 +116,14 @@ const StyledRecipeSubtitle = styled.h4`
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 5px;
+  color: #333;
 `;
 
 const StyledIngredientList = styled.ul`
   list-style: disc;
   margin-left: 20px;
   margin-bottom: 10px;
+  color: #555;
 `;
 
 const StyledIngredientItem = styled.li`
@@ -94,6 +133,7 @@ const StyledIngredientItem = styled.li`
 const StyledInstructionList = styled.ol`
   list-style: decimal;
   margin-left: 20px;
+  color: #555;
 `;
 
 const StyledInstructionItem = styled.li`
@@ -105,20 +145,11 @@ const StyledNoRecipes = styled.p`
   color: #888;
 `;
 
-const StyledRecipeImage = styled.img`
-  width: 200px;
-`;
-
 const StyledIngredientContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-`;
-
-const StyledSearchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  color: black;
 `;
 
 const MyRecipes = () => {
@@ -350,7 +381,7 @@ const MyRecipes = () => {
           color="success"
           variant="contained"
           sx={{ mt: 3, mb: 2 }}
-          style={{ margin: "0px" }}
+          style={{ margin: "3px" }}
           onClick={handleSearch}>
           Search
         </StyledButton>
@@ -360,71 +391,74 @@ const MyRecipes = () => {
           {filteredRecipes.map((recipe) => (
             <StyledListItem key={recipe.id}>
               <StyledRecipeImage src={recipe.audioInstructions} alt="Recipe" />{" "}
-              Image tag
-              <StyledRecipeName>{recipe.name}</StyledRecipeName>
-              <StyledRecipeDescription>
-                {recipe.description}
-              </StyledRecipeDescription>
-              <StyledRecipeDetails>
-                <StyledRecipeInfo>
-                  <strong>Prep Time:</strong> {recipe.prepTime} minutes
-                </StyledRecipeInfo>
-                <StyledRecipeInfo>
-                  <strong>Servings:</strong> {recipe.servings}
-                </StyledRecipeInfo>
-                <StyledRecipeInfo>
-                  <strong>Yield:</strong> {recipe.yield}
-                </StyledRecipeInfo>
-                <StyledRecipeInfo>
-                  <strong>Calories:</strong> {recipe.calories}
-                </StyledRecipeInfo>
-                <StyledTags>
-                  <strong>Tags:</strong>
-                  {recipe.tags.map((tag) => (
-                    <StyledTag key={tag.id}>{tag.name}</StyledTag>
+              <div>
+                <StyledRecipeName>{recipe.name}</StyledRecipeName>
+                <StyledRecipeDescription>
+                  {recipe.description}
+                </StyledRecipeDescription>
+                <StyledRecipeDetails>
+                  <StyledRecipeInfo>
+                    <strong>Prep Time:</strong> {recipe.prepTime} minutes
+                  </StyledRecipeInfo>
+                  <StyledRecipeInfo>
+                    <strong>Servings:</strong> {recipe.servings}
+                  </StyledRecipeInfo>
+                  <StyledRecipeInfo>
+                    <strong>Yield:</strong> {recipe.yield}
+                  </StyledRecipeInfo>
+                  <StyledRecipeInfo>
+                    <strong>Calories:</strong> {recipe.calories}
+                  </StyledRecipeInfo>
+                  <StyledTags>
+                    <strong>Tags:</strong>
+                    {recipe.tags.map((tag) => (
+                      <StyledTag key={tag.id}>{tag.name}</StyledTag>
+                    ))}
+                  </StyledTags>
+                  <StyledUserDetails>
+                    <strong>Posted by:</strong> {recipe.user.firstName}{" "}
+                    {recipe.user.lastName}
+                    <StyledUserEmail>
+                      <strong>Email:</strong> {recipe.user.email}
+                    </StyledUserEmail>
+                  </StyledUserDetails>
+                </StyledRecipeDetails>
+                <p className="cuisine-name">
+                  {" "}
+                  <strong>Cuisines:</strong> {recipe.cuisineName}
+                </p>{" "}
+                {/* Display cuisine name */}
+                <h4 className="recipe-subtitle">Ingredients:</h4>
+                <StyledIngredientList>
+                  {recipe.ingredients.map((ingredient) => (
+                    <StyledIngredientContainer key={ingredient.id}>
+                      <StyledIngredientItem>
+                        {ingredient.name} - {ingredient.amount}{" "}
+                        {ingredient.unit}
+                      </StyledIngredientItem>
+                      <StyledButton
+                        type="button"
+                        variant="outlined"
+                        sx={{ mt: 3, mb: 2 }}
+                        style={{ margin: "3px" }}
+                        onClick={() =>
+                          shopIngredient(ingredient.name, ingredient.amount)
+                        }>
+                        Shop ingredient
+                      </StyledButton>
+                    </StyledIngredientContainer>
                   ))}
-                </StyledTags>
-                <StyledUserDetails>
-                  <strong>Posted by:</strong> {recipe.user.firstName}{" "}
-                  {recipe.user.lastName}
-                  <StyledUserEmail>
-                    <strong>Email:</strong> {recipe.user.email}
-                  </StyledUserEmail>
-                </StyledUserDetails>
-              </StyledRecipeDetails>
-              <p className="cuisine-name">
-                {" "}
-                <strong>Cuisines:</strong> {recipe.cuisineName}
-              </p>{" "}
-              {/* Display cuisine name */}
-              <h4 className="recipe-subtitle">Ingredients:</h4>
-              <StyledIngredientList>
-                {recipe.ingredients.map((ingredient) => (
-                  <StyledIngredientContainer key={ingredient.id}>
-                    <StyledIngredientItem>
-                      {ingredient.name} - {ingredient.amount} {ingredient.unit}
-                    </StyledIngredientItem>
-                    <StyledButton
-                      type="button"
-                      variant="outlined"
-                      sx={{ mt: 3, mb: 2 }}
-                      onClick={() =>
-                        shopIngredient(ingredient.name, ingredient.amount)
-                      }>
-                      Shop ingredient
-                    </StyledButton>
-                  </StyledIngredientContainer>
-                ))}
-              </StyledIngredientList>
-              <StyledRecipeSubtitle>Instructions:</StyledRecipeSubtitle>
-              <StyledInstructionList>
-                {recipe.instructions.map((instruction) => (
-                  <StyledInstructionItem key={instruction.id}>
-                    Step {instruction.stepNumber}: {instruction.stepDescription}
-                  </StyledInstructionItem>
-                ))}
-              </StyledInstructionList>
-              {/* <StyledButton
+                </StyledIngredientList>
+                <StyledRecipeSubtitle>Instructions:</StyledRecipeSubtitle>
+                <StyledInstructionList>
+                  {recipe.instructions.map((instruction) => (
+                    <StyledInstructionItem key={instruction.id}>
+                      Step {instruction.stepNumber}:{" "}
+                      {instruction.stepDescription}
+                    </StyledInstructionItem>
+                  ))}
+                </StyledInstructionList>
+                {/* <StyledButton
                 type="button"
                 variant="outlined"
                 color="error"
@@ -433,68 +467,75 @@ const MyRecipes = () => {
                 onClick={() => deleteRecipe(recipe.id)}>
                 Delete Recipe
               </StyledButton> */}
-              <StyledButton
-                type="button"
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={() => handleAddToCollection(recipe.id)}>
-                Add to Collection
-              </StyledButton>
-              {recipe.id === reviewingRecipeId ? (
-                <div className="review-form">
-                  <p>Rate this recipe:</p>
-                  <StarRating
-                    rating={reviewRating}
-                    onRatingChange={setReviewRating}
-                  />
-                  <TextField
-                    label="Review Message"
-                    value={reviewMessage}
-                    onChange={(e) => setReviewMessage(e.target.value)} // Update the review message state
-                    multiline
-                    rows={4}
-                    fullWidth
-                    margin="normal"
-                  />
+                <StyledButton
+                  type="button"
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  style={{ margin: "3px" }}
+                  onClick={() => handleAddToCollection(recipe.id)}>
+                  Add to Collection
+                </StyledButton>
+                {recipe.id === reviewingRecipeId ? (
+                  <div className="review-form">
+                    <p>Rate this recipe:</p>
+                    <StarRating
+                      rating={reviewRating}
+                      onRatingChange={setReviewRating}
+                    />
+                    <TextField
+                      label="Review Message"
+                      value={reviewMessage}
+                      onChange={(e) => setReviewMessage(e.target.value)} // Update the review message state
+                      multiline
+                      rows={4}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <StyledButton
+                      type="button"
+                      color="secondary"
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      style={{ margin: "3px" }}
+                      onClick={() =>
+                        handleReviewRecipe(recipe.id, reviewRating)
+                      }>
+                      Submit Review
+                    </StyledButton>
+                  </div>
+                ) : (
                   <StyledButton
                     type="button"
                     color="secondary"
-                    variant="contained"
+                    variant="outlined"
                     sx={{ mt: 3, mb: 2 }}
-                    onClick={() => handleReviewRecipe(recipe.id, reviewRating)}>
-                    Submit Review
+                    style={{ margin: "3px" }}
+                    onClick={() => setReviewingRecipeId(recipe.id)}>
+                    Review Recipe
                   </StyledButton>
-                </div>
-              ) : (
+                )}
                 <StyledButton
                   type="button"
-                  color="secondary"
+                  color="success"
                   variant="outlined"
                   sx={{ mt: 3, mb: 2 }}
-                  onClick={() => setReviewingRecipeId(recipe.id)}>
-                  Review Recipe
+                  style={{ margin: "3px" }}
+                  onClick={() => handleShowReviews(recipe.id)}>
+                  Show Reviews
                 </StyledButton>
-              )}
-              <StyledButton
-                type="button"
-                color="success"
-                variant="outlined"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={() => handleShowReviews(recipe.id)}>
-                Show Reviews
-              </StyledButton>
-              {reviews && reviews[recipe.id] && (
-                <div key={recipe.id}>
-                  <h4>Reviews:</h4>
-                  <ul>
-                    {reviews[recipe.id].map((review) => (
-                      <li key={review.id}>
-                        Rating: {review.rating} | Message: {review.message}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                {reviews && reviews[recipe.id] && (
+                  <div key={recipe.id}>
+                    <h4>Reviews:</h4>
+                    <ul>
+                      {reviews[recipe.id].map((review) => (
+                        <li key={review.id}>
+                          Rating: {review.rating} | Message: {review.message}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </StyledListItem>
           ))}
         </StyledRecipeList>
