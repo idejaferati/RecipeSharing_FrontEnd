@@ -10,6 +10,8 @@ import Recipes from "./pages/recipes";
 import Shopping from "./pages/shopping";
 import UserPermissions from "./pages/user-permissions";
 import ManageUser from "./pages/manage-user";
+import ManageTags from "./pages/manage-tags";
+import ManageRecipes from "./pages/manage-recipes";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import Footer from "./components/footer";
@@ -50,6 +52,8 @@ function App() {
             <Route element={<RequireAuth allowedRole={"admin"} />}>
               <Route path="/permissions" element={<UserPermissions />} />
               <Route path="/manageuser" element={<ManageUser />} />
+              <Route path="/managetags" element={<ManageTags />} />
+              <Route path="/managerecipes" element={<ManageRecipes />} />
               <Route path="/profile" element={<Profile />} />
             </Route>
 
