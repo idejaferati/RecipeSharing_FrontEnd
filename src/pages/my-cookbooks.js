@@ -47,8 +47,11 @@ function MyCookbooks() {
   }
   async function deleteCookbook(cookbookId) {
     try {
-      await fetch(`api/cookbooks/${cookbookId}`, {
-        method: "DELETE",
+      const jwtToken = Cookies.get("jwtToken");
+      await axios.delete(`https://localhost:7164/api/cookbooks/${cookbookId}`,{
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        }
       });
       // Optional: You can remove the deleted cookbook from the state to update the UI immediately.
       setCookbookData((prevData) =>

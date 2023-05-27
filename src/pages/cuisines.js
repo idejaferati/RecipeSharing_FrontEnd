@@ -198,9 +198,7 @@ const Cuisines = () => {
           <div>
             <h1>{selectedCuisine.name}</h1>
             <p>{selectedCuisine.description}</p>
-            {selectedCuisine &&
-            selectedCuisine.recipes &&
-            selectedCuisine.recipes.length > 0 ? (
+            {selectedCuisineRecipes && selectedCuisineRecipes.length > 0 ? (
               <div>
                 <h2>Recipes:</h2>
                 <ul>
