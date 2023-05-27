@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { StyledField, StyledButton } from "./../shared/shared-style";
+import InfoSnackbar from "./../components/info-snackbar";
+import { useNavigate } from "react-router-dom";
 
 const ChangePassword = () => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const navigate = useNavigate();
+
   const jwtToken = Cookies.get("jwtToken");
+
   const handleSubmit = (values, { setSubmitting, setStatus }) => {
     axios
       .patch(
@@ -20,14 +27,23 @@ const ChangePassword = () => {
       )
       .then((response) => {
         setStatus(response.data.message);
+        setSnackbarMessage("Successfully updated!");
+        setOpenSnackbar(true);
+        setTimeout(() => navigate("/profile"), 6000);
       })
       .catch((error) => {
         console.error("Error:", error);
         setStatus("An error occurred. Please try again.");
+        setSnackbarMessage("An error occurred. Please try again.");
+        setOpenSnackbar(true);
       })
       .finally(() => {
         setSubmitting(false);
       });
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -77,6 +93,11 @@ const ChangePassword = () => {
           </Form>
         )}
       </Formik>
+      <InfoSnackbar
+        open={openSnackbar}
+        message={snackbarMessage}
+        onClose={handleCloseSnackbar}
+      />
     </div>
   );
 };
