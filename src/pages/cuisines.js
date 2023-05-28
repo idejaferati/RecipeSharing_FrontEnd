@@ -4,10 +4,13 @@ import styled from "styled-components";
 import useAuth from "./../components/hooks/use-auth";
 
 const StyledContainer = styled.div`
-  display: initial;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding-top: 60px;
+  padding-bottom: 60px;
 `;
 
 const StyledForm = styled.form`
@@ -33,6 +36,7 @@ const StyledButton = styled.button`
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  margin-left: 100px;
 
   &:hover {
     transition: all 0.2s ease-in-out;
@@ -44,11 +48,89 @@ const StyledButton = styled.button`
 const StyledCuisineCard = styled.div`
   flex: 0 0 300px;
   padding: 20px;
-  //border: 1px solid #ccc;
+  border: 1px solid #ccc;
   border-radius: 4px;
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 10px;
+`;
+
+const StyledRecipeSection = styled.div`
+  width: 100%;
+  max-width: 1300px;
+  overflow-y: auto;
+  min-height: 400px; /* Adjust this value to make the div taller */
+  padding: 0 20px; /* Add padding to create some spacing */
+`;
+
+const StyledRecipeCard = styled.li`
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px auto;
+  background: aliceblue;
+  border: 1px solid dodgerblue;
+  width: 70vw;
+  max-width: auto;
+  min-width: auto;
+`;
+
+const StyledRecipeImage = styled.img`
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 10px;
+`;
+
+const StyledRecipeTitle = styled.h3`
+  margin-bottom: 5px;
+`;
+
+const StyledRecipeDescription = styled.p`
+  margin-bottom: 10px;
+`;
+
+const StyledRecipeInfo = styled.p`
+  margin-bottom: 5px;
+`;
+
+const StyledTags = styled.div`
+  margin-bottom: 10px;
+`;
+
+const StyledTag = styled.span`
+  background-color: #5fd9c2;
+  color: black;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-right: 5px;
+`;
+
+const StyledUserDetails = styled.div`
+  margin-top: 10px;
+`;
+
+const StyledUserEmail = styled.p`
+  margin-bottom: 5px;
+`;
+
+const StyledSubtitle = styled.h4`
+  margin-bottom: 5px;
+`;
+
+const StyledIngredientList = styled.ul`
+  margin-bottom: 10px;
+`;
+
+const StyledInstructionList = styled.ol`
+  margin-bottom: 10px;
+`;
+
+const StyledRecipeHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 20px;
 `;
 
 const Cuisines = () => {
@@ -118,14 +200,6 @@ const Cuisines = () => {
         console.log("New cuisine added:", response.data);
         // Refresh the cuisines list
         fetchCuisines();
-        axios
-          .get("https://localhost:7164/api/cuisines")
-          .then((response) => {
-            setCuisines(response.data);
-          })
-          .catch((error) => {
-            console.error("Error fetching cuisines:", error);
-          });
       })
       .catch((error) => {
         console.error("Error adding new cuisine:", error);
@@ -173,88 +247,86 @@ const Cuisines = () => {
       <div>
         {selectedCuisine ? (
           <div>
-            <h1>{selectedCuisine.name}</h1>
-            <p>{selectedCuisine.description}</p>
+            <StyledRecipeHeader>
+              <h1>{selectedCuisine.name}</h1>
+              <p>{selectedCuisine.description}</p>
+            </StyledRecipeHeader>
+            <StyledRecipeHeader>
+              <h2>Recipes:</h2>
+            </StyledRecipeHeader>
             {selectedCuisineRecipes && selectedCuisineRecipes.length > 0 ? (
               <div>
-                <h2>Recipes:</h2>
-                <ul>
-                  {selectedCuisineRecipes.map((recipe) => (
-                    <li className="recipe-item" key={recipe.id}>
-                      {" "}
-                      <img
-                        src={recipe.audioInstructions}
-                        alt="Recipe"
-                        className="recipe-image"
-                      />{" "}
-                      Image tag
-                      <h3 className="recipe-name">{recipe.name}</h3>
-                      <p className="recipe-description">{recipe.description}</p>
-                      <div className="recipe-details">
-                        <p className="recipe-info">
+                <StyledRecipeSection>
+                  <ul>
+                    {selectedCuisineRecipes.map((recipe) => (
+                      <StyledRecipeCard key={recipe.id}>
+                        <StyledRecipeImage
+                          src={recipe.audioInstructions}
+                          alt="Recipe"
+                        />
+                        <StyledRecipeTitle>{recipe.name}</StyledRecipeTitle>
+                        <StyledRecipeDescription>
+                          {recipe.description}
+                        </StyledRecipeDescription>
+                        <StyledRecipeInfo>
                           <strong>Prep Time:</strong> {recipe.prepTime} minutes
-                        </p>
-                        <p className="recipe-info">
+                        </StyledRecipeInfo>
+                        <StyledRecipeInfo>
                           <strong>Servings:</strong> {recipe.servings}
-                        </p>
-                        <p className="recipe-info">
+                        </StyledRecipeInfo>
+                        <StyledRecipeInfo>
                           <strong>Yield:</strong> {recipe.yield}
-                        </p>
-                        <p className="recipe-info">
+                        </StyledRecipeInfo>
+                        <StyledRecipeInfo>
                           <strong>Calories:</strong> {recipe.calories}
-                        </p>
-                        <div className="tags">
+                        </StyledRecipeInfo>
+                        <StyledTags>
                           <strong>Tags:</strong>
                           {recipe.tags.map((tag) => (
-                            <span key={tag.id} className="tag">
-                              {tag.name}
-                            </span>
+                            <StyledTag key={tag.id}>{tag.name}</StyledTag>
                           ))}
-                        </div>
-                        <div className="user-details">
+                        </StyledTags>
+                        <StyledUserDetails>
                           <strong>Posted by:</strong> {recipe.user.firstName}{" "}
                           {recipe.user.lastName}
-                          <p className="user-email">
+                          <StyledUserEmail>
                             <strong>Email:</strong> {recipe.user.email}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="cuisine-name">
-                        {" "}
-                        <strong>Cuisines:</strong> {recipe.cuisine.name}
-                      </p>{" "}
-                      {/* Display cuisine name */}
-                      <h4 className="recipe-subtitle">Ingredients:</h4>
-                      <ul className="ingredient-list">
-                        {recipe.ingredients.map((ingredient) => (
-                          <li className="ingredient-item" key={ingredient.id}>
-                            {ingredient.name} - {ingredient.amount}{" "}
-                            {ingredient.unit}
-                          </li>
-                        ))}
-                      </ul>
-                      <h4 className="recipe-subtitle">Instructions:</h4>
-                      <ol className="instruction-list">
-                        {recipe.instructions.map((instruction) => (
-                          <li className="instruction-item" key={instruction.id}>
-                            Step {instruction.stepNumber}:{" "}
-                            {instruction.stepDescription}
-                          </li>
-                        ))}
-                      </ol>
-                    </li>
-                  ))}
-                </ul>
+                          </StyledUserEmail>
+                        </StyledUserDetails>
+                        <p>
+                          <strong>Cuisines:</strong> {recipe.cuisine.name}
+                        </p>
+                        <StyledSubtitle>Ingredients:</StyledSubtitle>
+                        <StyledIngredientList>
+                          {recipe.ingredients.map((ingredient) => (
+                            <li key={ingredient.id}>
+                              {ingredient.name} - {ingredient.amount}{" "}
+                              {ingredient.unit}
+                            </li>
+                          ))}
+                        </StyledIngredientList>
+                        <StyledSubtitle>Instructions:</StyledSubtitle>
+                        <StyledInstructionList>
+                          {recipe.instructions.map((instruction) => (
+                            <li key={instruction.id}>
+                              Step {instruction.stepNumber}:{" "}
+                              {instruction.stepDescription}
+                            </li>
+                          ))}
+                        </StyledInstructionList>
+                      </StyledRecipeCard>
+                    ))}
+                  </ul>
+                </StyledRecipeSection>
+                <StyledButton onClick={handleGoBack}>Go Back</StyledButton>
               </div>
             ) : (
               <p>There are no recipes for this cuisine.</p>
             )}
-
-            <StyledButton onClick={handleGoBack}>Go Back</StyledButton>
           </div>
         ) : (
           <>
-            {role == "admin" && (
+            {role === "admin" && (
               <StyledForm onSubmit={handleAddCuisine}>
                 <h2>ADD A NEW CUISINE</h2>
                 <StyledInput
@@ -282,9 +354,9 @@ const Cuisines = () => {
                 </h2>
                 <StyledButton
                   onClick={() => handleGetRecipesByCuisineId(cuisine.id)}>
-                  SHow Recipes
+                  Show Recipes
                 </StyledButton>
-                {role == "admin" && (
+                {role === "admin" && (
                   <StyledButton onClick={() => handleDeleteCuisine(cuisine.id)}>
                     Delete
                   </StyledButton>
@@ -298,4 +370,4 @@ const Cuisines = () => {
   );
 };
 
-export default Cuisines; // or export default [...];
+export default Cuisines;

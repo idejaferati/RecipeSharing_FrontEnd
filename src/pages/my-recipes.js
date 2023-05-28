@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
+import { AddToCookbookDialog } from "../components/add-to-cookbook-dialog";
 
 const StyledListItem = styled.li`
   border: 1px solid deepskyblue;
@@ -33,6 +34,8 @@ const MyRecipes = () => {
   const [selectedCookbook, setSelectedCookbook] = useState("");
   const [selectedRecipeId, setSelectedRecipeId] = useState("");
 
+  const [openAddToCookbookModal, setOpenAddToCookbookModal] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,8 +61,9 @@ const MyRecipes = () => {
     const fetchCookbooks = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
+        console.log(jwtToken);
         const response = await axios.get(
-          "https://localhost:7164/api/cookbooks/all",
+          "https://localhost:7164/api/cookbooks/all/user",
           {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
@@ -270,6 +274,16 @@ const MyRecipes = () => {
   const handleAddToCookbook = (recipeId) => {
     setSelectedRecipeId(recipeId);
     setShowAddToCookbook(true);
+    handleOpenAddToCookbookModal();
+  };
+
+  const handleOpenAddToCookbookModal = () => {
+    setOpenAddToCookbookModal(true);
+  };
+
+  const handleCloseAddToCookbookModal = (value) => {
+    setOpenAddToCookbookModal(false);
+    setSelectedRecipeId(value);
   };
 
   const handleAddToNewCookbook = async () => {
@@ -615,7 +629,7 @@ const MyRecipes = () => {
                 </Button>
                 <Button
                   type="button"
-                  variant="outlined"
+                  variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                   style={{ margin: "3px" }}
                   onClick={() => handleAddToCookbook(recipe.id)}>
@@ -626,55 +640,16 @@ const MyRecipes = () => {
           </StyledListItem>
         ))}
       </ul>
-      {showAddToCookbook && (
-        <div className="add-to-cookbook-modal">
-          <h3>Add to Cookbook</h3>
-          <div>
-            <p>Create a new cookbook:</p>
-            <StyledInput
-              type="text"
-              placeholder="Cookbook Name"
-              value={newCookbookName}
-              onChange={(e) => setNewCookbookName(e.target.value)}
-            />
-            <StyledInput
-              type="text"
-              placeholder="Cookbook Description"
-              value={newCookbookDescription}
-              onChange={(e) => setNewCookbookDescription(e.target.value)}
-            />
-            <Button
-              type="button"
-              variant="outlined"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={handleAddToNewCookbook}>
-              Create New Cookbook
-            </Button>
-          </div>
-          {!!cookbooks.length && (
-            <div>
-              <p>Choose an existing cookbook:</p>
-              <StyledSelect
-                value={selectedCookbook}
-                onChange={(e) => setSelectedCookbook(e.target.value)}>
-                <option value="">Select a cookbook</option>
-                {cookbooks.map((cookbook) => (
-                  <option key={cookbook.id} value={cookbook.id}>
-                    {cookbook.name}
-                  </option>
-                ))}
-              </StyledSelect>
-              <Button
-                type="button"
-                variant="outlined"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleAddToExistingCookbook}>
-                Add to Existing Cookbook
-              </Button>
-            </div>
-          )}
-        </div>
-      )}
+      showAddToCookbook && (
+      <AddToCookbookDialog
+        //onClick={handleAddToCookbook(recipe.id)}
+        open={openAddToCookbookModal}
+        onClose={handleCloseAddToCookbookModal}
+        selectedRecipeId={selectedRecipeId}
+        setSelectedRecipeId={setSelectedRecipeId}
+        setShowAddToCookbook={setShowAddToCookbook}
+      />
+      )
     </div>
   );
 };
