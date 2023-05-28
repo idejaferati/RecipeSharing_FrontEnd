@@ -16,6 +16,7 @@ import useAuth from "../components/hooks/use-auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useState } from "react";
 
 const theme = createTheme();
 
@@ -24,6 +25,7 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function loginAsync(event, setAuth) {
     event.preventDefault();
@@ -34,31 +36,32 @@ export default function Login() {
     };
 
     try {
-      await axios
-        .post(
-          "https://localhost:7164/api/Auth/Login",
-          JSON.stringify(jsonData),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          const accessToken = res.data.token;
-          Cookies.set("jwtToken", accessToken, { expires: 7 });
-          const role = res.data.role;
-          setAuth({
-            user: jsonData.email,
-            password: jsonData.password,
-            role,
-            accessToken,
-          });
-          navigate(from, { replace: true });
-          console.log(jsonData);
-        });
+      const response = await axios.post(
+        "https://localhost:7164/api/Auth/Login",
+        JSON.stringify(jsonData),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const accessToken = response.data.token;
+      Cookies.set("jwtToken", accessToken, { expires: 7 });
+      const role = response.data.role;
+      setAuth({
+        user: jsonData.email,
+        password: jsonData.password,
+        role,
+        accessToken,
+      });
+      navigate(from, { replace: true });
+      console.log(jsonData);
     } catch (error) {
       console.error(error);
+      // Handle error case
+      setAuth(null); // Reset authentication state
+      setErrorMessage("Invalid username or password. Please try again.");
     }
   }
 
@@ -76,18 +79,15 @@ export default function Login() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}>
+          }}
+        >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -116,9 +116,11 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}>
+              sx={{ mt: 3, mb: 2 }}
+            >
               Login
             </Button>
+            {errorMessage && <p>{errorMessage}</p>} {/* Display error message */}
             <Grid container>
               <Grid item xs>
                 <Link href="/changePassword" variant="body2">

@@ -5,6 +5,44 @@ import Cookies from "js-cookie";
 import { StyledField, StyledButton } from "./../shared/shared-style";
 import InfoSnackbar from "./../components/info-snackbar";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import * as Yup from "yup";
+
+const StyledContainer = styled.div`
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+`;
+
+const StyledTitle = styled.h2`
+  margin-bottom: 20px;
+`;
+
+const StyledLabel = styled.label`
+  font-weight: bold;
+`;
+
+const StyledErrorMessage = styled(ErrorMessage)`
+  color: red;
+  margin-top: 5px;
+`;
+
+const StyledSuccessMessage = styled.p`
+  color: green;
+  margin-top: 10px;
+`;
+
+const validationSchema = Yup.object().shape({
+  oldPassword: Yup.string().required("Required"),
+  newPassword: Yup.string()
+  .required("Password is required")
+  .matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+    "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
+  ),
+});
 
 const ChangePassword = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -47,49 +85,34 @@ const ChangePassword = () => {
   };
 
   return (
-    <div>
-      <h2>Change Password</h2>
+    <StyledContainer>
+      <StyledTitle>Change Password</StyledTitle>
       <Formik
         initialValues={{ oldPassword: "", newPassword: "" }}
-        validate={(values) => {
-          const errors = {};
-          if (!values.oldPassword) {
-            errors.oldPassword = "Required";
-          }
-          if (!values.newPassword) {
-            errors.newPassword = "Required";
-          }
-          return errors;
-        }}
-        onSubmit={handleSubmit}>
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
         {({ isSubmitting, status }) => (
           <Form>
             <div>
-              <label htmlFor="oldPassword">Old Password: </label>
-              <StyledField
-                type="password"
-                id="oldPassword"
-                name="oldPassword"
-              />
-              <ErrorMessage name="oldPassword" component="div" />
+              <StyledLabel htmlFor="oldPassword">Old Password: </StyledLabel>
+              <StyledField type="password" id="oldPassword" name="oldPassword" />
+              <StyledErrorMessage name="oldPassword" component="div" />
             </div>
             <div>
-              <label htmlFor="newPassword">New Password: </label>
-              <StyledField
-                type="password"
-                id="newPassword"
-                name="newPassword"
-              />
-              <ErrorMessage name="newPassword" component="div" />
+              <StyledLabel htmlFor="newPassword">New Password: </StyledLabel>
+              <StyledField type="password" id="newPassword" name="newPassword" />
+              <StyledErrorMessage name="newPassword" component="div" />
             </div>
             <StyledButton
               type="submit"
               variant="outlined"
               sx={{ mt: 3, mb: 2 }}
-              disabled={isSubmitting}>
+              disabled={isSubmitting}
+            >
               Submit
             </StyledButton>
-            {status && <p>{status}</p>}
+            {status && <StyledSuccessMessage>{status}</StyledSuccessMessage>}
           </Form>
         )}
       </Formik>
@@ -98,7 +121,7 @@ const ChangePassword = () => {
         message={snackbarMessage}
         onClose={handleCloseSnackbar}
       />
-    </div>
+    </StyledContainer>
   );
 };
 

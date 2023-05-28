@@ -5,13 +5,67 @@ import Cookies from "js-cookie";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+
+const StyledPageContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+`;
+
+const StyledSection = styled.div`
+  margin-bottom: 20px;
+`;
 
 const StyledFormContainer = styled.div`
-  display: flex;
-  margin-top: 30px;
-  gap: 10px;
-  flex-direction: column;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
 `;
+
+const StyledFormTitle = styled.h2`
+  margin-top: 0;
+  margin-bottom: 20px;
+`;
+
+const StyledForm = styled.form`
+  display: grid;
+  gap: 10px;
+`;
+
+const StyledFormGroup = styled.div`
+  display: grid;
+  gap: 5px;
+`;
+
+const StyledLabel = styled.label`
+  font-weight: bold;
+`;
+
+const StyledInput = styled.input`
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
+const StyledError = styled.div`
+  color: red;
+  font-size: 14px;
+`;
+
+const StyledSuccess = styled.div`
+  color: green;
+  font-size: 14px;
+`;
+
+const validationSchema = yup.object().shape({
+  firstName: yup.string().required("First Name is required"),
+  lastName: yup.string().required("Last Name is required"),
+  gender: yup.string().required("Gender is required"),
+  phoneNumber: yup.string().required("Phone Number is required"),
+});
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -52,7 +106,6 @@ const Profile = () => {
           },
         }
       );
-      alert("User data updated successfully!");
       setUserData(values); // Update the user data with the new values
       setShowForm(false); // Hide the form after successful update
     } catch (error) {
@@ -67,6 +120,7 @@ const Profile = () => {
       gender: userData?.gender || "",
       phoneNumber: userData?.phoneNumber || "",
     },
+    validationSchema: validationSchema,
     onSubmit: handleUpdate,
   });
 
@@ -83,38 +137,41 @@ const Profile = () => {
     });
     setShowForm(true);
   };
+
   const handleCancel = () => {
     setShowForm(false);
   };
 
   return (
-    <div>
-      <h2>User Data</h2>
-      <p>First Name: {userData.firstName}</p>
-      <p>Last Name: {userData.lastName}</p>
-      <p>Email: {userData.email}</p>
-      <p>Gender: {userData.gender}</p>
-      <p>Phone Number: {userData.phoneNumber}</p>
+    <StyledPageContainer>
+      <StyledSection>
+        <h2>User Data</h2>
+        <p>First Name: {userData.firstName}</p>
+        <p>Last Name: {userData.lastName}</p>
+        <p>Email: {userData.email}</p>
+        <p>Gender: {userData.gender}</p>
+        <p>Phone Number: {userData.phoneNumber}</p>
+      </StyledSection>
 
       {!showForm && (
-        <div>
+        <StyledSection>
           <Button
             type="button"
             variant="outlined"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={handleEditClick}>
+            onClick={handleEditClick}
+          >
             Update Data
           </Button>
-        </div>
+        </StyledSection>
       )}
 
       {showForm && (
         <StyledFormContainer>
-          <div>Form</div>
-          <form onSubmit={formik.handleSubmit}>
-            <div>
-              <label htmlFor="firstName">First Name:</label>
-              <input
+          <StyledFormTitle>Update User Data</StyledFormTitle>
+          <StyledForm onSubmit={formik.handleSubmit}>
+            <StyledFormGroup>
+              <StyledLabel htmlFor="firstName">First Name:</StyledLabel>
+              <StyledInput
                 id="firstName"
                 name="firstName"
                 type="text"
@@ -122,11 +179,14 @@ const Profile = () => {
                 onBlur={formik.handleBlur}
                 value={formik.values.firstName}
               />
-            </div>
+              {formik.touched.firstName && formik.errors.firstName && (
+                <StyledError>{formik.errors.firstName}</StyledError>
+              )}
+            </StyledFormGroup>
 
-            <div>
-              <label htmlFor="lastName">Last Name:</label>
-              <input
+            <StyledFormGroup>
+              <StyledLabel htmlFor="lastName">Last Name:</StyledLabel>
+              <StyledInput
                 id="lastName"
                 name="lastName"
                 type="text"
@@ -134,11 +194,14 @@ const Profile = () => {
                 onBlur={formik.handleBlur}
                 value={formik.values.lastName}
               />
-            </div>
+              {formik.touched.lastName && formik.errors.lastName && (
+                <StyledError>{formik.errors.lastName}</StyledError>
+              )}
+            </StyledFormGroup>
 
-            <div>
-              <label htmlFor="gender">Gender:</label>
-              <input
+            <StyledFormGroup>
+              <StyledLabel htmlFor="gender">Gender:</StyledLabel>
+              <StyledInput
                 id="gender"
                 name="gender"
                 type="text"
@@ -146,11 +209,14 @@ const Profile = () => {
                 onBlur={formik.handleBlur}
                 value={formik.values.gender}
               />
-            </div>
+              {formik.touched.gender && formik.errors.gender && (
+                <StyledError>{formik.errors.gender}</StyledError>
+              )}
+            </StyledFormGroup>
 
-            <div>
-              <label htmlFor="phoneNumber">Phone Number:</label>
-              <input
+            <StyledFormGroup>
+              <StyledLabel htmlFor="phoneNumber">Phone Number:</StyledLabel>
+              <StyledInput
                 id="phoneNumber"
                 name="phoneNumber"
                 type="text"
@@ -158,31 +224,40 @@ const Profile = () => {
                 onBlur={formik.handleBlur}
                 value={formik.values.phoneNumber}
               />
-            </div>
+              {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+                <StyledError>{formik.errors.phoneNumber}</StyledError>
+              )}
+            </StyledFormGroup>
 
             <div>
-              <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button type="submit" variant="contained">
                 Update
               </Button>
               <Button
                 type="button"
                 variant="outlined"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleCancel}>
+                onClick={handleCancel}
+              >
                 Cancel
               </Button>
             </div>
-          </form>
+            {formik.status && (
+              <StyledSuccess>{formik.status}</StyledSuccess>
+            )}
+          </StyledForm>
         </StyledFormContainer>
       )}
-      <Button
-        type="button"
-        onClick={() => navigate("/changePassword")}
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}>
-        Go to change password
-      </Button>
-    </div>
+      
+      <StyledSection>
+        <Button
+          type="button"
+          onClick={() => navigate("/changePassword")}
+          variant="contained"
+        >
+          Go to change password
+        </Button>
+      </StyledSection>
+    </StyledPageContainer>
   );
 };
 
