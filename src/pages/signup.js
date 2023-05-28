@@ -1,4 +1,6 @@
+import * as Yup from "yup";
 import * as React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -26,41 +28,51 @@ export default function SignUp() {
   const [selectedRole, setSelectedRole] = useState("");
   const navigate = useNavigate();
 
-  async function signUpAsync(event) {
-    event.preventDefault();
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+    gender: Yup.string().required("Gender is required"),
+    phoneNumber: Yup.string().required("Phone Number is required"),
+    roleId: Yup.string().required("Role is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string()
+    .required("Password is required")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+      "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
+    ),
+  });
 
-    const data = new FormData(event.currentTarget);
+  const signUpAsync = async (values) => {
+    const {
+      firstName,
+      lastName,
+      gender,
+      email,
+      roleId,
+      phoneNumber,
+      password,
+    } = values;
+
     const jsonData = {
-      firstName: data.get("firstName"),
-      lastName: data.get("lastName"),
-      gender: data.get("gender"),
-      email: data.get("email"),
-      roleId: data.get("roleId"),
-      phoneNumber: data.get("phoneNumber"),
-      password: data.get("password"),
+      FirstName: firstName,
+      LastName: lastName,
+      Gender: gender,
+      Email: email,
+      RoleId: roleId,
+      PhoneNumber: phoneNumber.toString(), // Convert the phone number to a string
+      Password: password,
     };
 
     try {
-      await axios
-        .post(
-          "https://localhost:7164/api/Users/Register",
-          JSON.stringify(jsonData),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          if (res) {
-            console.log(res.data);
-            navigate("/login");
-          }
-        });
+      await axios.post("https://localhost:7164/api/Users/register", jsonData);
+      console.log(jsonData);
+      navigate("/login");
     } catch (error) {
+      console.log(jsonData);
       console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -77,10 +89,6 @@ export default function SignUp() {
     fetchRoles();
   }, []);
 
-  const handleSubmit = async (event) => {
-    await signUpAsync(event);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -91,126 +99,182 @@ export default function SignUp() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}>
+          }}
+        >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
+          <Formik
+            initialValues={{
+              firstName: "",
+              lastName: "",
+              gender: "female",
+              phoneNumber: "",
+              roleId: "",
+              email: "",
+              password: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => signUpAsync(values)}
+          >
+            {({ isSubmitting }) => (
+              <Form sx={{ mt: 3 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      autoComplete="given-name"
+                      name="firstName"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      autoFocus
+                    />
+                    <ErrorMessage
+                      name="firstName"
+                      component="div"
+                      className="error-message"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      name="lastName"
+                      autoComplete="family-name"
+                    />
+                    <ErrorMessage
+                      name="lastName"
+                      component="div"
+                      className="error-message"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <FormLabel id="gender-label">Gender</FormLabel>
+                    <Field
+                      as={RadioGroup}
+                      aria-labelledby="gender-label"
+                      name="gender"
+                    >
+                      <FormControlLabel
+                        value="female"
+                        control={<Radio />}
+                        label="Female"
+                      />
+                      <FormControlLabel
+                        value="male"
+                        control={<Radio />}
+                        label="Male"
+                      />
+                    </Field>
+                    <ErrorMessage
+                      name="gender"
+                      component="div"
+                      className="error-message"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      as={TextField}
+                      required
+                      fullWidth
+                      id="phoneNumber"
+                      label="Phone Number"
+                      name="phoneNumber"
+                      autoComplete="phoneNumber"
+                      type="number"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                    <ErrorMessage
+                      name="phoneNumber"
+                      component="div"
+                      className="error-message"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl required fullWidth>
+                      <InputLabel id="roleId-label">Select Role</InputLabel>
+                      <Field
+                        as={Select}
+                        labelId="roleId-label"
+                        id="roleId"
+                        name="roleId"
+                      >
+                        {roles.map((role) => (
+                          <MenuItem key={role.id} value={role.id}>
+                            {role.name}
+                          </MenuItem>
+                        ))}
+                      </Field>
+                    </FormControl>
+                    <ErrorMessage
+                      name="roleId"
+                      component="div"
+                      className="error-message"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      as={TextField}
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="error-message"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      as={TextField}
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="new-password"
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="error-message"
+                    />
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
                   fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <FormLabel id="gender-label">Gender</FormLabel>
-                <RadioGroup
-                  aria-labelledby="gender-label"
-                  defaultValue="female"
-                  name="gender">
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                  />
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
-                  />
-                </RadioGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="phoneNumber"
-                  label="Phone Number"
-                  name="phoneNumber"
-                  autoComplete="phoneNumber"
-                  type="number"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl required fullWidth>
-                  <InputLabel id="roleId-label">Select Role</InputLabel>
-                  <Select
-                    labelId="roleId-label"
-                    id="roleId"
-                    name="roleId"
-                    value={selectedRole}
-                    onChange={(e) => setSelectedRole(e.target.value)}>
-                    {roles.map((role) => (
-                      <MenuItem key={role.id} value={role.id}>
-                        {role.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}>
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Log in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
+                  variant="contained"
+                  disabled={isSubmitting}
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign Up
+                </Button>
+                <Grid container justifyContent="flex-end">
+                  <Grid item>
+                    <Link href="/login" variant="body2">
+                      Already have an account? Log in
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
         </Box>
       </Container>
     </ThemeProvider>
