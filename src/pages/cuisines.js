@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import HomeImg from "../images/mainImg.jpg";
 import styled from "styled-components";
 import useAuth from "./../components/hooks/use-auth";
 
 const StyledContainer = styled.div`
-  display: flex;
+  display: initial;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-image: url(${HomeImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  padding: 20px;
 `;
 
 const StyledForm = styled.form`
@@ -50,28 +44,11 @@ const StyledButton = styled.button`
 const StyledCuisineCard = styled.div`
   flex: 0 0 300px;
   padding: 20px;
+  //border: 1px solid #ccc;
   border-radius: 4px;
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 10px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  h2 {
-    text-transform: uppercase;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  p {
-    margin-bottom: 10px;
-  }
-
-  button {
-    margin-top: 10px;
-    margin-left: 3px;
-    margin-right: 3px;
-  }
 `;
 
 const Cuisines = () => {
@@ -202,7 +179,7 @@ const Cuisines = () => {
               <div>
                 <h2>Recipes:</h2>
                 <ul>
-                  {selectedCuisine.recipes.map((recipe) => (
+                  {selectedCuisineRecipes.map((recipe) => (
                     <li className="recipe-item" key={recipe.id}>
                       {" "}
                       <img
