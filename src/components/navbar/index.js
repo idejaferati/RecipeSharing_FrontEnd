@@ -15,13 +15,16 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
-  const role = auth?.role;
 
   const handleLogout = () => {
     Cookies.remove("jwtToken");
+    localStorage.clear()
     setAuth(null);
     navigate("/");
   };
+  const storedAuth = JSON.parse(localStorage.getItem('auth'))
+  const role = storedAuth?.role || ""
+  console.log(role)
 
   return (
     <>

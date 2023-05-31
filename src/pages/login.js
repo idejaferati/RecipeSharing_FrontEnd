@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,18 +16,25 @@ import useAuth from "../components/hooks/use-auth";
 import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useState } from "react";
 
 const theme = createTheme();
 
 export default function Login() {
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function loginAsync(event, setAuth) {
+  useEffect(() => {
+    const storedAuth = localStorage.getItem("auth");
+    if (storedAuth) {
+      setAuth(JSON.parse(storedAuth));
+      navigate(from, { replace: true });
+    }
+  }, [setAuth]);
+
+  async function loginAsync(event) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
@@ -49,24 +56,25 @@ export default function Login() {
       const accessToken = response.data.token;
       Cookies.set("jwtToken", accessToken, { expires: 7 });
       const role = response.data.role;
-      setAuth({
+      const authenticatedUser = {
         user: jsonData.email,
         password: jsonData.password,
         role,
         accessToken,
-      });
+      };
+      setAuth(authenticatedUser);
+      localStorage.setItem("auth", JSON.stringify(authenticatedUser));
       navigate(from, { replace: true });
       console.log(jsonData);
     } catch (error) {
       console.error(error);
-      // Handle error case
-      setAuth(null); // Reset authentication state
+      setAuth(null);
       setErrorMessage("Invalid username or password. Please try again.");
     }
   }
 
   const handleSubmit = async (event) => {
-    await loginAsync(event, setAuth);
+    await loginAsync(event);
   };
 
   return (
@@ -120,7 +128,7 @@ export default function Login() {
             >
               Login
             </Button>
-            {errorMessage && <p>{errorMessage}</p>} {/* Display error message */}
+            {errorMessage && <p>{errorMessage}</p>}
             <Grid container>
               <Grid item xs>
                 <Link href="/changePassword" variant="body2">
