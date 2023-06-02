@@ -33,7 +33,7 @@ export default function SignUp() {
     lastName: Yup.string().required("Last Name is required"),
     gender: Yup.string().required("Gender is required"),
     phoneNumber: Yup.string().required("Phone Number is required"),
-    roleId: Yup.string().required("Role is required"),
+    // roleId: Yup.string().required("Role is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
     .required("Password is required")
@@ -59,7 +59,7 @@ export default function SignUp() {
       LastName: lastName,
       Gender: gender,
       Email: email,
-      RoleId: roleId,
+      RoleId: "24bade73-46d0-40dd-95e7-42352504fe2d",
       PhoneNumber: phoneNumber.toString(), // Convert the phone number to a string
       Password: password,
     };
@@ -74,20 +74,20 @@ export default function SignUp() {
     }
   };
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await axios.get(
-          "https://localhost:7164/api/Auth/getRoles"
-        );
-        setRoles(response.data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchRoles = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "https://localhost:7164/api/Auth/getRoles"
+  //       );
+  //       setRoles(response.data);
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   };
 
-    fetchRoles();
-  }, []);
+  //   fetchRoles();
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -200,7 +200,7 @@ export default function SignUp() {
                       className="error-message"
                     />
                   </Grid>
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <FormControl required fullWidth>
                       <InputLabel id="roleId-label">Select Role</InputLabel>
                       <Field
@@ -221,7 +221,7 @@ export default function SignUp() {
                       component="div"
                       className="error-message"
                     />
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12}>
                     <Field
                       as={TextField}

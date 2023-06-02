@@ -76,8 +76,13 @@ const UserPermissions = () => {
     // Fetch roles
     const fetchRoles = async () => {
       try {
+        const jwtToken = Cookies.get("jwtToken");
         const response = await axios.get(
-          "https://localhost:7164/api/Auth/getRoles"
+          "https://localhost:7164/api/Auth/getRoles",{
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
         setRoles(response.data);
       } catch (error) {
@@ -88,8 +93,13 @@ const UserPermissions = () => {
     // Fetch policies
     const fetchPolicies = async () => {
       try {
+        const jwtToken = Cookies.get("jwtToken");
         const response = await axios.get(
-          "https://localhost:7164/api/Auth/getPolicies"
+          "https://localhost:7164/api/Auth/getPolicies",{
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
         setPolicies(response.data);
       } catch (error) {
@@ -120,10 +130,15 @@ const UserPermissions = () => {
 
   const handleCreateRole = async () => {
     try {
+      const jwtToken = Cookies.get('jwtToken');
       const response = await axios.post(
         "https://localhost:7164/api/Auth/addRole",
         null,
         {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          
           params: {
             name: selectedRole,
           },
@@ -137,10 +152,14 @@ const UserPermissions = () => {
 
   const handleCreatePolicy = async () => {
     try {
+      const jwtToken = Cookies.get("jwtToken");
       const response = await axios.post(
         "https://localhost:7164/api/Auth/addPolicy",
         null,
         {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
           params: {
             name: selectedPolicy,
           },
@@ -160,6 +179,7 @@ const UserPermissions = () => {
 
     if (selectedRoleId && selectedPolicyId) {
       try {
+        const jwtToken = Cookies.get("jwtToken");
         console.log({
           roleId: selectedRoleId,
           policyId: selectedPolicyId,
@@ -168,6 +188,9 @@ const UserPermissions = () => {
           "https://localhost:7164/api/Auth/addRolePolicy",
           null,
           {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
             params: {
               roleId: selectedRoleId,
               policyId: selectedPolicyId,

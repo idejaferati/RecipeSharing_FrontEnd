@@ -19,7 +19,12 @@ const ManageTags = () => {
 
   const fetchTags = async () => {
     try {
-      const response = await axios.get('https://localhost:7164/api/tag');
+      const jwtToken = Cookies.get('jwtToken');
+      const response = await axios.get('https://localhost:7164/api/tag',{
+          headers: {
+            Authorization: `Bearer ${jwtToken}`
+          },
+        });
       setTags(response.data);
     } catch (error) {
       console.error('Error fetching tags:', error);
