@@ -42,6 +42,7 @@ const NewRecipeDialog = (props) => {
 
   useEffect(() => {
     // Fetch cuisines from API endpoint
+    const jwtToken = Cookies.get('jwtToken');
     axios
       .get("https://localhost:7164/api/cuisines")
       .then((response) => {
@@ -53,7 +54,11 @@ const NewRecipeDialog = (props) => {
 
     // Fetch tags from API endpoint
     axios
-      .get("https://localhost:7164/api/tag")
+      .get("https://localhost:7164/api/tag",{
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        },
+      })
       .then((response) => {
         setTags(response.data);
       })

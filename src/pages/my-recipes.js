@@ -150,7 +150,12 @@ const MyRecipes = () => {
   const handleDeleteRecipe = async (id) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.delete(`https://localhost:7164/api/recipes/${id}`);
+      await axios.delete(`https://localhost:7164/api/recipes/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       const response = await axios.get(
         "https://localhost:7164/api/recipes/user",
         {

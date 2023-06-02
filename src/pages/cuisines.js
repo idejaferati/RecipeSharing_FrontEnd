@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import useAuth from "./../components/hooks/use-auth";
+import Cookies from "js-cookie";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -176,6 +177,7 @@ const Cuisines = () => {
   };
 
   const handleAddCuisine = (event) => {
+    const jwtToken = Cookies.get("jwtToken");
     event.preventDefault();
     // Validate cuisine data
     if (!newCuisineData.name || !newCuisineData.description) {
@@ -195,7 +197,11 @@ const Cuisines = () => {
 
     // Add a new cuisine
     axios
-      .post("https://localhost:7164/api/cuisines", newCuisineData)
+      .post("https://localhost:7164/api/cuisines", newCuisineData,{
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
       .then((response) => {
         console.log("New cuisine added:", response.data);
         // Refresh the cuisines list
@@ -226,11 +232,16 @@ const Cuisines = () => {
   };
 
   const handleDeleteCuisine = (cuisineId) => {
+    const jwtToken = Cookies.get("jwtToken");
     // Confirm the deletion
     if (window.confirm("Are you sure you want to delete this cuisine?")) {
       // Delete the cuisine
       axios
-        .delete(`https://localhost:7164/api/cuisines/${cuisineId}`)
+        .delete(`https://localhost:7164/api/cuisines/${cuisineId}`,{
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
         .then((response) => {
           console.log("Cuisine deleted:", response.data);
           // Refresh the cuisines list

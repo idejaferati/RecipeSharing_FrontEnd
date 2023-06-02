@@ -229,9 +229,14 @@ const ManageUser = () => {
 
   useEffect(() => {
     const fetchRoles = async () => {
+      const jwtToken = Cookies.get("jwtToken");
       try {
         const response = await axios.get(
-          "https://localhost:7164/api/Auth/getRoles"
+          "https://localhost:7164/api/Auth/getRoles",{
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
         );
         setRoles(response.data);
       } catch (error) {
