@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { API_PATH } from "../constants";
 
 const Container = styled.div`
   display: flex;
@@ -65,7 +66,7 @@ function Carousel() {
 
   useEffect(() => {
     axios
-      .get("https://localhost:7164/api/cuisines")
+      .get(API_PATH + "cuisines")
       .then((response) => {
         setCuisines(response.data);
       })

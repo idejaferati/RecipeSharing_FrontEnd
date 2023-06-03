@@ -3,6 +3,7 @@ import axios from "axios";
 import styled from "styled-components";
 import useAuth from "./../components/hooks/use-auth";
 import Cookies from "js-cookie";
+import { API_PATH } from "../constants";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -151,7 +152,7 @@ const Cuisines = () => {
 
   const fetchCuisines = () => {
     axios
-      .get("https://localhost:7164/api/cuisines")
+      .get(API_PATH + "cuisines")
       .then((response) => {
         setCuisines(response.data);
       })
@@ -165,7 +166,7 @@ const Cuisines = () => {
     if (selectedCuisine) {
       // Fetch recipes for the selected cuisine
       axios
-        .get(`https://localhost:7164/api/recipes/cuisine/${id}`)
+        .get(API_PATH + `recipes/cuisine/${id}`)
         .then((response) => {
           setSelectedCuisineRecipes(response.data);
           setSelectedCuisine(selectedCuisine);
@@ -197,7 +198,7 @@ const Cuisines = () => {
 
     // Add a new cuisine
     axios
-      .post("https://localhost:7164/api/cuisines", newCuisineData,{
+      .post(API_PATH + "cuisines", newCuisineData, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -237,7 +238,7 @@ const Cuisines = () => {
     if (window.confirm("Are you sure you want to delete this cuisine?")) {
       // Delete the cuisine
       axios
-        .delete(`https://localhost:7164/api/cuisines/${cuisineId}`,{
+        .delete(API_PATH + `cuisines/${cuisineId}`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },

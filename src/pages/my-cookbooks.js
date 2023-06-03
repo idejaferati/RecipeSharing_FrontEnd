@@ -4,6 +4,7 @@ import axios from "axios";
 import { Formik, Form } from "formik";
 import { StyledButton, StyledField } from "./../shared/shared-style";
 import styled from "styled-components";
+import { API_PATH } from "../constants";
 
 const StyledCookbookContainer = styled.div`
   border: 1px solid blue;
@@ -31,14 +32,11 @@ function MyCookbooks() {
   async function fetchCookbookData() {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      const response = await axios.get(
-        "https://localhost:7164/api/cookbooks/all/user",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.get(API_PATH + "cookbooks/all/user", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setCookbookData(response.data);
     } catch (error) {
       console.log("Error fetching cookbook data:", error);
@@ -48,10 +46,10 @@ function MyCookbooks() {
   async function deleteCookbook(cookbookId) {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.delete(`https://localhost:7164/api/cookbooks/${cookbookId}`,{
+      await axios.delete(API_PATH + `cookbooks/${cookbookId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
-        }
+        },
       });
       // Optional: You can remove the deleted cookbook from the state to update the UI immediately.
       setCookbookData((prevData) =>
@@ -65,19 +63,15 @@ function MyCookbooks() {
   async function deleteRecipe(cookbookId, recipeId) {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.put(
-        `https://localhost:7164/api/cookbooks/removeRecipe`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          params: {
-            cookbookId,
-            recipeId,
-          },
-        }
-      );
+      await axios.put(API_PATH + "cookbooks/removeRecipe", null, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        params: {
+          cookbookId,
+          recipeId,
+        },
+      });
       // Optional: You can update the cookbook data in the state to reflect the changes immediately.
       setCookbookData((prevData) =>
         prevData.map((cookbook) => {
@@ -105,16 +99,12 @@ function MyCookbooks() {
         name: newName,
         description: newDescription,
       };
-      await axios.put(
-        `https://localhost:7164/api/cookbooks`,
-        JSON.stringify(data),
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.put(API_PATH + "cookbooks", JSON.stringify(data), {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
       // Optional: You can update the cookbook data in the state to reflect the changes immediately.
       setCookbookData((prevData) =>
         prevData.map((cookbook) => {

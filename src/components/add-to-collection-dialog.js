@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { API_PATH } from "../constants";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import styled from "styled-components";
@@ -52,7 +52,7 @@ export const AddToCollectionDialog = (props) => {
       try {
         const jwtToken = Cookies.get("jwtToken");
         await axios
-          .get("https://localhost:7164/api/collections/user", {
+          .get(API_PATH + "collections/user", {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
@@ -82,17 +82,13 @@ export const AddToCollectionDialog = (props) => {
       console.log(JSON.stringify(collectionData));
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .post(
-          "https://localhost:7164/api/Collections",
-          JSON.stringify(collectionData),
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
+        .post(API_PATH + "Collections", JSON.stringify(collectionData), {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
 
-              "Content-Type": "application/json",
-            },
-          }
-        )
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           const newCollection = response.data;
           setCollections((collections) => [...collections, newCollection]);
@@ -127,7 +123,7 @@ export const AddToCollectionDialog = (props) => {
 
       await axios
         .post(
-          `https://localhost:7164/api/collections/${collectionId}/recipes/addrecipe`,
+          API_PATH + `collections/${collectionId}/recipes/addrecipe`,
           null,
           {
             headers: {

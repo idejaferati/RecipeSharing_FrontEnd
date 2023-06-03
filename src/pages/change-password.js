@@ -7,6 +7,7 @@ import InfoSnackbar from "./../components/info-snackbar";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as Yup from "yup";
+import { API_PATH } from "../constants";
 
 const StyledContainer = styled.div`
   max-width: 400px;
@@ -37,11 +38,11 @@ const StyledSuccessMessage = styled.p`
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Required"),
   newPassword: Yup.string()
-  .required("Password is required")
-  .matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-    "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
-  ),
+    .required("Password is required")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+      "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
+    ),
 });
 
 const ChangePassword = () => {
@@ -53,16 +54,12 @@ const ChangePassword = () => {
 
   const handleSubmit = (values, { setSubmitting, setStatus }) => {
     axios
-      .patch(
-        "https://localhost:7164/api/users/change-password",
-        JSON.stringify(values),
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
+      .patch(API_PATH + "users/change-password", JSON.stringify(values), {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         setStatus(response.data.message);
         setSnackbarMessage("Successfully updated!");
@@ -90,26 +87,32 @@ const ChangePassword = () => {
       <Formik
         initialValues={{ oldPassword: "", newPassword: "" }}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+        onSubmit={handleSubmit}>
         {({ isSubmitting, status }) => (
           <Form>
             <div>
               <StyledLabel htmlFor="oldPassword">Old Password: </StyledLabel>
-              <StyledField type="password" id="oldPassword" name="oldPassword" />
+              <StyledField
+                type="password"
+                id="oldPassword"
+                name="oldPassword"
+              />
               <StyledErrorMessage name="oldPassword" component="div" />
             </div>
             <div>
               <StyledLabel htmlFor="newPassword">New Password: </StyledLabel>
-              <StyledField type="password" id="newPassword" name="newPassword" />
+              <StyledField
+                type="password"
+                id="newPassword"
+                name="newPassword"
+              />
               <StyledErrorMessage name="newPassword" component="div" />
             </div>
             <StyledButton
               type="submit"
               variant="outlined"
               sx={{ mt: 3, mb: 2 }}
-              disabled={isSubmitting}
-            >
+              disabled={isSubmitting}>
               Submit
             </StyledButton>
             {status && <StyledSuccessMessage>{status}</StyledSuccessMessage>}

@@ -12,6 +12,7 @@ import {
 import { StarRating } from "../components/star-rating";
 import TextField from "@mui/material/TextField";
 import { AddToCollectionDialog } from "../components/add-to-collection-dialog";
+import { API_PATH } from "../constants";
 
 const StyledRecipesContainer = styled.div`
   margin: 0 auto;
@@ -182,16 +183,14 @@ const MyRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        await axios
-          .get("https://localhost:7164/api/recipes/getAll")
-          .then((res) => {
-            setRecipes(res.data);
+        await axios.get(API_PATH + "recipes/getAll").then((res) => {
+          setRecipes(res.data);
 
-            const filtered = res.data.filter((recipe) =>
-              recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredRecipes(filtered);
-          });
+          const filtered = res.data.filter((recipe) =>
+            recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          setFilteredRecipes(filtered);
+        });
       } catch (error) {
         console.error("Error fetching recipes:", error);
         setError(error);
@@ -205,7 +204,7 @@ const MyRecipes = () => {
   //   try {
   //     const jwtToken = Cookies.get("jwtToken");
   //     await axios
-  //       .delete(`https://localhost:7164/api/recipes/${recipeId}`, {
+  //       .delete(API_PATH + `recipes/${recipeId}`, {
   //         headers: {
   //           Authorization: `Bearer ${jwtToken}`,
   //         },
@@ -224,16 +223,12 @@ const MyRecipes = () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .post(
-          "https://localhost:7164/api/ShoppingList",
-          JSON.stringify([{ name, quantity }]),
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        )
+        .post(API_PATH + "ShoppingList", JSON.stringify([{ name, quantity }]), {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
         .then((res) => {
           console.log("Ingredient is on shopping list", res);
         });
@@ -267,19 +262,15 @@ const MyRecipes = () => {
 
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .post(
-          "https://localhost:7164/api/reviews",
-          JSON.stringify(reviewData),
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(API_PATH + "reviews", JSON.stringify(reviewData), {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        })
         .then(() => {
           // Optionally, you can fetch the updated recipe data after adding the review
-          // const updatedRecipeResponse = await axios.get(`https://localhost:7164/api/recipes/${recipeId}`);
+          // const updatedRecipeResponse = await axios.get(API_PATH + `recipes/${recipeId}`);
           // const updatedRecipe = updatedRecipeResponse.data;
           // Update the recipe state with the updated data
 
@@ -298,7 +289,7 @@ const MyRecipes = () => {
       console.log(selectedRecipeId);
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .get(`https://localhost:7164/api/reviews`, {
+        .get(API_PATH + "reviews", {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },

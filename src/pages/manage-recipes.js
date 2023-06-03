@@ -11,9 +11,7 @@ import {
   StyledButton,
   StyledInput,
 } from "../shared/shared-style";
-import { StarRating } from "../components/star-rating";
-import TextField from "@mui/material/TextField";
-import { AddToCollectionDialog } from "../components/add-to-collection-dialog";
+import { API_PATH } from "../constants";
 
 const StyledRecipesContainer = styled.div`
   max-width: 800px;
@@ -153,16 +151,14 @@ const ManageRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        await axios
-          .get("https://localhost:7164/api/recipes/getAll")
-          .then((res) => {
-            setRecipes(res.data);
+        await axios.get(API_PATH + "recipes/getAll").then((res) => {
+          setRecipes(res.data);
 
-            const filtered = res.data.filter((recipe) =>
-              recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setFilteredRecipes(filtered);
-          });
+          const filtered = res.data.filter((recipe) =>
+            recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+          setFilteredRecipes(filtered);
+        });
       } catch (error) {
         console.error("Error fetching recipes:", error);
         setError(error);
@@ -175,7 +171,7 @@ const ManageRecipes = () => {
   const deleteRecipe = async (recipeId) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.delete(`https://localhost:7164/api/recipes/${recipeId}`, {
+      await axios.delete(API_PATH + `recipes/${recipeId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -191,17 +187,12 @@ const ManageRecipes = () => {
     }
   };
 
-
-
-
-
-
   const fetchReviews = async (selectedRecipeId) => {
     try {
       console.log(selectedRecipeId);
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .get(`https://localhost:7164/api/reviews`, {
+        .get(API_PATH + "reviews", {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -358,8 +349,6 @@ const ManageRecipes = () => {
                 onClick={() => deleteRecipe(recipe.id)}>
                 Delete Recipe
               </StyledButton>
-
-              
               <StyledButton
                 type="button"
                 color="success"

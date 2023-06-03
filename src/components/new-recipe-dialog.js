@@ -12,6 +12,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
+import { API_PATH } from "../constants";
 
 const StyledFormItem = styled.div`
   padding: 10px;
@@ -34,7 +35,7 @@ const StyledSelect = styled.select`
 const NewRecipeDialog = (props) => {
   const { onClose, selectedValue, open } = props;
   const [cuisines, setCuisines] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [existingTags, setExistingTags] = useState([]);
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -42,9 +43,9 @@ const NewRecipeDialog = (props) => {
 
   useEffect(() => {
     // Fetch cuisines from API endpoint
-    const jwtToken = Cookies.get('jwtToken');
+    const jwtToken = Cookies.get("jwtToken");
     axios
-      .get("https://localhost:7164/api/cuisines")
+      .get(API_PATH + "cuisines")
       .then((response) => {
         setCuisines(response.data);
       })
@@ -54,13 +55,13 @@ const NewRecipeDialog = (props) => {
 
     // Fetch tags from API endpoint
     axios
-      .get("https://localhost:7164/api/tag",{
+      .get(API_PATH + "tag", {
         headers: {
-          Authorization: `Bearer ${jwtToken}`
+          Authorization: `Bearer ${jwtToken}`,
         },
       })
       .then((response) => {
-        setTags(response.data);
+        setExistingTags(response.data);
       })
       .catch((error) => {
         console.error("Error fetching tags:", error);
@@ -69,10 +70,18 @@ const NewRecipeDialog = (props) => {
 
   const handleSubmit = async (values) => {
     try {
+      let copiedValues = JSON.parse(JSON.stringify(values));
+      if (copiedValues.existingTags) {
+        copiedValues.existingTags = copiedValues.existingTags.map((e) => {
+          return { name: e };
+        });
+        copiedValues.tags.push(...copiedValues.existingTags);
+      }
+
       const jwtToken = Cookies.get("jwtToken");
       const response = await axios.post(
-        "https://localhost:7164/api/recipes",
-        JSON.stringify(values),
+        API_PATH + "recipes",
+        JSON.stringify(copiedValues),
         {
           headers: {
             "Content-Type": "application/json",
@@ -98,6 +107,7 @@ const NewRecipeDialog = (props) => {
           name: "",
           description: "",
           cuisineId: "",
+          existingTags: [],
           tags: [],
           prepTime: 0,
           cookTime: 0,
@@ -148,22 +158,22 @@ const NewRecipeDialog = (props) => {
               <ErrorMessage name="cuisineId" component="div" />
             </StyledFormItem>
             <StyledFormItem>
-              <label htmlFor="tags">Tags</label>
-              <FieldArray name="tags">
+              <label htmlFor="existingTags">Tags</label>
+              <FieldArray name="existingTags">
                 {(arrayHelpers) => (
                   <div>
-                    {tags.map((tag) => (
+                    {existingTags.map((tag) => (
                       <label key={tag.id}>
                         <StyledInput
                           type="checkbox"
-                          name="tags"
+                          name="existingTags"
                           value={tag.name}
-                          checked={values.tags.includes(tag.name)}
+                          checked={values.existingTags.includes(tag.name)}
                           onChange={(e) => {
                             if (e.target.checked) {
                               arrayHelpers.push(tag.name);
                             } else {
-                              const idx = values.tags.indexOf(tag.name);
+                              const idx = values.existingTags.indexOf(tag.name);
                               arrayHelpers.remove(idx);
                             }
                           }}
@@ -174,7 +184,7 @@ const NewRecipeDialog = (props) => {
                   </div>
                 )}
               </FieldArray>
-              <ErrorMessage name="tags" component="div" />
+              <ErrorMessage name="existingTags" component="div" />
             </StyledFormItem>
 
             <br />

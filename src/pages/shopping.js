@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { StyledButton } from "./../shared/shared-style";
+import { API_PATH } from "../constants";
 
 const StyledButtonsContainer = styled.div`
   display: flex;
@@ -48,7 +49,7 @@ const Shopping = () => {
   const fetchShoppingList = () => {
     const jwtToken = Cookies.get("jwtToken");
     axios
-      .get("https://localhost:7164/api/ShoppingList", {
+      .get(API_PATH + "ShoppingList", {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -60,7 +61,7 @@ const Shopping = () => {
   const deleteProduct = (itemId) => {
     const jwtToken = Cookies.get("jwtToken");
     axios
-      .delete(`https://localhost:7164/api/ShoppingList/${itemId}`, {
+      .delete(API_PATH + `ShoppingList/${itemId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -72,7 +73,7 @@ const Shopping = () => {
   const buyProduct = (itemId) => {
     const jwtToken = Cookies.get("jwtToken");
     axios
-      .get(`https://localhost:7164/api/shoppinglist/getlink/${itemId}`, {
+      .get(API_PATH + `shoppinglist/getlink/${itemId}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

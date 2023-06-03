@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import styled from "styled-components";
+import { API_PATH } from "../constants";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -77,13 +78,11 @@ const UserPermissions = () => {
     const fetchRoles = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        const response = await axios.get(
-          "https://localhost:7164/api/Auth/getRoles",{
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "Auth/getRoles", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setRoles(response.data);
       } catch (error) {
         console.error(error);
@@ -94,13 +93,11 @@ const UserPermissions = () => {
     const fetchPolicies = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        const response = await axios.get(
-          "https://localhost:7164/api/Auth/getPolicies",{
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "Auth/getPolicies", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setPolicies(response.data);
       } catch (error) {
         console.error(error);
@@ -114,14 +111,11 @@ const UserPermissions = () => {
   const handleDelete = async () => {
     const jwtToken = Cookies.get("jwtToken");
     try {
-      const response = await axios.delete(
-        `https://localhost:7164/api/Users/${email}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.delete(API_PATH + `Users/${email}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       console.log(response.data); // Success message from the backend
     } catch (error) {
       console.error(error);
@@ -130,20 +124,16 @@ const UserPermissions = () => {
 
   const handleCreateRole = async () => {
     try {
-      const jwtToken = Cookies.get('jwtToken');
-      const response = await axios.post(
-        "https://localhost:7164/api/Auth/addRole",
-        null,
-        {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          
-          params: {
-            name: selectedRole,
-          },
-        }
-      );
+      const jwtToken = Cookies.get("jwtToken");
+      const response = await axios.post(API_PATH + "Auth/addRole", null, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+
+        params: {
+          name: selectedRole,
+        },
+      });
       console.log(response.data); // Success message from the backend
     } catch (error) {
       console.error(error);
@@ -153,18 +143,14 @@ const UserPermissions = () => {
   const handleCreatePolicy = async () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      const response = await axios.post(
-        "https://localhost:7164/api/Auth/addPolicy",
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          params: {
-            name: selectedPolicy,
-          },
-        }
-      );
+      const response = await axios.post(API_PATH + "Auth/addPolicy", null, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        params: {
+          name: selectedPolicy,
+        },
+      });
       console.log(response.data); // Success message from the backend
     } catch (error) {
       console.error(error);
@@ -185,7 +171,7 @@ const UserPermissions = () => {
           policyId: selectedPolicyId,
         });
         const response = await axios.post(
-          "https://localhost:7164/api/Auth/addRolePolicy",
+          API_PATH + "Auth/addRolePolicy",
           null,
           {
             headers: {

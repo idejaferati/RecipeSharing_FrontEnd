@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import styled from "styled-components";
-import Button from "@mui/material/Button";
+import { API_PATH } from "../constants";
 import { StyledListItem, StyledButton } from "../shared/shared-style";
 
 const MyCollections = () => {
@@ -13,7 +12,7 @@ const MyCollections = () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
         await axios
-          .get("https://localhost:7164/api/Collections/user", {
+          .get(API_PATH + "Collections/user", {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
@@ -31,7 +30,7 @@ const MyCollections = () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .delete(`https://localhost:7164/api/collections/${collectionId}`, {
+        .delete(API_PATH + `collections/${collectionId}`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -54,14 +53,11 @@ const MyCollections = () => {
       console.log(recipeId);
 
       await axios
-        .put(
-          `https://localhost:7164/api/collections/${collectionId}/recipes/${recipeId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        )
+        .put(API_PATH + `collections/${collectionId}/recipes/${recipeId}`, {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        })
         .then(() => {
           // Update the collections state by removing the deleted recipe from the specified collection
           setCollections(
@@ -98,7 +94,7 @@ const MyCollections = () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .put(`https://localhost:7164/api/collections`, updatedCollection, {
+        .put(API_PATH + "collections", updatedCollection, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },

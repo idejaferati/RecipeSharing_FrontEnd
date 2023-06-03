@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { StyledInput, StyledButton } from "./../shared/shared-style";
 import Cookies from "js-cookie";
 import axios from "axios";
-import InfoSnackbar from "./info-snackbar";
+import { API_PATH } from "../constants";
 
 const StyledAddToCookbookSection = styled.div`
   border: 1px dashed green;
@@ -52,7 +52,7 @@ export const AddToCookbookDialog = (props) => {
       try {
         const jwtToken = Cookies.get("jwtToken");
         await axios
-          .get("https://localhost:7164/api/cookbooks/all/user", {
+          .get(API_PATH + "cookbooks/all/user", {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
@@ -82,16 +82,12 @@ export const AddToCookbookDialog = (props) => {
       console.log(JSON.stringify(cookbookData));
       const jwtToken = Cookies.get("jwtToken");
       await axios
-        .post(
-          "https://localhost:7164/api/cookbooks",
-          JSON.stringify(cookbookData),
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(API_PATH + "cookbooks", JSON.stringify(cookbookData), {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+        })
         .then((response) => {
           const newCookbook = response.data;
           setCookbooks((cookbooks) => [...cookbooks, newCookbook]);
@@ -122,7 +118,7 @@ export const AddToCookbookDialog = (props) => {
       const recipeId = selectedRecipeId;
       //const recipeId = editingRecipe.id; // Assuming the recipe ID is required for adding to a cookbook
 
-      await axios.put(`https://localhost:7164/api/cookbooks/addRecipe`, null, {
+      await axios.put(API_PATH + `cookbooks/addRecipe`, null, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { StyledButton } from "./../shared/shared-style";
+import { API_PATH } from "../constants";
 
 const Cookbooks = () => {
   const [cookbooks, setCookbooks] = useState([]);
@@ -15,14 +16,11 @@ const Cookbooks = () => {
   const fetchCookbooks = async () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      const response = await axios.get(
-        "https://localhost:7164/api/cookbooks/all",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.get(API_PATH + "cookbooks/all", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setCookbooks(response.data);
     } catch (error) {
       console.error("Error fetching cookbooks:", error);

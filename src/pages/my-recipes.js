@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import { AddToCookbookDialog } from "../components/add-to-cookbook-dialog";
+import { API_PATH } from "../constants";
 
 const StyledListItem = styled.li`
   border: 1px solid deepskyblue;
@@ -40,14 +41,11 @@ const MyRecipes = () => {
     const fetchData = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        const response = await axios.get(
-          "https://localhost:7164/api/recipes/user",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "recipes/user", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setRecipes(response.data);
       } catch (error) {
         console.error("Error fetching recipe data:", error);
@@ -62,14 +60,11 @@ const MyRecipes = () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
         console.log(jwtToken);
-        const response = await axios.get(
-          "https://localhost:7164/api/cookbooks/all/user",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "cookbooks/all/user", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setCookbooks(response.data);
       } catch (error) {
         console.error("Error fetching cookbooks:", error);
@@ -122,24 +117,17 @@ const MyRecipes = () => {
 
       console.log(JSON.stringify(updatedRecipe));
 
-      await axios.put(
-        `https://localhost:7164/api/recipes`,
-        JSON.stringify(updatedRecipe),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-      const response = await axios.get(
-        "https://localhost:7164/api/recipes/user",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      await axios.put(API_PATH + "recipes", JSON.stringify(updatedRecipe), {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      const response = await axios.get(API_PATH + "recipes/user", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setRecipes(response.data);
     } catch (error) {
       console.error("Error updating recipe:", error);
@@ -150,20 +138,16 @@ const MyRecipes = () => {
   const handleDeleteRecipe = async (id) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.delete(`https://localhost:7164/api/recipes/${id}`,
-      {
+      await axios.delete(API_PATH + `recipes/${id}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      const response = await axios.get(
-        "https://localhost:7164/api/recipes/user",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.get(API_PATH + "recipes/user", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setRecipes(response.data);
     } catch (error) {
       console.error("Error deleting recipe:", error);
@@ -300,26 +284,19 @@ const MyRecipes = () => {
         recipes: [selectedRecipeId], // Assuming the recipe ID is required for adding to a cookbook
       };
       console.log(JSON.stringify(newCookbook));
-      await axios.post(
-        "https://localhost:7164/api/cookbooks",
-        JSON.stringify(newCookbook),
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.post(API_PATH + "cookbooks", JSON.stringify(newCookbook), {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       // Fetch updated cookbooks list
-      const response = await axios.get(
-        "https://localhost:7164/api/cookbooks/all",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.get(API_PATH + "cookbooks/all", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setCookbooks(response.data);
 
       // Reset the form
@@ -340,7 +317,7 @@ const MyRecipes = () => {
       const recipeId = selectedRecipeId;
       //const recipeId = editingRecipe.id; // Assuming the recipe ID is required for adding to a cookbook
 
-      await axios.put(`https://localhost:7164/api/cookbooks/addRecipe`, null, {
+      await axios.put(API_PATH + "cookbooks/addRecipe", null, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
