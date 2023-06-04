@@ -151,14 +151,14 @@ const ManageRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        await axios.get(API_PATH + "recipes/getAll").then((res) => {
-          setRecipes(res.data);
+        const res = await axios.get(API_PATH + "recipes/getAll");
 
-          const filtered = res.data.filter((recipe) =>
-            recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
-          );
-          setFilteredRecipes(filtered);
-        });
+        setRecipes(res.data);
+
+        const filtered = res.data.filter((recipe) =>
+          recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredRecipes(filtered);
       } catch (error) {
         console.error("Error fetching recipes:", error);
         setError(error);
@@ -191,24 +191,22 @@ const ManageRecipes = () => {
     try {
       console.log(selectedRecipeId);
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .get(API_PATH + "reviews", {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          params: {
-            id: selectedRecipeId,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          // reviews.find(e=>e.id == selectedRecipeId).reviews
-          // setReviews(res.data);
-          setReviews((prevReviews) => ({
-            ...prevReviews,
-            [selectedRecipeId]: res.data,
-          }));
-        });
+      const res = await axios.get(API_PATH + "reviews", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        params: {
+          id: selectedRecipeId,
+        },
+      });
+
+      console.log(res.data);
+      // reviews.find(e=>e.id == selectedRecipeId).reviews
+      // setReviews(res.data);
+      setReviews((prevReviews) => ({
+        ...prevReviews,
+        [selectedRecipeId]: res.data,
+      }));
     } catch (error) {
       console.error("Error fetching reviews:", error);
     }

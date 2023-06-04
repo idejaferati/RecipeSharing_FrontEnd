@@ -35,6 +35,11 @@ const StyledSuccessMessage = styled.p`
   margin-top: 10px;
 `;
 
+const StyledForm = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Required"),
   newPassword: Yup.string()
@@ -89,7 +94,7 @@ const ChangePassword = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}>
         {({ isSubmitting, status }) => (
-          <Form>
+          <StyledForm>
             <div>
               <StyledLabel htmlFor="oldPassword">Old Password: </StyledLabel>
               <StyledField
@@ -109,6 +114,7 @@ const ChangePassword = () => {
               <StyledErrorMessage name="newPassword" component="div" />
             </div>
             <StyledButton
+              style={{ width: "fit-content" }}
               type="submit"
               variant="outlined"
               sx={{ mt: 3, mb: 2 }}
@@ -116,7 +122,7 @@ const ChangePassword = () => {
               Submit
             </StyledButton>
             {status && <StyledSuccessMessage>{status}</StyledSuccessMessage>}
-          </Form>
+          </StyledForm>
         )}
       </Formik>
       <InfoSnackbar

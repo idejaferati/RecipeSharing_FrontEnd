@@ -51,15 +51,12 @@ export const AddToCookbookDialog = (props) => {
     const fetchCookbooks = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        await axios
-          .get(API_PATH + "cookbooks/all/user", {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          })
-          .then((res) => {
-            setCookbooks(res.data);
-          });
+        const res = await axios.get(API_PATH + "cookbooks/all/user", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+        setCookbooks(res.data);
       } catch (error) {
         console.error("Error fetching cookbooks:", error);
         const { status } = error.response;
@@ -81,27 +78,29 @@ export const AddToCookbookDialog = (props) => {
       };
       console.log(JSON.stringify(cookbookData));
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .post(API_PATH + "cookbooks", JSON.stringify(cookbookData), {
+      const response = await axios.post(
+        API_PATH + "cookbooks",
+        JSON.stringify(cookbookData),
+        {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
             "Content-Type": "application/json",
           },
-        })
-        .then((response) => {
-          const newCookbook = response.data;
-          setCookbooks((cookbooks) => [...cookbooks, newCookbook]);
-          setInfoSnackbar("Added");
-          setOpenSnackbar(true);
-          // Reset the form fields and selection
-          setNewCookbookName("");
-          setNewCookbookDescription("");
-          setSelectedRecipeId("");
-          setShowAddToCookbook(false);
-          setTimeout(() => {
-            handleClose();
-          }, 7000);
-        });
+        }
+      );
+
+      const newCookbook = response.data;
+      setCookbooks((cookbooks) => [...cookbooks, newCookbook]);
+      setInfoSnackbar("Added");
+      setOpenSnackbar(true);
+      // Reset the form fields and selection
+      setNewCookbookName("");
+      setNewCookbookDescription("");
+      setSelectedRecipeId("");
+      setShowAddToCookbook(false);
+      setTimeout(() => {
+        handleClose();
+      }, 7000);
     } catch (error) {
       console.error("Error creating new cookbook:", error);
       const { status } = error.response;
@@ -116,8 +115,7 @@ export const AddToCookbookDialog = (props) => {
       const jwtToken = Cookies.get("jwtToken");
       const cookBookId = selectedCookbook;
       const recipeId = selectedRecipeId;
-      //const recipeId = editingRecipe.id; // Assuming the recipe ID is required for adding to a cookbook
-
+      //const recipeId = editingRecipe.id;
       await axios.put(API_PATH + `cookbooks/addRecipe`, null, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -164,6 +162,7 @@ export const AddToCookbookDialog = (props) => {
             Create New Cookbook
           </StyledButton>
         </StyledCookbookContainer>
+        {/*allows the user to choose an existing cookbook to add the recipe to*/}
         {!!cookbooks?.length && (
           <StyledCookbookContainer>
             <p>Choose an existing cookbook:</p>
@@ -171,6 +170,7 @@ export const AddToCookbookDialog = (props) => {
               value={selectedCookbook}
               onChange={(e) => setSelectedCookbook(e.target.value)}>
               <option value="">Select a cookbook</option>
+              {/*allows the user to see a list of available cookbooks to choose from in the select dropdown*/}
               {cookbooks.map((cookbook) => (
                 <option key={cookbook.id} value={cookbook.id}>
                   {cookbook.name}

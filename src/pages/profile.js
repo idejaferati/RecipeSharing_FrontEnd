@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { API_PATH } from "../constants";
+import { StyledButtonsContainer } from "./../shared/shared-style";
 
 const StyledPageContainer = styled.div`
   max-width: 600px;
@@ -17,7 +18,7 @@ const StyledPageContainer = styled.div`
 `;
 
 const StyledSection = styled.div`
-  margin-bottom: 20px;
+  margin: 20px 0;
 `;
 
 const StyledFormContainer = styled.div`
@@ -219,14 +220,14 @@ const Profile = () => {
               )}
             </StyledFormGroup>
 
-            <div>
+            <StyledButtonsContainer>
               <Button type="submit" variant="contained">
                 Update
               </Button>
               <Button type="button" variant="outlined" onClick={handleCancel}>
                 Cancel
               </Button>
-            </div>
+            </StyledButtonsContainer>
             {formik.status && <StyledSuccess>{formik.status}</StyledSuccess>}
           </StyledForm>
         </StyledFormContainer>

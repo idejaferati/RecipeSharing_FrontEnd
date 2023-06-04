@@ -38,7 +38,7 @@ const StyledRecipeList = styled.ul`
 
 const StyledRecipeImage = styled.img`
   width: 200px;
-  height: 400px;
+  height: 200px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   align-self: flex-start;
@@ -153,6 +153,13 @@ const StyledIngredientContainer = styled.div`
   color: black;
 `;
 
+const StyledReviewContainer = styled.div`
+  background: white;
+  padding: 10px;
+  margin: 10px 5px;
+  border-radius: 10px;
+`;
+
 const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState(null);
@@ -167,6 +174,7 @@ const MyRecipes = () => {
   const [reviewMessage, setReviewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchClicked, setSearchClicked] = useState(false);
+  const [showReviewedRecipe, setShowReviewedRecipe] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [openAddToCollectionModal, setOpenAddToCollectionModal] =
     useState(false);
@@ -183,14 +191,14 @@ const MyRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        await axios.get(API_PATH + "recipes/getAll").then((res) => {
-          setRecipes(res.data);
+        const res = await axios.get(API_PATH + "recipes/getAll");
 
-          const filtered = res.data.filter((recipe) =>
-            recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
-          );
-          setFilteredRecipes(filtered);
-        });
+        setRecipes(res.data);
+
+        const filtered = res.data.filter((recipe) =>
+          recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        setFilteredRecipes(filtered);
       } catch (error) {
         console.error("Error fetching recipes:", error);
         setError(error);
@@ -208,12 +216,10 @@ const MyRecipes = () => {
   //         headers: {
   //           Authorization: `Bearer ${jwtToken}`,
   //         },
-  //       })
-  //       .then(() => {
-  //         setRecipes((recipes) =>
-  //           recipes.filter((recipe) => recipe.id !== recipeId)
-  //         );
   //       });
+  //       setRecipes((recipes) =>
+  //         recipes.filter((recipe) => recipe.id !== recipeId)
+  //       );
   //   } catch (error) {
   //     console.error("Error deleting recipe:", error);
   //   }
@@ -222,16 +228,17 @@ const MyRecipes = () => {
   const shopIngredient = async (name, quantity) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .post(API_PATH + "ShoppingList", JSON.stringify([{ name, quantity }]), {
+      const res = await axios.post(
+        API_PATH + "ShoppingList",
+        JSON.stringify([{ name, quantity }]),
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${jwtToken}`,
           },
-        })
-        .then((res) => {
-          console.log("Ingredient is on shopping list", res);
-        });
+        }
+      );
+      console.log("Ingredient is on shopping list", res);
     } catch (error) {
       console.error("Error shopping recipe:", error);
     }
@@ -261,24 +268,22 @@ const MyRecipes = () => {
       };
 
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .post(API_PATH + "reviews", JSON.stringify(reviewData), {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        })
-        .then(() => {
-          // Optionally, you can fetch the updated recipe data after adding the review
-          // const updatedRecipeResponse = await axios.get(API_PATH + `recipes/${recipeId}`);
-          // const updatedRecipe = updatedRecipeResponse.data;
-          // Update the recipe state with the updated data
+      await axios.post(API_PATH + "reviews", JSON.stringify(reviewData), {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-          // Reset the review form
-          setReviewingRecipeId("");
-          setReviewRating(0);
-          setReviewMessage(""); // Reset the review message
-        });
+      // Optionally, you can fetch the updated recipe data after adding the review
+      // const updatedRecipeResponse = await axios.get(API_PATH + `recipes/${recipeId}`);
+      // const updatedRecipe = updatedRecipeResponse.data;
+      // Update the recipe state with the updated data
+
+      // Reset the review form
+      setReviewingRecipeId("");
+      setReviewRating(0);
+      setReviewMessage(""); // Reset the review message
     } catch (error) {
       console.error("Error adding review:", error);
     }
@@ -288,24 +293,22 @@ const MyRecipes = () => {
     try {
       console.log(selectedRecipeId);
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .get(API_PATH + "reviews", {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          params: {
-            id: selectedRecipeId,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          // reviews.find(e=>e.id == selectedRecipeId).reviews
-          // setReviews(res.data);
-          setReviews((prevReviews) => ({
-            ...prevReviews,
-            [selectedRecipeId]: res.data,
-          }));
-        });
+      const res = await axios.get(API_PATH + "reviews", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        params: {
+          id: selectedRecipeId,
+        },
+      });
+
+      console.log(res.data);
+      // reviews.find(e=>e.id == selectedRecipeId).reviews
+      // setReviews(res.data);
+      setReviews((prevReviews) => ({
+        ...prevReviews,
+        [selectedRecipeId]: res.data,
+      }));
     } catch (error) {
       console.error("Error fetching reviews:", error);
     }
@@ -325,6 +328,7 @@ const MyRecipes = () => {
   };
 
   const handleShowReviews = async (recipeId) => {
+    setShowReviewedRecipe(recipeId);
     await fetchReviews(recipeId);
   };
 
@@ -381,7 +385,10 @@ const MyRecipes = () => {
         <StyledRecipeList>
           {filteredRecipes.map((recipe) => (
             <StyledListItem key={recipe.id}>
-              <StyledRecipeImage src={recipe.audioInstructions} alt="Recipe" />{" "}
+              <StyledRecipeImage
+                src={require("../images/no-img.png")}
+                alt="Recipe"
+              />{" "}
               <div>
                 <StyledRecipeName>{recipe.name}</StyledRecipeName>
                 <StyledRecipeDescription>
@@ -467,7 +474,7 @@ const MyRecipes = () => {
                   Add to Collection
                 </StyledButton>
                 {recipe.id === reviewingRecipeId ? (
-                  <div className="review-form">
+                  <StyledReviewContainer>
                     <p>Rate this recipe:</p>
                     <StarRating
                       rating={reviewRating}
@@ -493,7 +500,15 @@ const MyRecipes = () => {
                       }>
                       Submit Review
                     </StyledButton>
-                  </div>
+                    <StyledButton
+                      type="button"
+                      variant="outlined"
+                      sx={{ mt: 3, mb: 2 }}
+                      style={{ margin: "3px" }}
+                      onClick={() => setReviewingRecipeId("")}>
+                      Cancel
+                    </StyledButton>
+                  </StyledReviewContainer>
                 ) : (
                   <StyledButton
                     type="button"
@@ -501,7 +516,9 @@ const MyRecipes = () => {
                     variant="outlined"
                     sx={{ mt: 3, mb: 2 }}
                     style={{ margin: "3px" }}
-                    onClick={() => setReviewingRecipeId(recipe.id)}>
+                    onClick={() => {
+                      setReviewingRecipeId(recipe.id);
+                    }}>
                     Review Recipe
                   </StyledButton>
                 )}
@@ -510,22 +527,26 @@ const MyRecipes = () => {
                   color="success"
                   variant="outlined"
                   sx={{ mt: 3, mb: 2 }}
-                  style={{ margin: "3px" }}
+                  style={{ margin: "3px", display: "block" }}
                   onClick={() => handleShowReviews(recipe.id)}>
                   Show Reviews
                 </StyledButton>
-                {reviews && reviews[recipe.id] && (
-                  <div key={recipe.id}>
-                    <h4>Reviews:</h4>
-                    <ul>
-                      {reviews[recipe.id].map((review) => (
-                        <li key={review.id}>
-                          Rating: {review.rating} | Message: {review.message}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {!reviewingRecipeId &&
+                  showReviewedRecipe === recipe.id &&
+                  (reviews[recipe.id]?.length > 0 ? (
+                    <div key={recipe.id}>
+                      <h4>Reviews:</h4>
+                      <ul>
+                        {reviews[recipe.id].map((review) => (
+                          <li key={review.id}>
+                            Rating: {review.rating} | Message: {review.message}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    <div>No reviews yet.</div>
+                  ))}
               </div>
             </StyledListItem>
           ))}

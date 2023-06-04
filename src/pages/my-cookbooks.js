@@ -5,6 +5,7 @@ import { Formik, Form } from "formik";
 import { StyledButton, StyledField } from "./../shared/shared-style";
 import styled from "styled-components";
 import { API_PATH } from "../constants";
+import { StyledButtonsContainer } from "./../shared/shared-style";
 
 const StyledCookbookContainer = styled.div`
   border: 1px solid blue;
@@ -154,7 +155,7 @@ function MyCookbooks() {
                   setSubmitting(false);
                   setEditCookbookId(null);
                 }}>
-                <Form>
+                <Form style={{ display: "inline-grid", gap: "10px" }}>
                   <label htmlFor="name">Name:</label>
                   <StyledField type="text" id="name" name="name" />
                   <label htmlFor="description">Description:</label>
@@ -163,19 +164,21 @@ function MyCookbooks() {
                     id="description"
                     name="description"
                   />
-                  <StyledButton
-                    type="submit"
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}>
-                    Update Cookbook
-                  </StyledButton>
-                  <StyledButton
-                    type="button"
-                    variant="text"
-                    onClick={handleCancelEditCookbook}
-                    sx={{ mt: 3, mb: 2 }}>
-                    Cancel
-                  </StyledButton>
+                  <StyledButtonsContainer>
+                    <StyledButton
+                      type="submit"
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}>
+                      Update Cookbook
+                    </StyledButton>
+                    <StyledButton
+                      type="button"
+                      variant="text"
+                      onClick={handleCancelEditCookbook}
+                      sx={{ mt: 3, mb: 2 }}>
+                      Cancel
+                    </StyledButton>
+                  </StyledButtonsContainer>
                 </Form>
               </Formik>
             </div>
@@ -185,21 +188,23 @@ function MyCookbooks() {
               <p>{cookbook.description}</p>
 
               <p>Number of Recipes: {cookbook.numberOfRecipes}</p>
-              <StyledButton
-                type="button"
-                variant="outlined"
-                color="error"
-                onClick={() => deleteCookbook(cookbook.id)}
-                sx={{ mt: 3, mb: 2 }}>
-                Delete Cookbook
-              </StyledButton>
-              <StyledButton
-                type="button"
-                variant="contained"
-                onClick={() => handleEditCookbook(cookbook.id)}
-                sx={{ mt: 3, mb: 2 }}>
-                Edit Cookbook
-              </StyledButton>
+              <StyledButtonsContainer>
+                <StyledButton
+                  type="button"
+                  variant="contained"
+                  onClick={() => handleEditCookbook(cookbook.id)}
+                  sx={{ mt: 3, mb: 2 }}>
+                  Edit Cookbook
+                </StyledButton>
+                <StyledButton
+                  type="button"
+                  variant="outlined"
+                  color="error"
+                  onClick={() => deleteCookbook(cookbook.id)}
+                  sx={{ mt: 3, mb: 2 }}>
+                  Delete Cookbook
+                </StyledButton>
+              </StyledButtonsContainer>
             </div>
           )}
 

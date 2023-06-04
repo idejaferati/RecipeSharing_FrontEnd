@@ -3,6 +3,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { StyledButton } from "./../shared/shared-style";
 import { API_PATH } from "../constants";
+import styled from "styled-components";
+
+const StyledItem = styled.div`
+  background: #b0e0e682;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+`;
 
 const Cookbooks = () => {
   const [cookbooks, setCookbooks] = useState([]);
@@ -75,7 +83,7 @@ const Cookbooks = () => {
           </StyledButton>
           <h3>Recipes:</h3>
           {selectedCookbook.recipes.map((recipe) => (
-            <div key={recipe.id}>
+            <StyledItem key={recipe.id}>
               <h4>{recipe.name}</h4>
               <p>{recipe.description}</p>
               <p>Cuisine: {recipe.cuisine.name}</p>
@@ -103,7 +111,7 @@ const Cookbooks = () => {
               {recipe.videoInstructions && (
                 <p>Video Instructions: {recipe.videoInstructions}</p>
               )}
-            </div>
+            </StyledItem>
           ))}
         </div>
       )}

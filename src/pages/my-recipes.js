@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Button from "@mui/material/Button";
 import { AddToCookbookDialog } from "../components/add-to-cookbook-dialog";
 import { API_PATH } from "../constants";
+import { StyledButtonsContainer } from "../shared/shared-style";
 
 const StyledListItem = styled.li`
   border: 1px solid deepskyblue;
@@ -23,6 +24,13 @@ const StyledSelect = styled.select`
 
 const StyledFormItem = styled.div`
   padding: 10px;
+`;
+
+const StyledFormContainer = styled.div`
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px;
 `;
 
 const MyRecipes = () => {
@@ -104,7 +112,9 @@ const MyRecipes = () => {
         instructions: instructions.map(
           (instruction) => instruction.stepDescription
         ),
-        tags: tags.map((tag) => ({ id: tag.id, name: tag.name })),
+        tags: tags.map((tag) =>
+          tag.id ? { id: tag.id, name: tag.name } : { name: tag.name }
+        ),
         cuisineId,
         prepTime,
         cookTime,
@@ -281,7 +291,7 @@ const MyRecipes = () => {
       const newCookbook = {
         name: newCookbookName,
         description: newCookbookDescription,
-        recipes: [selectedRecipeId], // Assuming the recipe ID is required for adding to a cookbook
+        recipes: [selectedRecipeId],
       };
       console.log(JSON.stringify(newCookbook));
       await axios.post(API_PATH + "cookbooks", JSON.stringify(newCookbook), {
@@ -315,7 +325,7 @@ const MyRecipes = () => {
       const jwtToken = Cookies.get("jwtToken");
       const cookBookId = selectedCookbook;
       const recipeId = selectedRecipeId;
-      //const recipeId = editingRecipe.id; // Assuming the recipe ID is required for adding to a cookbook
+      //const recipeId = editingRecipe.id;
 
       await axios.put(API_PATH + "cookbooks/addRecipe", null, {
         headers: {
@@ -376,17 +386,9 @@ const MyRecipes = () => {
                 </li>
               ))}
             </ol>
-            <Button
-              type="button"
-              variant="outlined"
-              color="error"
-              sx={{ mt: 3, mb: 2 }}
-              style={{ margin: "3px" }}
-              onClick={() => handleDeleteRecipe(recipe.id)}>
-              Delete Recipe
-            </Button>
+
             {editingRecipe && editingRecipe.id === recipe.id ? (
-              <div>
+              <StyledFormContainer>
                 {/* Form to update the recipe */}
                 <h4>Update Recipe</h4>
                 <StyledFormItem>
@@ -580,13 +582,12 @@ const MyRecipes = () => {
                     onChange={handleInputChange}></textarea>
                 </StyledFormItem>
 
-                <StyledFormItem>
+                <StyledButtonsContainer>
                   {/* Add more input fields for other recipe properties */}
                   <Button
                     type="button"
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
-                    style={{ margin: "3px" }}
                     onClick={handleUpdateRecipe}>
                     Save
                   </Button>
@@ -597,41 +598,48 @@ const MyRecipes = () => {
                     onClick={handleCancelEdit}>
                     Cancel
                   </Button>
-                </StyledFormItem>
-              </div>
+                </StyledButtonsContainer>
+              </StyledFormContainer>
             ) : (
-              <>
-                <Button
-                  type="button"
-                  variant="outlined"
-                  sx={{ mt: 3, mb: 2 }}
-                  style={{ margin: "3px" }}
-                  onClick={() => handleEditClick(recipe)}>
-                  Update Recipe
-                </Button>
+              <StyledButtonsContainer>
                 <Button
                   type="button"
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  style={{ margin: "3px" }}
                   onClick={() => handleAddToCookbook(recipe.id)}>
                   Add to Cookbook
                 </Button>
-              </>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={() => handleEditClick(recipe)}>
+                  Update Recipe
+                </Button>
+              </StyledButtonsContainer>
             )}
+            <Button
+              type="button"
+              variant="outlined"
+              color="error"
+              sx={{ mt: 3, mb: 2 }}
+              style={{ margin: "3px" }}
+              onClick={() => handleDeleteRecipe(recipe.id)}>
+              Delete Recipe
+            </Button>
           </StyledListItem>
         ))}
       </ul>
-      showAddToCookbook && (
-      <AddToCookbookDialog
-        //onClick={handleAddToCookbook(recipe.id)}
-        open={openAddToCookbookModal}
-        onClose={handleCloseAddToCookbookModal}
-        selectedRecipeId={selectedRecipeId}
-        setSelectedRecipeId={setSelectedRecipeId}
-        setShowAddToCookbook={setShowAddToCookbook}
-      />
-      )
+      {showAddToCookbook && (
+        <AddToCookbookDialog
+          //onClick={handleAddToCookbook(recipe.id)}
+          open={openAddToCookbookModal}
+          onClose={handleCloseAddToCookbookModal}
+          selectedRecipeId={selectedRecipeId}
+          setSelectedRecipeId={setSelectedRecipeId}
+          setShowAddToCookbook={setShowAddToCookbook}
+        />
+      )}
     </div>
   );
 };

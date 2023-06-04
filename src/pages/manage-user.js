@@ -142,13 +142,15 @@ const ManageUser = () => {
     const jwtToken = Cookies.get("jwtToken");
     try {
       if (searchEmail) {
-        await axios
-          .get(API_PATH + `Users/search-by-email/${searchEmail}`, {
+        const res = await axios.get(
+          API_PATH + `Users/search-by-email/${searchEmail}`,
+          {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
-          })
-          .then((res) => setFoundUsers(res.data));
+          }
+        );
+        setFoundUsers(res.data);
       } else {
         setFoundUsers(users);
       }
@@ -193,18 +195,20 @@ const ManageUser = () => {
     };
 
     try {
-      await axios
-        .post(API_PATH + "Users/Register", JSON.stringify(jsonData), {
+      const res = await axios.post(
+        API_PATH + "Users/Register",
+        JSON.stringify(jsonData),
+        {
           headers: {
             "Content-Type": "application/json",
           },
-        })
-        .then((res) => {
-          if (res) {
-            console.log(res.data);
-            navigate("/login");
-          }
-        });
+        }
+      );
+
+      if (res) {
+        console.log(res.data);
+        navigate("/login");
+      }
     } catch (error) {
       console.error(error);
     }
