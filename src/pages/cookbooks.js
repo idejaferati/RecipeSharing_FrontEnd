@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { StyledButton } from "./../shared/shared-style";
 import { API_PATH } from "../constants";
 import styled from "styled-components";
+import { ContentContainer } from "./../shared/shared-style";
 
 const StyledItem = styled.div`
   background: #b0e0e682;
@@ -54,7 +55,7 @@ const Cookbooks = () => {
   }
 
   return (
-    <div>
+    <ContentContainer>
       <h1>Cookbook List</h1>
       {!selectedCookbook &&
         cookbooks.map((cookbook) => (
@@ -115,7 +116,7 @@ const Cookbooks = () => {
           ))}
         </div>
       )}
-    </div>
+    </ContentContainer>
   );
 };
 

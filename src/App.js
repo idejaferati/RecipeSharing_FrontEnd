@@ -52,7 +52,7 @@ function App() {
             <Route path="/manageuser" element={<ManageUser />} />
             <Route path="/managetags" element={<ManageTags />} />
             <Route path="/managerecipes" element={<ManageRecipes />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/adminProfile" element={<Profile />} />
           </Route>
 
           {/* catch all */}

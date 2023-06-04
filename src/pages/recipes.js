@@ -386,7 +386,12 @@ const MyRecipes = () => {
           {filteredRecipes.map((recipe) => (
             <StyledListItem key={recipe.id}>
               <StyledRecipeImage
-                src={require("../images/no-img.png")}
+                src={
+                  !recipe.audioInstructions ||
+                  recipe.audioInstructions === "nothing"
+                    ? require("../images/no-img.png")
+                    : recipe.audioInstructions
+                }
                 alt="Recipe"
               />{" "}
               <div>

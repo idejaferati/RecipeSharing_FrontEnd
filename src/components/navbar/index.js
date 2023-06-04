@@ -18,13 +18,12 @@ const Navbar = () => {
 
   const handleLogout = () => {
     Cookies.remove("jwtToken");
-    localStorage.clear()
+    localStorage.clear();
     setAuth(null);
     navigate("/");
   };
-  const storedAuth = JSON.parse(localStorage.getItem('auth'))
-  const role = storedAuth?.role || ""
-  console.log(role)
+  const storedAuth = JSON.parse(localStorage.getItem("auth"));
+  const role = storedAuth?.role || "";
 
   return (
     <>
@@ -37,7 +36,7 @@ const Navbar = () => {
           <StyledNavLink to="/cuisines" activestyle="true">
             Cuisines
           </StyledNavLink>
-          {role == "user" ? (
+          {role === "user" ? (
             <>
               <StyledNavLink to="/recipes" activestyle="true">
                 Recipes
@@ -59,7 +58,7 @@ const Navbar = () => {
               </StyledNavLink>
             </>
           ) : null}
-          {role == "admin" ? (
+          {role === "admin" ? (
             <>
               <StyledNavLink to="/permissions" activestyle="true">
                 Permissions
@@ -78,9 +77,12 @@ const Navbar = () => {
           {/* Second Nav */}
           {/* <NavBtnLink to='/sign-in'>Sign In</NavBtnLink> */}
         </StyledNavMenu>
-        {role == "admin" || role == "user" ? (
+        {role === "admin" || role === "user" ? (
           <StyledNavBtn>
-            <StyledNavBtnLink to="/profile">Profile</StyledNavBtnLink>
+            <StyledNavBtnLink
+              to={role === "user" ? "/profile" : "/adminProfile"}>
+              Profile
+            </StyledNavBtnLink>
             <StyledNavBtnLink2 onClick={handleLogout}>
               Log out
             </StyledNavBtnLink2>
