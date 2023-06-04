@@ -2,6 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { StyledButton } from "./../shared/shared-style";
+import { API_PATH } from "../constants";
+import styled from "styled-components";
+
+const StyledItem = styled.div`
+  background: #b0e0e682;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+`;
 
 const Cookbooks = () => {
   const [cookbooks, setCookbooks] = useState([]);
@@ -15,14 +24,11 @@ const Cookbooks = () => {
   const fetchCookbooks = async () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      const response = await axios.get(
-        "https://localhost:7164/api/cookbooks/all",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.get(API_PATH + "cookbooks/all", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setCookbooks(response.data);
     } catch (error) {
       console.error("Error fetching cookbooks:", error);
@@ -77,7 +83,7 @@ const Cookbooks = () => {
           </StyledButton>
           <h3>Recipes:</h3>
           {selectedCookbook.recipes.map((recipe) => (
-            <div key={recipe.id}>
+            <StyledItem key={recipe.id}>
               <h4>{recipe.name}</h4>
               <p>{recipe.description}</p>
               <p>Cuisine: {recipe.cuisine.name}</p>
@@ -105,7 +111,7 @@ const Cookbooks = () => {
               {recipe.videoInstructions && (
                 <p>Video Instructions: {recipe.videoInstructions}</p>
               )}
-            </div>
+            </StyledItem>
           ))}
         </div>
       )}

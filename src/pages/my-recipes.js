@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import { AddToCookbookDialog } from "../components/add-to-cookbook-dialog";
+import { API_PATH } from "../constants";
+import { StyledButtonsContainer } from "../shared/shared-style";
 
 const StyledListItem = styled.li`
   border: 1px solid deepskyblue;
@@ -24,6 +26,13 @@ const StyledFormItem = styled.div`
   padding: 10px;
 `;
 
+const StyledFormContainer = styled.div`
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px;
+`;
+
 const MyRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [editingRecipe, setEditingRecipe] = useState(null);
@@ -40,14 +49,11 @@ const MyRecipes = () => {
     const fetchData = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        const response = await axios.get(
-          "https://localhost:7164/api/recipes/user",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "recipes/user", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setRecipes(response.data);
       } catch (error) {
         console.error("Error fetching recipe data:", error);
@@ -62,14 +68,11 @@ const MyRecipes = () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
         console.log(jwtToken);
-        const response = await axios.get(
-          "https://localhost:7164/api/cookbooks/all/user",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "cookbooks/all/user", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setCookbooks(response.data);
       } catch (error) {
         console.error("Error fetching cookbooks:", error);
@@ -109,7 +112,9 @@ const MyRecipes = () => {
         instructions: instructions.map(
           (instruction) => instruction.stepDescription
         ),
-        tags: tags.map((tag) => ({ id: tag.id, name: tag.name })),
+        tags: tags.map((tag) =>
+          tag.id ? { id: tag.id, name: tag.name } : { name: tag.name }
+        ),
         cuisineId,
         prepTime,
         cookTime,
@@ -122,24 +127,17 @@ const MyRecipes = () => {
 
       console.log(JSON.stringify(updatedRecipe));
 
-      await axios.put(
-        `https://localhost:7164/api/recipes`,
-        JSON.stringify(updatedRecipe),
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-      const response = await axios.get(
-        "https://localhost:7164/api/recipes/user",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      await axios.put(API_PATH + "recipes", JSON.stringify(updatedRecipe), {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      const response = await axios.get(API_PATH + "recipes/user", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setRecipes(response.data);
     } catch (error) {
       console.error("Error updating recipe:", error);
@@ -150,20 +148,16 @@ const MyRecipes = () => {
   const handleDeleteRecipe = async (id) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.delete(`https://localhost:7164/api/recipes/${id}`,
-      {
+      await axios.delete(API_PATH + `recipes/${id}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      const response = await axios.get(
-        "https://localhost:7164/api/recipes/user",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.get(API_PATH + "recipes/user", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setRecipes(response.data);
     } catch (error) {
       console.error("Error deleting recipe:", error);
@@ -297,29 +291,22 @@ const MyRecipes = () => {
       const newCookbook = {
         name: newCookbookName,
         description: newCookbookDescription,
-        recipes: [selectedRecipeId], // Assuming the recipe ID is required for adding to a cookbook
+        recipes: [selectedRecipeId],
       };
       console.log(JSON.stringify(newCookbook));
-      await axios.post(
-        "https://localhost:7164/api/cookbooks",
-        JSON.stringify(newCookbook),
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.post(API_PATH + "cookbooks", JSON.stringify(newCookbook), {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       // Fetch updated cookbooks list
-      const response = await axios.get(
-        "https://localhost:7164/api/cookbooks/all",
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const response = await axios.get(API_PATH + "cookbooks/all", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setCookbooks(response.data);
 
       // Reset the form
@@ -338,9 +325,9 @@ const MyRecipes = () => {
       const jwtToken = Cookies.get("jwtToken");
       const cookBookId = selectedCookbook;
       const recipeId = selectedRecipeId;
-      //const recipeId = editingRecipe.id; // Assuming the recipe ID is required for adding to a cookbook
+      //const recipeId = editingRecipe.id;
 
-      await axios.put(`https://localhost:7164/api/cookbooks/addRecipe`, null, {
+      await axios.put(API_PATH + "cookbooks/addRecipe", null, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -399,17 +386,9 @@ const MyRecipes = () => {
                 </li>
               ))}
             </ol>
-            <Button
-              type="button"
-              variant="outlined"
-              color="error"
-              sx={{ mt: 3, mb: 2 }}
-              style={{ margin: "3px" }}
-              onClick={() => handleDeleteRecipe(recipe.id)}>
-              Delete Recipe
-            </Button>
+
             {editingRecipe && editingRecipe.id === recipe.id ? (
-              <div>
+              <StyledFormContainer>
                 {/* Form to update the recipe */}
                 <h4>Update Recipe</h4>
                 <StyledFormItem>
@@ -603,13 +582,12 @@ const MyRecipes = () => {
                     onChange={handleInputChange}></textarea>
                 </StyledFormItem>
 
-                <StyledFormItem>
+                <StyledButtonsContainer>
                   {/* Add more input fields for other recipe properties */}
                   <Button
                     type="button"
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
-                    style={{ margin: "3px" }}
                     onClick={handleUpdateRecipe}>
                     Save
                   </Button>
@@ -620,41 +598,48 @@ const MyRecipes = () => {
                     onClick={handleCancelEdit}>
                     Cancel
                   </Button>
-                </StyledFormItem>
-              </div>
+                </StyledButtonsContainer>
+              </StyledFormContainer>
             ) : (
-              <>
-                <Button
-                  type="button"
-                  variant="outlined"
-                  sx={{ mt: 3, mb: 2 }}
-                  style={{ margin: "3px" }}
-                  onClick={() => handleEditClick(recipe)}>
-                  Update Recipe
-                </Button>
+              <StyledButtonsContainer>
                 <Button
                   type="button"
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  style={{ margin: "3px" }}
                   onClick={() => handleAddToCookbook(recipe.id)}>
                   Add to Cookbook
                 </Button>
-              </>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={() => handleEditClick(recipe)}>
+                  Update Recipe
+                </Button>
+              </StyledButtonsContainer>
             )}
+            <Button
+              type="button"
+              variant="outlined"
+              color="error"
+              sx={{ mt: 3, mb: 2 }}
+              style={{ margin: "3px" }}
+              onClick={() => handleDeleteRecipe(recipe.id)}>
+              Delete Recipe
+            </Button>
           </StyledListItem>
         ))}
       </ul>
-      showAddToCookbook && (
-      <AddToCookbookDialog
-        //onClick={handleAddToCookbook(recipe.id)}
-        open={openAddToCookbookModal}
-        onClose={handleCloseAddToCookbookModal}
-        selectedRecipeId={selectedRecipeId}
-        setSelectedRecipeId={setSelectedRecipeId}
-        setShowAddToCookbook={setShowAddToCookbook}
-      />
-      )
+      {showAddToCookbook && (
+        <AddToCookbookDialog
+          //onClick={handleAddToCookbook(recipe.id)}
+          open={openAddToCookbookModal}
+          onClose={handleCloseAddToCookbookModal}
+          selectedRecipeId={selectedRecipeId}
+          setSelectedRecipeId={setSelectedRecipeId}
+          setShowAddToCookbook={setShowAddToCookbook}
+        />
+      )}
     </div>
   );
 };

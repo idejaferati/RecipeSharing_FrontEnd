@@ -2,17 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import styled from "styled-components";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -25,6 +17,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { API_PATH } from "../constants";
 
 const StyledBlogContainer = styled.div`
   display: flex;
@@ -115,14 +108,11 @@ const ManageUser = () => {
     const jwtToken = Cookies.get("jwtToken");
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "https://localhost:7164/api/Users/findAllusers",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "Users/findAllusers", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setUsers(response.data);
       } catch (error) {
         console.error("Error:", error);
@@ -135,7 +125,7 @@ const ManageUser = () => {
   const handleDeleteUser = async (email) => {
     const jwtToken = Cookies.get("jwtToken");
     try {
-      await axios.delete(`https://localhost:7164/api/Users/${email}`, {
+      await axios.delete(API_PATH + `Users/${email}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -152,16 +142,15 @@ const ManageUser = () => {
     const jwtToken = Cookies.get("jwtToken");
     try {
       if (searchEmail) {
-        await axios
-          .get(
-            `https://localhost:7164/api/Users/search-by-email/${searchEmail}`,
-            {
-              headers: {
-                Authorization: `Bearer ${jwtToken}`,
-              },
-            }
-          )
-          .then((res) => setFoundUsers(res.data));
+        const res = await axios.get(
+          API_PATH + `Users/search-by-email/${searchEmail}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+        setFoundUsers(res.data);
       } else {
         setFoundUsers(users);
       }
@@ -181,7 +170,7 @@ const ManageUser = () => {
   const handleCreateUserSubmit = async () => {
     // Perform the create user API call using the `newUser` state data
     try {
-      await axios.post("https://localhost:7164/api/Users/Register", newUser);
+      await axios.post(API_PATH + "Users/Register", newUser);
       // Optionally, you can update the users list to include the newly created user
       setUsers([...users, newUser]);
       console.log("User created successfully.");
@@ -206,22 +195,20 @@ const ManageUser = () => {
     };
 
     try {
-      await axios
-        .post(
-          "https://localhost:7164/api/Users/Register",
-          JSON.stringify(jsonData),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          if (res) {
-            console.log(res.data);
-            navigate("/login");
-          }
-        });
+      const res = await axios.post(
+        API_PATH + "Users/Register",
+        JSON.stringify(jsonData),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res) {
+        console.log(res.data);
+        navigate("/login");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -231,13 +218,11 @@ const ManageUser = () => {
     const fetchRoles = async () => {
       const jwtToken = Cookies.get("jwtToken");
       try {
-        const response = await axios.get(
-          "https://localhost:7164/api/Auth/getRoles",{
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "Auth/getRoles", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setRoles(response.data);
       } catch (error) {
         console.error("Error:", error);

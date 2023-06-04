@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { API_PATH } from "../constants";
+import { StyledButtonsContainer } from "./../shared/shared-style";
 
 const StyledPageContainer = styled.div`
   max-width: 600px;
@@ -16,7 +18,7 @@ const StyledPageContainer = styled.div`
 `;
 
 const StyledSection = styled.div`
-  margin-bottom: 20px;
+  margin: 20px 0;
 `;
 
 const StyledFormContainer = styled.div`
@@ -76,14 +78,11 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        const response = await axios.get(
-          "https://localhost:7164/api/users/my-data",
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          }
-        );
+        const response = await axios.get(API_PATH + "users/my-data", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -96,16 +95,12 @@ const Profile = () => {
   const handleUpdate = async (values) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios.put(
-        "https://localhost:7164/api/users/update-user",
-        JSON.stringify(values),
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await axios.put(API_PATH + "users/update-user", JSON.stringify(values), {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+          "Content-Type": "application/json",
+        },
+      });
       setUserData(values); // Update the user data with the new values
       setShowForm(false); // Hide the form after successful update
     } catch (error) {
@@ -155,11 +150,7 @@ const Profile = () => {
 
       {!showForm && (
         <StyledSection>
-          <Button
-            type="button"
-            variant="outlined"
-            onClick={handleEditClick}
-          >
+          <Button type="button" variant="outlined" onClick={handleEditClick}>
             Update Data
           </Button>
         </StyledSection>
@@ -229,31 +220,24 @@ const Profile = () => {
               )}
             </StyledFormGroup>
 
-            <div>
+            <StyledButtonsContainer>
               <Button type="submit" variant="contained">
                 Update
               </Button>
-              <Button
-                type="button"
-                variant="outlined"
-                onClick={handleCancel}
-              >
+              <Button type="button" variant="outlined" onClick={handleCancel}>
                 Cancel
               </Button>
-            </div>
-            {formik.status && (
-              <StyledSuccess>{formik.status}</StyledSuccess>
-            )}
+            </StyledButtonsContainer>
+            {formik.status && <StyledSuccess>{formik.status}</StyledSuccess>}
           </StyledForm>
         </StyledFormContainer>
       )}
-      
+
       <StyledSection>
         <Button
           type="button"
           onClick={() => navigate("/changePassword")}
-          variant="contained"
-        >
+          variant="contained">
           Go to change password
         </Button>
       </StyledSection>

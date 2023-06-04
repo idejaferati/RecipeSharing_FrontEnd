@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import { API_PATH } from "../constants";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import styled from "styled-components";
@@ -51,15 +51,13 @@ export const AddToCollectionDialog = (props) => {
     const fetchCollections = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        await axios
-          .get("https://localhost:7164/api/collections/user", {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          })
-          .then((res) => {
-            setCollections(res.data);
-          });
+        const res = await axios.get(API_PATH + "collections/user", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+
+        setCollections(res.data);
       } catch (error) {
         console.error("Error fetching collections:", error);
         const { status } = error.response;
@@ -81,33 +79,30 @@ export const AddToCollectionDialog = (props) => {
       };
       console.log(JSON.stringify(collectionData));
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .post(
-          "https://localhost:7164/api/Collections",
-          JSON.stringify(collectionData),
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
+      const response = await axios.post(
+        API_PATH + "Collections",
+        JSON.stringify(collectionData),
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
 
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          const newCollection = response.data;
-          setCollections((collections) => [...collections, newCollection]);
-          setInfoSnackbar("Added");
-          setOpenSnackbar(true);
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const newCollection = response.data;
+      setCollections((collections) => [...collections, newCollection]);
+      setInfoSnackbar("Added");
+      setOpenSnackbar(true);
 
-          // Reset the form fields and selection
-          setNewCollectionName("");
-          setNewCollectionDescription("");
-          setSelectedRecipeId("");
-          setShowAddToCollection(false);
-          setTimeout(() => {
-            handleClose();
-          }, 7000);
-        });
+      // Reset the form fields and selection
+      setNewCollectionName("");
+      setNewCollectionDescription("");
+      setSelectedRecipeId("");
+      setShowAddToCollection(false);
+      setTimeout(() => {
+        handleClose();
+      }, 7000);
     } catch (error) {
       console.error("Error creating new collection:", error);
       const { status } = error.response;
@@ -125,28 +120,26 @@ export const AddToCollectionDialog = (props) => {
       console.log(collectionId, recipeId);
       const jwtToken = Cookies.get("jwtToken");
 
-      await axios
-        .post(
-          `https://localhost:7164/api/collections/${collectionId}/recipes/addrecipe`,
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-            params: {
-              recipeId,
-            },
-          }
-        )
-        .then(() => {
-          setSelectedRecipeId("");
-          setShowAddToCollection(false);
-          setInfoSnackbar("Added");
-          setOpenSnackbar(true);
-          setTimeout(() => {
-            handleClose();
-          }, 7000);
-        });
+      await axios.post(
+        API_PATH + `collections/${collectionId}/recipes/addrecipe`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          params: {
+            recipeId,
+          },
+        }
+      );
+
+      setSelectedRecipeId("");
+      setShowAddToCollection(false);
+      setInfoSnackbar("Added");
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        handleClose();
+      }, 7000);
     } catch (error) {
       console.error("Error adding recipe to existing collection:", error);
       const { status } = error.response;

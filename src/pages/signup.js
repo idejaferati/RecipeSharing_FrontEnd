@@ -20,6 +20,7 @@ import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_PATH } from "../constants";
 
 const theme = createTheme();
 
@@ -36,11 +37,11 @@ export default function SignUp() {
     // roleId: Yup.string().required("Role is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string()
-    .required("Password is required")
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-      "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
-    ),
+      .required("Password is required")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number"
+      ),
   });
 
   const signUpAsync = async (values) => {
@@ -65,7 +66,7 @@ export default function SignUp() {
     };
 
     try {
-      await axios.post("https://localhost:7164/api/Users/register", jsonData);
+      await axios.post(API_PATH + "Users/register", jsonData);
       console.log(jsonData);
       navigate("/login");
     } catch (error) {
@@ -78,7 +79,7 @@ export default function SignUp() {
   //   const fetchRoles = async () => {
   //     try {
   //       const response = await axios.get(
-  //         "https://localhost:7164/api/Auth/getRoles"
+  //         API_PATH + "Auth/getRoles"
   //       );
   //       setRoles(response.data);
   //     } catch (error) {
@@ -99,8 +100,7 @@ export default function SignUp() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}
-        >
+          }}>
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
@@ -118,8 +118,7 @@ export default function SignUp() {
               password: "",
             }}
             validationSchema={validationSchema}
-            onSubmit={(values) => signUpAsync(values)}
-          >
+            onSubmit={(values) => signUpAsync(values)}>
             {({ isSubmitting }) => (
               <Form sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
@@ -161,8 +160,7 @@ export default function SignUp() {
                     <Field
                       as={RadioGroup}
                       aria-labelledby="gender-label"
-                      name="gender"
-                    >
+                      name="gender">
                       <FormControlLabel
                         value="female"
                         control={<Radio />}
@@ -261,8 +259,7 @@ export default function SignUp() {
                   fullWidth
                   variant="contained"
                   disabled={isSubmitting}
-                  sx={{ mt: 3, mb: 2 }}
-                >
+                  sx={{ mt: 3, mb: 2 }}>
                   Sign Up
                 </Button>
                 <Grid container justifyContent="flex-end">

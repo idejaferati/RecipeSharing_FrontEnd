@@ -21,3 +21,8 @@ export const StyledInput = styled.input`
 export const StyledField = styled(Field)`
   height: 30px;
 `;
+
+export const StyledButtonsContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;

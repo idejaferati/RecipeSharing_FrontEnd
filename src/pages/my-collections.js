@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import styled from "styled-components";
-import Button from "@mui/material/Button";
+import { API_PATH } from "../constants";
 import { StyledListItem, StyledButton } from "../shared/shared-style";
 
 const MyCollections = () => {
@@ -12,13 +11,13 @@ const MyCollections = () => {
     const fetchCollections = async () => {
       try {
         const jwtToken = Cookies.get("jwtToken");
-        await axios
-          .get("https://localhost:7164/api/Collections/user", {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
-          })
-          .then((res) => setCollections(res.data));
+        const res = await axios.get(API_PATH + "Collections/user", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
+
+        setCollections(res.data);
       } catch (error) {
         console.error("Error fetching collections:", error);
       }
@@ -30,18 +29,15 @@ const MyCollections = () => {
   const deleteCollection = async (collectionId) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .delete(`https://localhost:7164/api/collections/${collectionId}`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        })
-        .then(() => {
-          // Update the collections state by removing the deleted collection
-          setCollections(
-            collections.filter((collection) => collection.id !== collectionId)
-          );
-        });
+      await axios.delete(API_PATH + `collections/${collectionId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      // Update the collections state by removing the deleted collection
+      setCollections(
+        collections.filter((collection) => collection.id !== collectionId)
+      );
     } catch (error) {
       console.error("Error deleting collection:", error);
     }
@@ -53,31 +49,29 @@ const MyCollections = () => {
       console.log(collectionId);
       console.log(recipeId);
 
-      await axios
-        .put(
-          `https://localhost:7164/api/collections/${collectionId}/recipes/${recipeId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
-            },
+      await axios.put(
+        API_PATH + `collections/${collectionId}/recipes/${recipeId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      // Update the collections state by removing the deleted recipe from the specified collection
+      setCollections(
+        collections.map((collection) => {
+          if (collection.id === collectionId) {
+            return {
+              ...collection,
+              recipes: collection.recipes.filter(
+                (recipe) => recipe.id !== recipeId
+              ),
+            };
           }
-        )
-        .then(() => {
-          // Update the collections state by removing the deleted recipe from the specified collection
-          setCollections(
-            collections.map((collection) => {
-              if (collection.id === collectionId) {
-                return {
-                  ...collection,
-                  recipes: collection.recipes.filter(
-                    (recipe) => recipe.id !== recipeId
-                  ),
-                };
-              }
-              return collection;
-            })
-          );
-        });
+          return collection;
+        })
+      );
     } catch (error) {
       console.error("Error deleting recipe:", error);
     }
@@ -97,22 +91,20 @@ const MyCollections = () => {
   const updateCollection = async (collectionId, updatedCollection) => {
     try {
       const jwtToken = Cookies.get("jwtToken");
-      await axios
-        .put(`https://localhost:7164/api/collections`, updatedCollection, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        })
-        .then(() => {
-          // Update the collections state by replacing the old collection with the updated one
-          setCollections(
-            collections.map((collection) =>
-              collection.id === collectionId
-                ? { ...collection, ...updatedCollection }
-                : collection
-            )
-          );
-        });
+      await axios.put(API_PATH + "collections", updatedCollection, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+
+      // Update the collections state by replacing the old collection with the updated one
+      setCollections(
+        collections.map((collection) =>
+          collection.id === collectionId
+            ? { ...collection, ...updatedCollection }
+            : collection
+        )
+      );
     } catch (error) {
       console.error("Error updating collection:", error);
     }
@@ -132,19 +124,19 @@ const MyCollections = () => {
               </p>
               <StyledButton
                 type="button"
-                variant="outlined"
-                color="error"
+                variant="contained"
                 style={{ marginRight: "10px" }}
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => deleteCollection(collection.id)}>
-                Delete Collection
+                onClick={() => handleUpdateCollection(collection.id)}>
+                Update Collection
               </StyledButton>
               <StyledButton
                 type="button"
                 variant="outlined"
+                color="error"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => handleUpdateCollection(collection.id)}>
-                Update Collection
+                onClick={() => deleteCollection(collection.id)}>
+                Delete Collection
               </StyledButton>
               <ul className="recipe-list">
                 {collection.recipes.map((recipe) => (

@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { API_PATH } from "../constants";
 
 const ManageTags = () => {
   const [tags, setTags] = useState([]);
-  const [newTagName, setNewTagName] = useState('');
+  const [newTagName, setNewTagName] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
-  const [updateTagId, setUpdateTagId] = useState('');
-  const [updateTagName, setUpdateTagName] = useState('');
+  const [updateTagId, setUpdateTagId] = useState("");
+  const [updateTagName, setUpdateTagName] = useState("");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
-  const [searchTagId, setSearchTagId] = useState('');
+  const [searchTagId, setSearchTagId] = useState("");
   const [searchedTag, setSearchedTag] = useState(null);
 
   useEffect(() => {
@@ -19,15 +20,15 @@ const ManageTags = () => {
 
   const fetchTags = async () => {
     try {
-      const jwtToken = Cookies.get('jwtToken');
-      const response = await axios.get('https://localhost:7164/api/tag',{
-          headers: {
-            Authorization: `Bearer ${jwtToken}`
-          },
-        });
+      const jwtToken = Cookies.get("jwtToken");
+      const response = await axios.get(API_PATH + "tag", {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
       setTags(response.data);
     } catch (error) {
-      console.error('Error fetching tags:', error);
+      console.error("Error fetching tags:", error);
     }
   };
 
@@ -37,45 +38,44 @@ const ManageTags = () => {
     if (!newTagName) return;
 
     try {
-      const jwtToken = Cookies.get('jwtToken');
+      const jwtToken = Cookies.get("jwtToken");
       const jsonData = {
         name: newTagName,
       };
 
       const response = await axios.post(
-        'https://localhost:7164/api/tag',
+        API_PATH + "tag",
         JSON.stringify(jsonData),
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
-      setNewTagName('');
+      setNewTagName("");
       fetchTags();
     } catch (error) {
-      console.error('Error adding tag:', error);
+      console.error("Error adding tag:", error);
     }
   };
 
   const handleTagDelete = async (tagId) => {
     try {
-      
-      const jwtToken = Cookies.get('jwtToken');
+      const jwtToken = Cookies.get("jwtToken");
 
-      await axios.delete(`https://localhost:7164/api/tag`,
-                    null ,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${jwtToken}`,
-                      },params: {
-                        tagId
-                            }});
+      await axios.delete(API_PATH + `tag`, null, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        params: {
+          tagId,
+        },
+      });
 
       fetchTags();
     } catch (error) {
-      console.error('Error deleting tag:', error);
+      console.error("Error deleting tag:", error);
     }
   };
 
@@ -89,29 +89,29 @@ const ManageTags = () => {
     e.preventDefault();
 
     try {
-      const jwtToken = Cookies.get('jwtToken');
+      const jwtToken = Cookies.get("jwtToken");
       const jsonData = {
         id: updateTagId,
         name: updateTagName,
       };
 
       const response = await axios.put(
-        'https://localhost:7164/api/tag',
+        API_PATH + "tag",
         JSON.stringify(jsonData),
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
-      setUpdateTagId('');
-      setUpdateTagName('');
+      setUpdateTagId("");
+      setUpdateTagName("");
       fetchTags();
       setShowUpdateForm(false);
     } catch (error) {
-      console.error('Error updating tag:', error);
+      console.error("Error updating tag:", error);
     }
   };
 
@@ -121,22 +121,19 @@ const ManageTags = () => {
     if (!searchTagId) return;
 
     try {
-      const jwtToken = Cookies.get('jwtToken');
-      const response = await axios.get(
-        `https://localhost:7164/api/tag/${searchTagId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
+      const jwtToken = Cookies.get("jwtToken");
+      const response = await axios.get(API_PATH + `tag/${searchTagId}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
 
       setSearchedTag(response.data);
-      setSearchTagId('');
+      setSearchTagId("");
     } catch (error) {
-      console.error('Error searching tag:', error);
+      console.error("Error searching tag:", error);
       setSearchedTag(null);
-      setSearchTagId('');
+      setSearchTagId("");
     }
   };
 
@@ -162,7 +159,9 @@ const ManageTags = () => {
             <span>ID: {searchedTag.id}</span>
             <span>Name: {searchedTag.name}</span>
             <button onClick={() => handleTagUpdate(searchedTag)}>Update</button>
-            <button onClick={() => handleTagDelete(searchedTag.id)}>Delete</button>
+            <button onClick={() => handleTagDelete(searchedTag.id)}>
+              Delete
+            </button>
           </div>
         </div>
       ) : null}
