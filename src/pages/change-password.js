@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { StyledField, StyledButton } from "./../shared/shared-style";
+import { StyledButton } from "./../shared/shared-style";
 import InfoSnackbar from "./../components/info-snackbar";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as Yup from "yup";
 import { API_PATH } from "../constants";
 import useAuth from "./../components/hooks/use-auth";
+import { StyledErrorMessage } from "./../shared/shared-style";
 
 const StyledContainer = styled.div`
   max-width: 400px;
@@ -26,11 +27,6 @@ const StyledLabel = styled.label`
   font-weight: bold;
 `;
 
-const StyledErrorMessage = styled(ErrorMessage)`
-  color: red;
-  margin-top: 5px;
-`;
-
 const StyledSuccessMessage = styled.p`
   color: green;
   margin-top: 10px;
@@ -41,6 +37,12 @@ const StyledForm = styled(Form)`
   flex-direction: column;
   gap: 10px;
 `;
+
+const StyledField = styled(Field)`
+  margin: 10px;
+  padding: 10px;
+`;
+
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Required"),
   newPassword: Yup.string()
@@ -102,20 +104,22 @@ const ChangePassword = () => {
         {({ isSubmitting, status }) => (
           <StyledForm>
             <div>
-              <StyledLabel htmlFor="oldPassword">Old Password: </StyledLabel>
+              <StyledLabel htmlFor="oldPassword">Old Password:</StyledLabel>
               <StyledField
                 type="password"
                 id="oldPassword"
                 name="oldPassword"
+                className="input-field"
               />
               <StyledErrorMessage name="oldPassword" component="div" />
             </div>
             <div>
-              <StyledLabel htmlFor="newPassword">New Password: </StyledLabel>
+              <StyledLabel htmlFor="newPassword">New Password:</StyledLabel>
               <StyledField
                 type="password"
                 id="newPassword"
                 name="newPassword"
+                className="input-field"
               />
               <StyledErrorMessage name="newPassword" component="div" />
             </div>
