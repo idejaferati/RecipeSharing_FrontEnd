@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { API_PATH } from "../constants";
 import { StyledListItem, StyledButton } from "../shared/shared-style";
+import { ContentContainer, StyledList } from "../shared/shared-style";
 
 const MyCollections = () => {
   const [collections, setCollections] = useState([]);
@@ -51,6 +52,7 @@ const MyCollections = () => {
 
       await axios.put(
         API_PATH + `collections/${collectionId}/recipes/${recipeId}`,
+        null,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -111,10 +113,10 @@ const MyCollections = () => {
   };
 
   return (
-    <div className="collections-container">
+    <ContentContainer>
       <h2 className="collections-title">Collections</h2>
       {collections.length > 0 ? (
-        <ul className="collection-list">
+        <StyledList>
           {collections.map((collection) => (
             <StyledListItem key={collection.id}>
               <h3 className="collection-name">{collection.name}</h3>
@@ -192,11 +194,11 @@ const MyCollections = () => {
               </ul>
             </StyledListItem>
           ))}
-        </ul>
+        </StyledList>
       ) : (
         <p className="no-collections">No collections found.</p>
       )}
-    </div>
+    </ContentContainer>
   );
 };
 

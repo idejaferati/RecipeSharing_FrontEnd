@@ -4,13 +4,14 @@ import styled from "styled-components";
 import useAuth from "./../components/hooks/use-auth";
 import Cookies from "js-cookie";
 import { API_PATH } from "../constants";
+import { StyledButton, StyledList } from "../shared/shared-style";
 
 const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
+  min-height: 50vh;
   padding-top: 60px;
   padding-bottom: 60px;
 `;
@@ -30,23 +31,6 @@ const StyledInput = styled.input`
   font-size: 16px;
 `;
 
-const StyledButton = styled.button`
-  padding: 8px 12px;
-  background-color: #5fd9c2;
-  color: black;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-left: 100px;
-
-  &:hover {
-    transition: all 0.2s ease-in-out;
-    background: #fff;
-    color: #5fd9c2;
-  }
-`;
-
 const StyledCuisineCard = styled.div`
   flex: 0 0 300px;
   padding: 20px;
@@ -62,7 +46,6 @@ const StyledRecipeSection = styled.div`
   max-width: 1300px;
   overflow-y: auto;
   min-height: 400px; /* Adjust this value to make the div taller */
-  padding: 0 20px; /* Add padding to create some spacing */
 `;
 
 const StyledRecipeCard = styled.li`
@@ -268,12 +251,20 @@ const Cuisines = () => {
             </StyledRecipeHeader>
             {selectedCuisineRecipes && selectedCuisineRecipes.length > 0 ? (
               <div>
+                <StyledButton variant="outlined" onClick={handleGoBack}>
+                  Go Back
+                </StyledButton>
                 <StyledRecipeSection>
-                  <ul>
+                  <StyledList>
                     {selectedCuisineRecipes.map((recipe) => (
                       <StyledRecipeCard key={recipe.id}>
                         <StyledRecipeImage
-                          src={recipe.audioInstructions}
+                          src={
+                            !recipe.audioInstructions ||
+                            recipe.audioInstructions === "nothing"
+                              ? require("../images/no-img.png")
+                              : recipe.audioInstructions
+                          }
                           alt="Recipe"
                         />
                         <StyledRecipeTitle>{recipe.name}</StyledRecipeTitle>
@@ -328,9 +319,8 @@ const Cuisines = () => {
                         </StyledInstructionList>
                       </StyledRecipeCard>
                     ))}
-                  </ul>
+                  </StyledList>
                 </StyledRecipeSection>
-                <StyledButton onClick={handleGoBack}>Go Back</StyledButton>
               </div>
             ) : (
               <p>There are no recipes for this cuisine.</p>
@@ -354,8 +344,11 @@ const Cuisines = () => {
                   value={newCuisineData.description}
                   placeholder="Cuisine Description"
                   onChange={handleInputChange}
+                  variant="contained"
                 />
-                <StyledButton type="submit">Add Cuisine</StyledButton>
+                <StyledButton variant="outlined" type="submit">
+                  Add Cuisine
+                </StyledButton>
               </StyledForm>
             )}
 
@@ -365,11 +358,16 @@ const Cuisines = () => {
                   {cuisine.name}
                 </h2>
                 <StyledButton
+                  variant="contained"
+                  style={{ marginRight: "10px" }}
                   onClick={() => handleGetRecipesByCuisineId(cuisine.id)}>
                   Show Recipes
                 </StyledButton>
                 {role === "admin" && (
-                  <StyledButton onClick={() => handleDeleteCuisine(cuisine.id)}>
+                  <StyledButton
+                    color="error"
+                    variant="contained"
+                    onClick={() => handleDeleteCuisine(cuisine.id)}>
                     Delete
                   </StyledButton>
                 )}

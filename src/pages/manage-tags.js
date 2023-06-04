@@ -2,6 +2,117 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { API_PATH } from "../constants";
+import styled from "styled-components";
+import {
+  StyledButton,
+  StyledButtonsContainer,
+  StyledInput,
+} from "../shared/shared-style";
+import { ContentContainer } from "../shared/shared-style";
+
+const StyledTagContainer = styled.div`
+  background: #f8ecdb9c;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+  display: grid;
+`;
+
+const StyledForm = styled.form`
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+`;
+
+const StyledBtn = styled(StyledButton)`
+  margin: 10px !important;
+`;
+
+const StyledTableData = styled.td`
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+`;
+
+const StyledTableRow = styled.tr`
+  &:hover {
+    background-color: #f2f2f2;
+  }
+`;
+
+const StyledAddFormContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const StyledAddForm = styled.form`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledAddInput = styled.input`
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
+
+const StyledAddButton = styled.button`
+  padding: 5px 10px;
+  background-color: #5fd9c2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #4fc4af;
+  }
+`;
+
+const StyledUpdateFormContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const StyledUpdateForm = styled.form`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledUpdateInput = styled.input`
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
+
+const StyledUpdateButton = styled.button`
+  padding: 5px 10px;
+  background-color: #5fd9c2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #4fc4af;
+  }
+`;
+
+const StyledSearchFormContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const StyledSearchForm = styled.form`
+  display: flex;
+  align-items: center;
+`;
+
+const StyledSearchInput = styled.input`
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
 
 const ManageTags = () => {
   const [tags, setTags] = useState([]);
@@ -64,12 +175,12 @@ const ManageTags = () => {
     try {
       const jwtToken = Cookies.get("jwtToken");
 
-      await axios.delete(API_PATH + `tag`, null, {
+      await axios.delete(API_PATH + `tag`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
         params: {
-          tagId,
+          id: tagId,
         },
       });
 
@@ -138,26 +249,33 @@ const ManageTags = () => {
   };
 
   return (
-    <div>
+    <ContentContainer>
       <h2>Tag List</h2>
 
       <form onSubmit={handleSearchSubmit}>
         <h3>Search Tag by ID</h3>
-        <input
+        <StyledInput
           type="text"
+          style={{ marginRight: "10px" }}
           value={searchTagId}
           onChange={(e) => setSearchTagId(e.target.value)}
           placeholder="Enter tag ID"
         />
-        <button type="submit">Search</button>
+        <StyledButton variant="contained" type="submit">
+          Search
+        </StyledButton>
       </form>
 
       {searchedTag ? (
         <div>
           <h3>Search Result</h3>
           <div>
-            <span>ID: {searchedTag.id}</span>
-            <span>Name: {searchedTag.name}</span>
+            <span>
+              <b>ID:</b> {searchedTag.id}
+            </span>
+            <span>
+              <b>Name:</b> {searchedTag.name}
+            </span>
             <button onClick={() => handleTagUpdate(searchedTag)}>Update</button>
             <button onClick={() => handleTagDelete(searchedTag.id)}>
               Delete
@@ -168,42 +286,64 @@ const ManageTags = () => {
 
       <h3>All Tags</h3>
       {tags.map((tag) => (
-        <div key={tag.id}>
+        <StyledTagContainer key={tag.id}>
           <span>ID: {tag.id}</span>
           <span>Name: {tag.name}</span>
-          <button onClick={() => handleTagUpdate(tag)}>Update</button>
-          <button onClick={() => handleTagDelete(tag.id)}>Delete</button>
-        </div>
+          <StyledButtonsContainer>
+            <StyledButton
+              onClick={() => handleTagUpdate(tag)}
+              variant="outlined"
+              sx={{ mt: 3, mb: 2 }}>
+              Update
+            </StyledButton>
+            <StyledButton
+              onClick={() => handleTagDelete(tag.id)}
+              variant="outlined"
+              color="error"
+              sx={{ mt: 3, mb: 2 }}>
+              Delete
+            </StyledButton>
+          </StyledButtonsContainer>
+        </StyledTagContainer>
       ))}
 
       {showAddForm ? (
-        <form onSubmit={handleTagSubmit}>
+        <StyledForm onSubmit={handleTagSubmit}>
           <h3>Add Tag</h3>
-          <input
+          <StyledInput
             type="text"
             value={newTagName}
             onChange={(e) => setNewTagName(e.target.value)}
             placeholder="Enter tag name"
           />
-          <button type="submit">Add Tag</button>
-        </form>
+          <StyledBtn type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+            Add Tag
+          </StyledBtn>
+        </StyledForm>
       ) : (
-        <button onClick={() => setShowAddForm(true)}>Add Tag</button>
+        <StyledButton
+          onClick={() => setShowAddForm(true)}
+          variant="contained"
+          sx={{ mt: 3, mb: 2 }}>
+          Add Tag
+        </StyledButton>
       )}
 
       {showUpdateForm ? (
-        <form onSubmit={handleUpdateSubmit}>
+        <StyledForm onSubmit={handleUpdateSubmit}>
           <h3>Update Tag</h3>
-          <input
+          <StyledInput
             type="text"
             value={updateTagName}
             onChange={(e) => setUpdateTagName(e.target.value)}
             placeholder="Enter updated tag name"
           />
-          <button type="submit">Update Tag</button>
-        </form>
+          <StyledBtn type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+            Update Tag
+          </StyledBtn>
+        </StyledForm>
       ) : null}
-    </div>
+    </ContentContainer>
   );
 };
 

@@ -29,6 +29,7 @@ export default function Login() {
 
   useEffect(() => {
     const storedAuth = localStorage.getItem("auth");
+
     if (storedAuth) {
       setAuth(JSON.parse(storedAuth));
       navigate(from, { replace: true });
@@ -66,7 +67,6 @@ export default function Login() {
       setAuth(authenticatedUser);
       localStorage.setItem("auth", JSON.stringify(authenticatedUser));
       navigate(from, { replace: true });
-      console.log(jsonData);
     } catch (error) {
       console.error(error);
       setAuth(null);

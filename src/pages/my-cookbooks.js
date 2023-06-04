@@ -6,6 +6,7 @@ import { StyledButton, StyledField } from "./../shared/shared-style";
 import styled from "styled-components";
 import { API_PATH } from "../constants";
 import { StyledButtonsContainer } from "./../shared/shared-style";
+import { ContentContainer } from "./../shared/shared-style";
 
 const StyledCookbookContainer = styled.div`
   border: 1px solid blue;
@@ -138,7 +139,7 @@ function MyCookbooks() {
   }
 
   return (
-    <div>
+    <ContentContainer>
       <h1>User Cookbook</h1>
       {cookbookData.map((cookbook) => (
         <StyledCookbookContainer key={cookbook.id}>
@@ -251,7 +252,7 @@ function MyCookbooks() {
           ))}
         </StyledCookbookContainer>
       ))}
-    </div>
+    </ContentContainer>
   );
 }
 

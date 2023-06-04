@@ -6,12 +6,14 @@ import Button from "@mui/material/Button";
 import { AddToCookbookDialog } from "../components/add-to-cookbook-dialog";
 import { API_PATH } from "../constants";
 import { StyledButtonsContainer } from "../shared/shared-style";
+import { ContentContainer, StyledList } from "../shared/shared-style";
 
 const StyledListItem = styled.li`
   border: 1px solid deepskyblue;
   background: aliceblue;
   padding: 15px;
-  margin: 15px;
+  margin: 15px 0;
+  border-radius: 10px;
 `;
 
 const StyledInput = styled.input`
@@ -347,9 +349,9 @@ const MyRecipes = () => {
   };
 
   return (
-    <div>
+    <ContentContainer>
       <h3>Your Recipes</h3>
-      <ul className="recipe-list">
+      <StyledList>
         {recipes.map((recipe) => (
           <StyledListItem key={recipe.id}>
             <h4 className="recipe-name">{recipe.name}</h4>
@@ -629,7 +631,7 @@ const MyRecipes = () => {
             </Button>
           </StyledListItem>
         ))}
-      </ul>
+      </StyledList>
       {showAddToCookbook && (
         <AddToCookbookDialog
           //onClick={handleAddToCookbook(recipe.id)}
@@ -640,7 +642,7 @@ const MyRecipes = () => {
           setShowAddToCookbook={setShowAddToCookbook}
         />
       )}
-    </div>
+    </ContentContainer>
   );
 };
 

@@ -18,15 +18,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { API_PATH } from "../constants";
-
-const StyledBlogContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f9f9f9;
-`;
+import { ContentContainer, StyledButton } from "../shared/shared-style";
 
 const StyledUserTable = styled.table`
   width: 100%;
@@ -244,7 +236,7 @@ const ManageUser = () => {
   };
 
   return (
-    <StyledBlogContainer>
+    <ContentContainer>
       <h1>User Management</h1>
 
       <StyledSearchContainer>
@@ -318,9 +310,12 @@ const ManageUser = () => {
                     <StyledTableData>{user.email}</StyledTableData>
                     <StyledTableData>{user.phoneNumber}</StyledTableData>
                     <StyledTableData>
-                      <button onClick={() => handleDeleteUser(user.email)}>
+                      <StyledButton
+                        color="error"
+                        variant="outlined"
+                        onClick={() => handleDeleteUser(user.email)}>
                         Delete
-                      </button>
+                      </StyledButton>
                     </StyledTableData>
                   </StyledTableRow>
                 ))}
@@ -333,7 +328,11 @@ const ManageUser = () => {
       )}
 
       {/* "Create User" button */}
-      <Button variant="contained" color="primary" onClick={handleCreateUser}>
+      <Button
+        style={{ marginTop: "10px" }}
+        variant="contained"
+        color="primary"
+        onClick={handleCreateUser}>
         Create User
       </Button>
 
@@ -449,11 +448,13 @@ const ManageUser = () => {
           </form>
         </DialogContent>
         <DialogActions>
+          <Button variant="contained" onClick={handleCreateUserSubmit}>
+            Create
+          </Button>
           <Button onClick={handleCloseCreateUserDialog}>Cancel</Button>
-          <Button onClick={handleCreateUserSubmit}>Create</Button>
         </DialogActions>
       </Dialog>
-    </StyledBlogContainer>
+    </ContentContainer>
   );
 };
 

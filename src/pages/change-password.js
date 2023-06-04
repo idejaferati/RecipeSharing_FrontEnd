@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import * as Yup from "yup";
 import { API_PATH } from "../constants";
+import useAuth from "./../components/hooks/use-auth";
 
 const StyledContainer = styled.div`
   max-width: 400px;
@@ -53,6 +54,8 @@ const validationSchema = Yup.object().shape({
 const ChangePassword = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const { auth } = useAuth();
+  const role = auth?.role;
   const navigate = useNavigate();
 
   const jwtToken = Cookies.get("jwtToken");
@@ -69,7 +72,10 @@ const ChangePassword = () => {
         setStatus(response.data.message);
         setSnackbarMessage("Successfully updated!");
         setOpenSnackbar(true);
-        setTimeout(() => navigate("/profile"), 6000);
+        setTimeout(
+          () => navigate(role === "user" ? "/profile" : "/adminProfile"),
+          6000
+        );
       })
       .catch((error) => {
         console.error("Error:", error);

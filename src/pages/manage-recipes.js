@@ -282,8 +282,15 @@ const ManageRecipes = () => {
         <StyledRecipeList>
           {filteredRecipes.map((recipe) => (
             <StyledListItem key={recipe.id}>
-              <StyledRecipeImage src={recipe.audioInstructions} alt="Recipe" />{" "}
-              Image tag
+              <StyledRecipeImage
+                src={
+                  !recipe.audioInstructions ||
+                  recipe.audioInstructions === "nothing"
+                    ? require("../images/no-img.png")
+                    : recipe.audioInstructions
+                }
+                alt="Recipe"
+              />{" "}
               <StyledRecipeName>{recipe.name}</StyledRecipeName>
               <StyledRecipeDescription>
                 {recipe.description}
