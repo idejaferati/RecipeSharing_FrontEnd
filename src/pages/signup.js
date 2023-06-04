@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import * as React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,11 +16,11 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_PATH } from "../constants";
+import { StyledErrorMessage } from "../shared/shared-style";
 
 const theme = createTheme();
 
@@ -133,7 +133,7 @@ export default function SignUp() {
                       label="First Name"
                       autoFocus
                     />
-                    <ErrorMessage
+                    <StyledErrorMessage
                       name="firstName"
                       component="div"
                       className="error-message"
@@ -149,7 +149,7 @@ export default function SignUp() {
                       name="lastName"
                       autoComplete="family-name"
                     />
-                    <ErrorMessage
+                    <StyledErrorMessage
                       name="lastName"
                       component="div"
                       className="error-message"
@@ -172,7 +172,7 @@ export default function SignUp() {
                         label="Male"
                       />
                     </Field>
-                    <ErrorMessage
+                    <StyledErrorMessage
                       name="gender"
                       component="div"
                       className="error-message"
@@ -192,7 +192,7 @@ export default function SignUp() {
                         shrink: true,
                       }}
                     />
-                    <ErrorMessage
+                    <StyledErrorMessage
                       name="phoneNumber"
                       component="div"
                       className="error-message"
@@ -214,7 +214,7 @@ export default function SignUp() {
                         ))}
                       </Field>
                     </FormControl>
-                    <ErrorMessage
+                    <StyledErrorMessage
                       name="roleId"
                       component="div"
                       className="error-message"
@@ -230,7 +230,7 @@ export default function SignUp() {
                       name="email"
                       autoComplete="email"
                     />
-                    <ErrorMessage
+                    <StyledErrorMessage
                       name="email"
                       component="div"
                       className="error-message"
@@ -247,7 +247,7 @@ export default function SignUp() {
                       id="password"
                       autoComplete="new-password"
                     />
-                    <ErrorMessage
+                    <StyledErrorMessage
                       name="password"
                       component="div"
                       className="error-message"

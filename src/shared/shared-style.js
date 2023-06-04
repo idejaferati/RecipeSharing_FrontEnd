@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Button from "@mui/material/Button";
-import { Field } from "formik";
+import { Field, ErrorMessage } from "formik";
 
 export const StyledButton = styled(Button)`
   margin: 0;
@@ -36,4 +36,9 @@ export const ContentContainer = styled.div`
 export const StyledList = styled.ul`
   list-style-type: none;
   padding: 0;
+`;
+
+export const StyledErrorMessage = styled(ErrorMessage)`
+  color: red;
+  margin-top: 5px;
 `;

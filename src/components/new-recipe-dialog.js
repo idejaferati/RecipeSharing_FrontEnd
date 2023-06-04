@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  Formik,
-  Field,
-  FieldArray,
-  ErrorMessage,
-  useFormikContext,
-} from "formik";
+import { Formik, Field, FieldArray } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 import Cookies from "js-cookie";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -13,6 +8,7 @@ import Dialog from "@mui/material/Dialog";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import { API_PATH } from "../constants";
+import { StyledErrorMessage } from "../shared/shared-style";
 
 const StyledFormItem = styled.div`
   padding: 10px;
@@ -31,6 +27,12 @@ const StyledField = styled(Field)`
 const StyledSelect = styled.select`
   height: 36px;
 `;
+
+// Validation schema using Yup
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  cuisineId: Yup.string().required("Cuisine is required"),
+});
 
 const NewRecipeDialog = (props) => {
   const { onClose, selectedValue, open } = props;
@@ -91,7 +93,7 @@ const NewRecipeDialog = (props) => {
       );
       console.log("Recipe submitted successfully!", response.data);
 
-      setTimeout(() => handleClose(), 4000);
+      setTimeout(() => handleClose(), 2000);
       // Handle success or show a success message
     } catch (error) {
       console.error("Error submitting recipe:", error);
@@ -119,8 +121,9 @@ const NewRecipeDialog = (props) => {
           audioInstructions: "",
           videoInstructions: "",
         }}
+        validationSchema={validationSchema} // Apply the validation schema
         onSubmit={handleSubmit}>
-        {({ values, handleChange, handleBlur, handleSubmit }) => (
+        {({ values, handleChange, handleBlur, handleSubmit, errors }) => (
           <form style={{ minWidth: "450px" }} onSubmit={handleSubmit}>
             <StyledFormItem>
               <label htmlFor="name">Name</label>
@@ -132,12 +135,12 @@ const NewRecipeDialog = (props) => {
                 onBlur={handleBlur}
                 value={values.name}
               />
-              <ErrorMessage name="name" component="div" />
+              <StyledErrorMessage name="name" component="div" />
             </StyledFormItem>
             <StyledFormItem>
               <label htmlFor="description">Description</label>
               <StyledField type="text" id="description" name="description" />
-              <ErrorMessage name="description" component="div" />
+              <StyledErrorMessage name="description" component="div" />
             </StyledFormItem>
 
             <StyledFormItem>
@@ -155,7 +158,7 @@ const NewRecipeDialog = (props) => {
                   </option>
                 ))}
               </StyledSelect>
-              <ErrorMessage name="cuisineId" component="div" />
+              <StyledErrorMessage name="cuisineId" component="div" />
             </StyledFormItem>
             <StyledFormItem>
               <label htmlFor="existingTags">Tags</label>
@@ -184,7 +187,7 @@ const NewRecipeDialog = (props) => {
                   </div>
                 )}
               </FieldArray>
-              <ErrorMessage name="existingTags" component="div" />
+              <StyledErrorMessage name="existingTags" component="div" />
             </StyledFormItem>
 
             <br />
@@ -209,7 +212,7 @@ const NewRecipeDialog = (props) => {
                             onBlur={handleBlur}
                             value={ingredient.name}
                           />
-                          <ErrorMessage
+                          <StyledErrorMessage
                             name={`ingredients.${index}.name`}
                             component="div"
                           />
@@ -227,7 +230,7 @@ const NewRecipeDialog = (props) => {
                             onBlur={handleBlur}
                             value={ingredient.amount}
                           />
-                          <ErrorMessage
+                          <StyledErrorMessage
                             name={`ingredients.${index}.amount`}
                             component="div"
                           />
@@ -258,7 +261,7 @@ const NewRecipeDialog = (props) => {
                             <option value="Tablespoon">Pieces</option>
                             {/* Add more units as needed */}
                           </StyledSelect>
-                          <ErrorMessage
+                          <StyledErrorMessage
                             name={`ingredients.${index}.unit`}
                             component="div"
                           />
@@ -290,7 +293,7 @@ const NewRecipeDialog = (props) => {
                   </div>
                 )}
               </FieldArray>
-              <ErrorMessage name="ingredients" component="div" />
+              <StyledErrorMessage name="ingredients" component="div" />
             </StyledFormItem>
 
             <br />
@@ -314,7 +317,7 @@ const NewRecipeDialog = (props) => {
                           onBlur={handleBlur}
                           value={instruction.stepNumber}
                         /> */}
-                          <ErrorMessage
+                          <StyledErrorMessage
                             name={`instructions.${index}.stepNumber`}
                             component="div"
                           />
@@ -333,7 +336,7 @@ const NewRecipeDialog = (props) => {
                             onBlur={handleBlur}
                             value={instruction.stepDescription}
                           />
-                          <ErrorMessage
+                          <StyledErrorMessage
                             name={`instructions.${index}.stepDescription`}
                             component="div"
                           />
@@ -364,7 +367,7 @@ const NewRecipeDialog = (props) => {
                   </div>
                 )}
               </FieldArray>
-              <ErrorMessage name="instructions" component="div" />
+              <StyledErrorMessage name="instructions" component="div" />
             </StyledFormItem>
             <br />
             <StyledFormItem>
@@ -415,7 +418,7 @@ const NewRecipeDialog = (props) => {
                   </div>
                 )}
               </FieldArray>
-              <ErrorMessage name="tags" component="div" />
+              <StyledErrorMessage name="tags" component="div" />
             </StyledFormItem>
 
             <br />
