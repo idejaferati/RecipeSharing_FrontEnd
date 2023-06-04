@@ -186,9 +186,7 @@ function MyCookbooks() {
           ) : (
             <div>
               <h2>{cookbook.name}</h2>
-              <p>{cookbook.description}</p>
-
-              <p>Number of Recipes: {cookbook.numberOfRecipes}</p>
+              <p>Description: {cookbook.description}</p>
               <StyledButtonsContainer>
                 <StyledButton
                   type="button"
@@ -208,6 +206,9 @@ function MyCookbooks() {
               </StyledButtonsContainer>
             </div>
           )}
+          <br />
+
+          <p>Number of Recipes: {cookbook.numberOfRecipes}</p>
 
           <h3>Recipes</h3>
           {cookbook.recipes.map((recipe) => (
